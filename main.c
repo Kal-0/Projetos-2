@@ -52,7 +52,7 @@ int main(void) {
   int input = 0;
   while(1){
     
-    printf("");
+    printf("eee");
     
     scanf("%d", &input);
     if(input == -1){
