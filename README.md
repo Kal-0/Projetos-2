@@ -1,5 +1,4 @@
 # Projetos-2
-Protótipo da aplicação desenvolvida para a disciplina de Projetos-2
 
 Projeto em C para uma disciplina da faculdade feito em grupo.
 
