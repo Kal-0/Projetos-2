@@ -9,12 +9,6 @@ Usuario* perfil = NULL;
 
 
 
-
-
-
-
-
-
 int main(void) {
 
 
