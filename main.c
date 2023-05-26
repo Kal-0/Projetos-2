@@ -1,6 +1,17 @@
 #include "utils.h"
 
+
+int input = 0;
+
+
 Usuario* perfil = NULL;
+
+
+void navBar();
+
+void home();
+
+
 
 int countFilesInFolder(const char* folderPath) {
     DIR* directory = opendir(folderPath);
@@ -49,20 +60,88 @@ int main(void) {
 
 
 
-  int input = 0;
-  while(1){
-    
-    printf("eee");
-    
-    scanf("%d", &input);
-    if(input == -1){
-      break;
-    }
-  }
+  
+  home();
     
 
   
   printf("Hello World\n");
 
   return 0;
+}
+
+
+void navBar(){
+  while(1){
+    printf("NavBar\n\n"\
+      "selecione uma opcao:\n"\
+      "-1 -> voltar\n"\
+      "1 -> perfil\n"\
+      "2 -> atividades\n"\
+  
+       "\n:"
+    );
+  
+    
+    scanf("%d", &input);
+  
+  
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+        printf("ver perfil\n");
+        break;
+      
+      case 2:
+        printf("ver atividades\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
+}
+
+
+
+
+void home(){
+  while(1){
+    printf("HOME\n"\
+        "selecione uma opcao:\n"\
+        "-1 -> voltar\n"\
+        "0 -> navBar\n"\
+        "1 -> ver residencias\n"\
+        
+        "\n:"
+      );
+  
+    
+    scanf("%d", &input);
+
+    
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 0:
+        navBar();
+        break;
+      
+      case 1:
+        printf("ver residencia\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
 }
