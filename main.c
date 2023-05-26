@@ -2,7 +2,24 @@
 
 Usuario* perfil = NULL;
 
+int countFilesInFolder(const char* folderPath) {
+    DIR* directory = opendir(folderPath);
+    if (directory == NULL) {
+        perror("Unable to open the directory");
+        return -1;
+    }
 
+    int fileCount = 0;
+    struct dirent* entry;
+    while ((entry = readdir(directory)) != NULL) {
+        if (entry->d_type == DT_REG) {  // Regular file
+            fileCount++;
+        }
+    }
+
+    closedir(directory);
+    return fileCount;
+}
 
 
 int main(void) {

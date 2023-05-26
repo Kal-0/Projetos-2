@@ -1,12 +1,14 @@
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "sqlite3/sqlite3.h"
+
+
 #ifndef UTILS_H_
 #define UTILS_H_
 
-
-  
 typedef struct {
   char nome[60];
   int id;
@@ -114,10 +116,9 @@ typedef struct {
 
 void fazerCadastro();
 
-
 Usuario *fazerLogin(char *email, char *senha);
-/*
 
+/*
 void criarCriteriosDeFeedback(Turma *turma);
 
 void criarAtividades(Turma *turma);
