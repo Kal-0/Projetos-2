@@ -1,3 +1,7 @@
+#ifndef __UTILS__
+#define __UTILS__
+
+
 typedef struct{
   char nome[60];
   int id;
@@ -101,32 +105,34 @@ typedef struct{
 
 // Funções
 
-void fazerCadastro(){};
+void fazerCadastro();
 
-Usuario* fazerLogin(char* email, char* senha,  Usuario *usuario){}
+Usuario* fazerLogin(char* email, char* senha,  Usuario *usuario);
 
-void criarCriteriosDeFeedback(Turma* turma){}
+void criarCriteriosDeFeedback(Turma* turma);
 
-void criarAtividades(Turma* turma){};
+void criarAtividades(Turma* turma);
 
-void visualizarTurmas(Turma* listaTurmas ){};
+void visualizarTurmas(Turma* listaTurmas );
 
 void visualizarFeedbacks(char* nome);
 
-void visualizarAtividades( Atividade* listaAtividades){};
+void visualizarAtividades( Atividade* listaAtividades);
 
-void submeterAtividade( Residente* residente, Submissao* submissao){};
+void submeterAtividade( Residente* residente, Submissao* submissao);
 
 void visualizarSubmissao(Submissao* submissao);
 
 void contestarFeedback(Usuario* usuario, feedbackGeral feedbackGeral);
 
-void visualizarUsuario(Usuario* usuario){};
+void visualizarUsuario(Usuario* usuario);
 
-void avaliarAtividade(Preceptor* preceptor, Submissao* submissao){};
+void avaliarAtividade(Preceptor* preceptor, Submissao* submissao);
 
-void fazerAvaliacaoTrimestral( Usuario* usuario, float notaTrimestral) {};
+void fazerAvaliacaoTrimestral( Usuario* usuario, float notaTrimestral);
 
-void fazerFeedback(Preceptor* preceptor, Residente* residente, Usuario usuario){};
+void fazerFeedback(Preceptor* preceptor, Residente* residente, Usuario usuario);
 
-void cadastrarTurma(ProgramaResidencia* residencia){};
+void cadastrarTurma(ProgramaResidencia* residencia);
+
+#endif //__UTILS__
