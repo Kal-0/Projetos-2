@@ -8,3 +8,21 @@ typedef struct{
   int status;
   
 }Usuario;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

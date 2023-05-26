@@ -4,24 +4,21 @@
 
 #include "utils.h"
 
+Usuario* perfil = NULL;
 
 
-typedef struct{
-  char nome[60];
-  int id;
-  char* email;
-  char* senha;
-  char* tipoDeUsuario;
-  void* categoriaUsuario;
-  int status;
-  
-}Usuario;
+
+
+
 
 
 
 
 
 int main(void) {
+
+
+  
 
   Usuario* decoyUser1 = NULL;
   Usuario* decoyUser2 = NULL;
@@ -41,7 +38,21 @@ int main(void) {
   ((Usuario*)(decoyUser1->categoriaUsuario))->email = "bebe\n";
   
   printf("%s", decoyUser2->email);
-  
+
+
+
+
+  int input = 0;
+  while(1){
+    
+    printf("");
+    
+    scanf("%d", &input);
+    if(input == -1){
+      break;
+    }
+  }
+    
 
   
   printf("Hello World\n");
