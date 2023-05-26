@@ -122,9 +122,9 @@ typedef struct{
 
 void fazerCadastro(){};
 
-struct Usuario* fazerLogin(char* email, char* senha, struct Usuario *usuario){}
+Usuario* fazerLogin(char* email, char* senha){};
 
-void criarCriteriosDeFeedback(struct Turma* turma){}
+void criarCriteriosDeFeedback(struct Turma* turma){};
 
 void criarAtividades(struct Turma* turma){};
 
