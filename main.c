@@ -5,22 +5,6 @@
 #include "utils.h"
 
 
-
-typedef struct{
-  char nome[60];
-  int id;
-  char* email;
-  char* senha;
-  char* tipoDeUsuario;
-  void* categoriaUsuario;
-  int status;
-  
-}Usuario;
-
-
-
-
-
 int main(void) {
 
   Usuario* decoyUser1 = NULL;
