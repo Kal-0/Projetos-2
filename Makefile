@@ -41,7 +41,7 @@ SRCS += $(shell find $(SQLITE_FOLDER) -name '*.c' -print)
 
 
 
-# name of output .exe
+# name of output executable
 TARGET = main
 
 all: $(TARGET)

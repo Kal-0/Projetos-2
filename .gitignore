@@ -45,3 +45,10 @@ tags
 .replit
 replit.nix
 .ccls-cache
+
+#vscode
+.output
+
+#other
+main
+main.exe
