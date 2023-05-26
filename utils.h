@@ -31,54 +31,57 @@ typedef struct{
 // Tipos de Usuarios
 
 typedef struct{
-  struct Usuario usuario;
+  Usuario usuario;
   int matricula;
-  struct Turma turma;
-  struct Atividade* listaAtividades;
-  struct Submissao* listaSubmissoes;
-  struct Preceptor preceptorResponsavel;
+  Turma turma;
+  Atividade* listaAtividades;
+  Submissao* listaSubmissoes;
+  Preceptor preceptorResponsavel;
   float notasTrimestrais[];
-  struct FeedbackGeral* listaFeedbacks;
+  FeedbackGeral* listaFeedbacks;
 }Residente;
 
 typedef struct{
-  struct Usuario usuario;
-  struct Residente* listaResidentesAtuais;
-  struct Atividade* listaAtividades;
-  struct ProgramaResidencia* listaResidencias;
-  struct FeedbackGeral* listaFeedbacks;
+  Usuario usuario;
+  Residente* listaResidentesAtuais;
+  Atividade* listaAtividades;
+  ProgramaResidencia* listaResidencias;
+  FeedbackGeral* listaFeedbacks;
 }Preceptor;
 
 typedef struct{
-  struct Usuario usuario;
+  Usuario usuario;
   char cargo[];
-  struct ProgramaResidencia residencia; residencia;
+  ProgramaResidencia residencia; residencia;
 }Coordenacao;
 
 typedef struct{
-  struct Usuario usuario;
+  Usuario usuario;
   char cargo[];
-  struct ProgramaResidencia* listaResidencias;
+  ProgramaResidencia* listaResidencias;
 }Gestao;
 
 
 // Conjuntos
 
 typedef struct{
+  char nomePrograma[];
+  Coordenacao* listaCoordenacao;
+  Turma* listaTurmas
+}ProgramaResidencia;
+
+
+typedef struct{
   char nomeResidencia[];
   char anoDaTurma[];
-  struct Residente* residentes;
-  struct Preceptor* listaPreceptores;
-  struct Atividade* listasAtividades;
-  struct ProgramaResidencia residencia;
+  Residente* residentes;
+  Preceptor* listaPreceptores;
+  Atividade* listasAtividades;
+  ProgramaResidencia residencia;
   char* criteriosAvaliativos;
 }Turma;
 
-typedef struct{
-  char nomePrograma[];
-  struct Coordenacao* listaCoordenacao;
-  struct Turma* listaTurmas
-}ProgramaResidencia;
+
 
 
 // Funcionalidades da solução
@@ -86,18 +89,18 @@ typedef struct{
 typedef struct{
   char nomeDaAtividade[];
   char descricaoDaAtividade[];
-  struct Turma turma;
+  Turma turma;
   char programaDeResidencia[];
-  struct Submissao* listaSubmissao;
+  Submissao* listaSubmissao;
   char dataDaPostagem;
   char dataDaEntrega;
   int ativa;
 }Atividade;
 
 typedef struct{
-  struct Residente residente;
-  struct Preceptor preceptor;
-  struct Atividade atividade;
+  Residente residente;
+  Preceptor preceptor;
+  Atividade atividade;
   float nota;
   char * resposta;
   char feedback[];
@@ -105,8 +108,7 @@ typedef struct{
 }Submissao;
 
 typedef struct{
-  struct Residente residente;
-  struct Preceptor preceptor;
+  Preceptor preceptor;
   char *criterios;
   float nota;
   char *feedback;
@@ -122,13 +124,31 @@ typedef struct{
 
 void fazerCadastro(){};
 
+
 Usuario* fazerLogin(char* email, char* senha){};
 
-void criarCriteriosDeFeedback(struct Turma* turma){};
+void criarCriteriosDeFeedback(Turma* turma){}
 
-void criarAtividades(struct Turma* turma){};
+void criarAtividades(Turma* turma){};
 
-void visualizarTurmas(struct Turma* listaTurmas ){};
+void visualizarTurmas(Turma* listaTurmas ){};
 
 void visualizarFeedbacks(char* nome);
 
+void visualizarAtividades( Atividade* listaAtividades){};
+
+void submeterAtividade( Residente* residente, Submissao* submissao){};
+
+void visualizarSubmissao(Submissao* submissao);
+
+void contestarFeedback(Usuario* usuario, feedbackGeral feedbackGeral);
+
+void visualizarUsuario(Usuario* usuario){};
+
+void avaliarAtividade(Preceptor* preceptor, Submissao* submissao){};
+
+void fazerAvaliacaoTrimestral( Usuario* usuario, float notaTrimestral) {};
+
+void fazerFeedback(Preceptor* preceptor, Residente* residente, Usuario usuario){};
+
+void cadastrarTurma(ProgramaResidencia* residencia){};
