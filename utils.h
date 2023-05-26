@@ -1,35 +1,21 @@
-typedef struct{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+typedef struct {
   char nome[60];
   int id;
-  char* email;
-  char* senha;
-  char* tipoDeUsuario;
-  void* categoriaUsuario;
+  char *email;
+  char *senha;
+  char *tipoDeUsuario;
+  void *categoriaUsuario;
   int status;
-  
-}Usuario;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} Usuario;
 
 // Tipos de Usuarios
-
+/*
 typedef struct{
   Usuario usuario;
   int matricula;
@@ -119,14 +105,13 @@ typedef struct{
   char data[];
   char status(para constentacao);
 }FeedbackGeral;
-
+*/
 // Funções
 
 void fazerCadastro(){};
 
-
-Usuario* fazerLogin(char* email, char* senha){};
-
+Usuario *fazerLogin(char *email, char *senha);
+/*
 void criarCriteriosDeFeedback(Turma* turma){}
 
 void criarAtividades(Turma* turma){};
@@ -149,6 +134,8 @@ void avaliarAtividade(Preceptor* preceptor, Submissao* submissao){};
 
 void fazerAvaliacaoTrimestral( Usuario* usuario, float notaTrimestral) {};
 
-void fazerFeedback(Preceptor* preceptor, Residente* residente, Usuario usuario){};
+void fazerFeedback(Preceptor* preceptor, Residente* residente, Usuario
+usuario){};
 
 void cadastrarTurma(ProgramaResidencia* residencia){};
+*/

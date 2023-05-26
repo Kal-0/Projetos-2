@@ -1,7 +1,12 @@
 #include "utils.h"
 
+Usuario *fazerLogin(char *email, char *senha) {
+  Usuario *usuarioLogin = (Usuario *)malloc(sizeof(Usuario));
 
-Usuario* fazerLogin(char* email, char* senha){
+  while(1){
+
+    
+  }
   
-  
-}
+  return usuarioLogin;
+};
