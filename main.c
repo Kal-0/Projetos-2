@@ -36,7 +36,11 @@ int countFilesInFolder(const char* folderPath) {
 int main(void) {
 
   sqlite3* db = NULL;
+  char* sql_cmd;
+  char* fdb_msg;
+  
   int ret;
+  
 
 
   //oppening or creating the database
@@ -44,7 +48,26 @@ int main(void) {
   if(ret){
     fprintf(stderr, "nao foi possivel abrir o banco de dados.\n ERRO: %s", sqlite3_errmsg(db));
   }
+  else{
+    fprintf(stderr, "abrindo o banco de dados.\n STATUS: %s", sqlite3_errmsg(db));
+  }
 
+
+  sql_cmd =
+    "CREATE TABLE USUARIO_TB("\
+    "ID INT PRIMARY KEY NOT NULL"\
+    "NAME TEXT NOT NULL"\
+    "EMAIL TEXT NOT NULL"\
+    "SENHA TEXT NOT NULL"\
+    "TIPO TEXT NOT NULL"\
+    ")";
+
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+
+  
+  
+  sqlite3_close(db);
+  
   
 
   Usuario* decoyUser1 = NULL;
