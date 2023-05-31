@@ -35,6 +35,15 @@ int countFilesInFolder(const char* folderPath) {
 
 int main(void) {
 
+  sqlite3* db = NULL;
+  int ret;
+
+
+  //oppening or creating the database
+  ret = sqlite3_open("BD/database.bd", &db);
+  if(ret){
+    fprintf(stderr, "nao foi possivel abrir o banco de dados.\n ERRO: %s", sqlite3_errmsg(db));
+  }
 
   
 
@@ -84,7 +93,7 @@ void navBar(){
   
     
     scanf("%d", &input);
-  
+    getchar();
   
     if(input == -1){
       break;
@@ -123,7 +132,7 @@ void home(){
   
     
     scanf("%d", &input);
-
+    getchar();
     
     if(input == -1){
       break;
