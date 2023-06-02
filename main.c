@@ -47,33 +47,61 @@ int main(void) {
 
 
   //oppening or creating the database
-  ret = sqlite3_open("BD/database.bd", &db);
+
+  ret = sqlite3_open("BD/db.sqlite3", &db);
+
+
   if(ret){
-    fprintf(stderr, "nao foi possivel abrir o banco de dados.\n ERRO: %s", sqlite3_errmsg(db));
+    fprintf(stderr, "\n\nnao foi possivel abrir o banco de dados.\n ERRO: %s\n\n", sqlite3_errmsg(db));
   }
   else{
-    fprintf(stderr, "abrindo o banco de dados.\n STATUS: %s", sqlite3_errmsg(db));
+    fprintf(stderr, "\n\nabrindo o banco de dados.\n STATUS: %s\n\n", sqlite3_errmsg(db));
   }
 
-
+  //criando tables
   sql_cmd =
     "CREATE TABLE USUARIO_TB("\
-    "ID INT PRIMARY KEY NOT NULL"\
-    "NAME TEXT NOT NULL"\
-    "EMAIL TEXT NOT NULL"\
-    "SENHA TEXT NOT NULL"\
+    "ID INT PRIMARY KEY NOT NULL,"\
+    "NAME TEXT NOT NULL,"\
+    "EMAIL TEXT NOT NULL,"\
+    "SENHA TEXT NOT NULL,"\
     "TIPO TEXT NOT NULL"\
-    ")";
+    "), "\
+    
+    "CREATE TABLE GESTAO_TB("\
+    "ID INT PRIMARY KEY NOT NULL,"\
+    "CARGO TEXT NOT NULL"\
+    "), "\
+
+
+  "";
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
 
-  
-  
-  sqlite3_close(db);
-  
-  
   if(ret){
-    fprintf(stderr, "\n\nnao foi possivel abrir o banco de dados, \n: %s\n\n", sqlite3_errmsg(db));
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+  } 
+  else{
+    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
+  }
+
+
+
+
+  //inserindo tables
+  sql_cmd = 
+    "INSERT INTO USUARIO_TB (ID,NAME,EMAIL,SENHA,TIPO) "  \
+    "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); " \
+
+  "";
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+
+  if(ret){
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+  } 
+  else{
+    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
   }
 
   sqlite3_close(db);
