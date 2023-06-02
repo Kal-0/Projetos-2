@@ -8,8 +8,11 @@ Usuario* perfil = NULL;
 
 
 void navBar();
-
 void home();
+
+
+
+
 
 
 
@@ -35,20 +38,38 @@ int countFilesInFolder(const char* folderPath) {
 
 int main(void) {
 
+  sqlite3* db;
+  sqlite3_stmt* stmt;
+  int ret;
 
+  //opens or create the database.bd
+  ret = sqlite3_open("Database.db", &db);
   
+  if(ret){
+    fprintf(stderr, "\n\nnao foi possivel abrir o banco de dados, \n: %s\n\n", sqlite3_errmsg(db));
+  }
+
+  sqlite3_close(db);
+
 
   Usuario* decoyUser1 = NULL;
   Usuario* decoyUser2 = NULL;
-  
+  Residente* r1 = NULL;
 
   decoyUser1 = (Usuario*)malloc(sizeof(Usuario));
-  
   decoyUser2 = (Usuario*)malloc(sizeof(Usuario));
 
-  decoyUser2->email = "arromba@123\n";
+  r1 = (Residente*)malloc(sizeof(Residente));
+
+
+
+  decoyUser2->email = "arromba@123";
+  decoyUser2->categoriaUsuario = r1;
   
-  printf("%s", decoyUser2->email);
+  r1->matricula = 1234567;
+
+  printf("%s\n", decoyUser2->email);
+  printf("%d\n", ((Residente*)decoyUser2->categoriaUsuario)->matricula);
   
   
   decoyUser1->categoriaUsuario = (void*)decoyUser2;
@@ -69,6 +90,9 @@ int main(void) {
 
   return 0;
 }
+
+
+
 
 
 void navBar(){

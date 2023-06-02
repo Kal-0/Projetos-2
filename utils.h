@@ -22,95 +22,123 @@ typedef struct {
 
 // Tipos de Usuarios
 
+
+
+struct Gestao;
+struct Coordenacao;
+struct Preceptor;
+struct Residente;
+
+struct ProgramaResidencia;
+struct Turma;
+
+struct Atividade;
+struct Submissao;
+struct FeedbackGeral;
+
 /*
+typedef struct Gestao Gestao;
+typedef struct Coordenacao Coordenacao;
+typedef struct Preceptor Preceptor;
+typedef struct Residente Residente;
+
+typedef struct ProgramaResidencia ProgramaResidencia;
+typedef struct Turma Turma;
+
+typedef struct Atividade Atividade;
+typedef struct Submissao Submissao;
+typedef struct FeedbackGeral FeedbackGeral;
+*/
 
 typedef struct {
   Usuario usuario;
   int matricula;
-  Turma turma;
-  Atividade *listaAtividades;
-  Submissao *listaSubmissoes;
-  Preceptor preceptorResponsavel;
-  float notasTrimestrais[];
-  FeedbackGeral *listaFeedbacks;
-} Residente;
+  struct Turma* turma;
+  struct Atividade *listaAtividades;
+  struct Submissao *listaSubmissoes;
+  struct Preceptor* preceptorResponsavel;
+  float notasTrimestrais[4];
+  struct FeedbackGeral *listaFeedbacks;
+}Residente;
+ 
+typedef struct {
+  Usuario usuario;
+  struct Residente *listaResidentesAtuais;
+  struct Atividade *listaAtividades;
+  struct ProgramaResidencia *listaResidencias;
+  struct FeedbackGeral *listaFeedbacks;
+}Preceptor;
 
 typedef struct {
   Usuario usuario;
-  Residente *listaResidentesAtuais;
-  Atividade *listaAtividades;
-  ProgramaResidencia *listaResidencias;
-  FeedbackGeral *listaFeedbacks;
-} Preceptor;
+  char cargo[30];
+  struct ProgramaResidencia* residencia;
+}Coordenacao;
 
 typedef struct {
   Usuario usuario;
-  char cargo[];
-  ProgramaResidencia residencia;
-  residencia;
-} Coordenacao;
+  char cargo[30];
+  struct ProgramaResidencia *listaResidencias;
+}Gestao;
+
+
+
+// estruturas
 
 typedef struct {
-  Usuario usuario;
-  char cargo[];
-  ProgramaResidencia *listaResidencias;
-} Gestao;
-
-// Conjuntos
-
-typedef struct{
-  char nomePrograma[];
-  Coordenacao* listaCoordenacao;
-  Turma* listaTurmas
+  char nomePrograma[30];
+  struct Coordenacao* listaCoordenacao;
+  struct Turma* listaTurmas;
 }ProgramaResidencia;
 
 
-typedef struct{
-  char nomeResidencia[];
-  char anoDaTurma[];
-  Residente *residentes;
-  Preceptor *listaPreceptores;
-  Atividade *listasAtividades;
-  ProgramaResidencia residencia;
+typedef struct {
+  char nomeTurma[40];
+  char anoDaTurma[10];
+  struct Residente *residentes;
+  struct Preceptor *listaPreceptores;
+  struct Atividade *listasAtividades;
+  struct ProgramaResidencia* residencia;
   char *criteriosAvaliativos;
-} Turma;
+}Turma;
 
 
-// Funcionalidades da solução
+// objetos
 
 typedef struct {
-  char nomeDaAtividade[];
-  char descricaoDaAtividade[];
-  Turma turma;
-  char programaDeResidencia[];
-  Submissao *listaSubmissao;
-  char dataDaPostagem;
-  char dataDaEntrega;
+  char nomeDaAtividade[40];
+  char* descricaoDaAtividade;
+  struct Turma* turma;
+  struct Submissao *listaSubmissao;
+  char dataDaPostagem[16];
+  char dataDaEntrega[16];
   int ativa;
-} Atividade;
+}Atividade;
 
 typedef struct {
-  Residente residente;
-  Preceptor preceptor;
-  Atividade atividade;
+  struct Residente* residente;
+  struct Preceptor* preceptor;
+  struct Atividade* atividade;
   float nota;
   char *resposta;
-  char feedback[];
+  char *feedback;
   char *status;
-} Submissao;
+}Submissao;
 
 typedef struct {
-  Preceptor preceptor;
+  struct Preceptor* preceptor;
   char *criterios;
   float nota;
   char *feedback;
-  char *contestacao char *respostaConstentacao;
+  char *contestacao;
+  char *respostaConstentacao;
   char remetente;
-  char destinatário;
-  char data[];
-  char status(para constentacao);
+  char destinatario;
+  char data[16];
+  char status;
 }FeedbackGeral;
-*/
+
+
 
 // Funções
 
