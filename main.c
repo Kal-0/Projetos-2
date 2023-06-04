@@ -40,10 +40,14 @@ int main(void) {
 
   sqlite3* db = NULL;
   char* sql_cmd;
-  char* fdb_msg;
+  char* fdb_msg = NULL;
   
   int ret;
   
+
+  //links para estudo do banco de dados sqlite3:
+  //https://www.tutorialspoint.com/sqlite/
+  //https://www.sqlitetutorial.net/
 
 
   //oppening or creating the database
@@ -58,28 +62,33 @@ int main(void) {
     fprintf(stderr, "\n\nabrindo o banco de dados.\n STATUS: %s\n\n", sqlite3_errmsg(db));
   }
 
+
+
+
   //criando tables
   sql_cmd =
-    "CREATE TABLE USUARIO_TB("\
-    "ID INT PRIMARY KEY NOT NULL,"\
-    "NAME TEXT NOT NULL,"\
-    "EMAIL TEXT NOT NULL,"\
-    "SENHA TEXT NOT NULL,"\
-    "TIPO TEXT NOT NULL"\
-    "), "\
+    "CREATE TABLE USUARIO_TB( "\
+      "ID INT PRIMARY KEY NOT NULL, "\
+      "NOME TEXT NOT NULL, "\
+      "EMAIL TEXT NOT NULL, "\
+      "SENHA TEXT NOT NULL, "\
+      "TIPO TEXT NOT NULL "\
+    "); "\
     
-    "CREATE TABLE GESTAO_TB("\
-    "ID INT PRIMARY KEY NOT NULL,"\
-    "CARGO TEXT NOT NULL"\
-    "), "\
+    "CREATE TABLE GESTAO_TB( "\
+      "ID INT PRIMARY KEY NOT NULL, "\
+      "CARGO TEXT NOT NULL "\
+    "); "\
 
 
   "";
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  free(sql_cmd);
 
   if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
+    sqlite3_free(fdb_msg);
   } 
   else{
     fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
@@ -90,21 +99,57 @@ int main(void) {
 
   //inserindo tables
   sql_cmd = 
-    "INSERT INTO USUARIO_TB (ID,NAME,EMAIL,SENHA,TIPO) "  \
-    "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); " \
+    "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
+    "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
 
   "";
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  free(sql_cmd);
 
   if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
+    sqlite3_free(fdb_msg);
   } 
   else{
     fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
   }
 
+
+
+
+//atualizando tables
+  sql_cmd = 
+    "UPDATE USUARIO_TB "\
+    "SET "\
+      "NOME = 'Paula', "\
+      "EMAIL = 'paulao@gmail.com' "\
+    ""\
+
+    "WHERE (ID = 1); "\
+
+  "";
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  free(sql_cmd);
+
+  if(ret){
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
+    sqlite3_free(fdb_msg);
+  } 
+  else{
+    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
+  }
+
+
+
   sqlite3_close(db);
+
+
+
+
+
+
 
 
   Usuario* decoyUser1 = NULL;
