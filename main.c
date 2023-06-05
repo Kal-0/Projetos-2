@@ -84,6 +84,7 @@ int main(void) {
   "";
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  //printf("%s\n", sql_cmd);
   free(sql_cmd);
 
   if(ret){
@@ -105,6 +106,7 @@ int main(void) {
   "";
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  //printf("%s\n", sql_cmd);
   free(sql_cmd);
 
   if(ret){
@@ -131,6 +133,7 @@ int main(void) {
   "";
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  //printf("%s\n", sql_cmd);
   free(sql_cmd);
 
   if(ret){
