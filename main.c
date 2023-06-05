@@ -36,10 +36,22 @@ int countFilesInFolder(const char* folderPath) {
 }
 
 
+void strOverwrite(char** oldString, char* newString){
+  if(*oldString != NULL){
+    free(*oldString);
+  }
+  *oldString = NULL;
+
+  *oldString = (char*)malloc(strlen(newString) + 1);
+  strcpy(*oldString, newString);
+}
+
 int main(void) {
 
+
+
   sqlite3* db = NULL;
-  char* sql_cmd;
+  char* sql_cmd = NULL;
   char* fdb_msg = NULL;
   
   int ret;
@@ -51,6 +63,7 @@ int main(void) {
 
 
   //oppening or creating the database
+  //abrindo ou criando o banco de dados
 
   ret = sqlite3_open("BD/db.sqlite3", &db);
 
@@ -66,7 +79,7 @@ int main(void) {
 
 
   //criando tables
-  sql_cmd =
+  strOverwrite(&sql_cmd, 
     "CREATE TABLE USUARIO_TB( "\
       "ID INT PRIMARY KEY NOT NULL, "\
       "NOME TEXT NOT NULL, "\
@@ -81,11 +94,11 @@ int main(void) {
     "); "\
 
 
-  "";
+  "");
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
   //printf("%s\n", sql_cmd);
-  free(sql_cmd);
+  
 
   if(ret){
     fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
@@ -99,15 +112,15 @@ int main(void) {
 
 
   //inserindo tables
-  sql_cmd = 
+  strOverwrite(&sql_cmd,  
     "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
     "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
 
-  "";
+  "");
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
   //printf("%s\n", sql_cmd);
-  free(sql_cmd);
+  
 
   if(ret){
     fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
@@ -121,7 +134,7 @@ int main(void) {
 
 
 //atualizando tables
-  sql_cmd = 
+  strOverwrite(&sql_cmd,  
     "UPDATE USUARIO_TB "\
     "SET "\
       "NOME = 'Paula', "\
@@ -130,11 +143,11 @@ int main(void) {
 
     "WHERE (ID = 1); "\
 
-  "";
+  "");
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
   //printf("%s\n", sql_cmd);
-  free(sql_cmd);
+
 
   if(ret){
     fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
@@ -146,6 +159,10 @@ int main(void) {
 
 
 
+
+
+
+  //fechando o banco de dados
   sqlite3_close(db);
 
 
