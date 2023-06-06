@@ -39,12 +39,12 @@ int countFilesInFolder(const char* folderPath) {
 
 
 int main(void) {
-  char* str1 = "ola %s, bem vindo!";
-  char* str2 = "caio";
+  // char* str1 = "ola %s e %s, bem vindo!";
+  // char* str2 = "caio";
 
-  char* str3 = NULL;
-  strFOverwrite(&str3, str1, str2);
-  printf("result: %s\n", str3);
+  // char* str3 = NULL;
+  // strFOverwrite(&str3, str1, str2, "cleber");
+  // printf("result: %s\n", str3);
 
 
   sqlite3* db = NULL;
@@ -77,7 +77,7 @@ int main(void) {
 
 
   //criando tables
-  strOverwrite(&sql_cmd, 
+  strFOverwrite(&sql_cmd, 
     "CREATE TABLE USUARIO_TB( "\
       "ID INT PRIMARY KEY NOT NULL, "\
       "NOME TEXT NOT NULL, "\
@@ -92,47 +92,32 @@ int main(void) {
     "); "\
 
 
-  "");
+  "", NULL);
 
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   //printf("%s\n", sql_cmd);
-  
-
-  if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
-    sqlite3_free(fdb_msg);
-  } 
-  else{
-    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
-  }
+  sysStatus(&db, ret);
 
 
 
 
   //inserindo tables
-  strOverwrite(&sql_cmd,  
+  strFOverwrite(&sql_cmd,  
     "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
     "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
 
-  "");
+  "", NULL);
   
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   //printf("%s\n", sql_cmd);
-  
+  sysStatus(&db, ret);
 
-  if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
-    sqlite3_free(fdb_msg);
-  } 
-  else{
-    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
-  }
 
 
 
 
 //atualizando tables
-  strOverwrite(&sql_cmd,  
+  strFOverwrite(&sql_cmd,  
     "UPDATE USUARIO_TB "\
     "SET "\
       "NOME = 'Paula', "\
@@ -141,50 +126,45 @@ int main(void) {
 
     "WHERE (ID = 1); "\
 
-  "");
+  "", NULL);
   
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, &fdb_msg);
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   //printf("%s\n", sql_cmd);
+  sysStatus(&db, ret);
 
-
-  if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", fdb_msg);
-    sqlite3_free(fdb_msg);
-  } 
-  else{
-    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
-  }
 
 
 
   //pegando dados do banco de dados
-  strOverwrite(&sql_cmd,  
+  strFOverwrite(&sql_cmd,  
     "SELECT * FROM USUARIO_TB; "\
 
-  "");
+  "", NULL);
 
   ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+  sysStatus(&db, ret);
 
-  if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
-  } 
-  else{
-    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
-  }
 
   ret = sqlite3_step(sql_stmt);
+  sysStatus(&db, ret);
+  
+  if (ret == SQLITE_ROW) {
+    printf("%s\n", sqlite3_column_text(sql_stmt, 1));
+    ret = sqlite3_step(sql_stmt);
+    sysStatus(&db, ret);
     
-    if (ret == SQLITE_ROW) {
-        printf("%s\n", sqlite3_column_text(sql_stmt, 1));
-    }
+  }
+  printf("%s\n", sqlite3_column_text(sql_stmt, 1));
 
-
+  sqlite3_finalize(sql_stmt);
+    
 
   //fechando o banco de dados
   sqlite3_close(db);
 
+  perfil = fazerLogin(&db, "paulao@gmail.com", "paulinho123");
 
-
+  printf("nome: %s\n", perfil->nome);
 
 
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "sqlite3/sqlite3.h"
 
@@ -10,7 +11,7 @@
 #define UTILS_H_
 
 typedef struct {
-  char nome[60];
+  char *nome;
   int id;
   char *email;
   char *senha;
@@ -144,9 +145,7 @@ typedef struct {
 
 
 // -Gerais:
-char* strFOverwrite(char** output_str, char* base_str, char* variable_str);
-void strOverwrite(char** oldString, char* newString);
-
+char* strFOverwrite(char** output_str, char* base_str, ...);
 
 
 int sysStatus(sqlite3** db_ptr, int ret);

@@ -11,48 +11,61 @@
 
 // -Gerais:
 
-char* strFOverwrite(char** output_str, char* base_str, char* variable_str){
-  char* formatted_str = base_str;
-  if(base_str != NULL && variable_str != NULL){
-    //printf("nnulo\n");
+char* strFOverwrite(char** output_str, char* base_str, ...){
+  char* formatted_str = NULL;
+  int str_size = 0;
 
-    formatted_str = (char*)malloc(strlen(base_str) + strlen(variable_str) + 1);
-    sprintf(formatted_str, base_str, variable_str);
-  }
+  if(base_str != NULL){
 
-  //printf("result: %s\n", formatted_str);
+    va_list args;
+    va_start(args, base_str);
 
-  if(output_str != NULL){
+    str_size = vsnprintf(NULL, 0, base_str, args);
+    //printf("size: %d\n", str_size);
 
-    if(*output_str != NULL){
-      free(*output_str);
+    va_end(args);
+    
+
+    formatted_str = (char*)malloc(str_size+ 1);
+    strcpy(formatted_str, base_str);
+
+    if (formatted_str == NULL)
+        return NULL;
+
+
+    va_start(args, base_str);
+
+    vsnprintf(formatted_str, str_size, base_str, args);
+
+    va_end(args);
+
+    printf("result: %s\n", formatted_str);
+
+    if(output_str != NULL){
+
+      if(*output_str != NULL){
+        free(*output_str);
+      }
+
+      *output_str = formatted_str;
     }
-
-    *output_str = formatted_str;
   }
 
   return formatted_str;
 }
 
-void strOverwrite(char** oldString, char* newString){
-  if(*oldString != NULL){
-    free(*oldString);
-  }
-  *oldString = NULL;
-
-  *oldString = (char*)malloc(strlen(newString) + 1);
-  strcpy(*oldString, newString);
-}
-
 
 int sysStatus(sqlite3** db_ptr, int ret){
   sqlite3* db = *db_ptr;
+
+  printf("\nCODE: %d\n", ret);
+
   if(ret){
-    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+    fprintf(stderr, "nao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
     return 1;
   } 
   else{
-    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
+    fprintf(stderr, "banco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
     return 0;
   }
 }
@@ -67,6 +80,8 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
   
   int ret;
 
+  sqlite3_open("BD/db.sqlite3", &db);
+
   // funcao
   Usuario *usuarioLogin = NULL;
   
@@ -74,26 +89,53 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
   //pegando dados do banco de dados
   //strFormater()
 
-  strOverwrite(&sql_cmd,
+  strFOverwrite(&sql_cmd,
     "SELECT * FROM USUARIO_TB "\
-    "WHERE (EMAIL = %s); "\
+    "WHERE (EMAIL = '%s'); "\
 
-  "");
+  "", email);
 
   ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
   sysStatus(&db, ret);
 
-  if(ret){
-    usuarioLogin = (Usuario *)malloc(sizeof(Usuario));
-
+  if(ret == SQLITE_OK){
 
     ret = sqlite3_step(sql_stmt);
     sysStatus(&db, ret);
-    
-    if(ret == SQLITE_ROW) {
-      printf("%s\n", sqlite3_column_text(sql_stmt, 1));
+
+
+    if(!strcmp(email, sqlite3_column_text(sql_stmt, 2))){
+      printf("usuario encotrado.\n");
+
+      if(!strcmp(senha, sqlite3_column_text(sql_stmt, 3))){
+      
+
+
+        usuarioLogin = (Usuario *)malloc(sizeof(Usuario));
+
+
+        
+        usuarioLogin->id = sqlite3_column_int(sql_stmt, 0);
+        usuarioLogin->nome = sqlite3_column_text(sql_stmt, 1);
+        usuarioLogin->email = sqlite3_column_text(sql_stmt, 2);
+        usuarioLogin->senha = sqlite3_column_text(sql_stmt, 3);
+        usuarioLogin->tipoDeUsuario = sqlite3_column_text(sql_stmt, 4);
+
+
+
+        
+        sysStatus(&db, ret);
+      }else{
+        printf("senha incorreta...\n");
+      }
+    }else{
+      printf("email incorreto...\n");
     }
+
+    
   }
+
+  sqlite3_close(db);
   
   return usuarioLogin;
 };
