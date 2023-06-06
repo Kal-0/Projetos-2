@@ -140,11 +140,20 @@ typedef struct {
 
 
 
-// Funções
+// Funções:
+
+
+// -Gerais:
+char* strFOverwrite(char** output_str, char* base_str, char* variable_str);
+void strOverwrite(char** oldString, char* newString);
+
+
+
+int sysStatus(sqlite3** db_ptr, int ret);
 
 void fazerCadastro();
 
-Usuario *fazerLogin(char *email, char *senha);
+Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha);
 
 /*
 void criarCriteriosDeFeedback(Turma *turma);

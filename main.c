@@ -36,21 +36,19 @@ int countFilesInFolder(const char* folderPath) {
 }
 
 
-void strOverwrite(char** oldString, char* newString){
-  if(*oldString != NULL){
-    free(*oldString);
-  }
-  *oldString = NULL;
 
-  *oldString = (char*)malloc(strlen(newString) + 1);
-  strcpy(*oldString, newString);
-}
 
 int main(void) {
+  char* str1 = "ola %s, bem vindo!";
+  char* str2 = "caio";
 
+  char* str3 = NULL;
+  strFOverwrite(&str3, str1, str2);
+  printf("result: %s\n", str3);
 
 
   sqlite3* db = NULL;
+  sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   char* fdb_msg = NULL;
   
@@ -159,6 +157,26 @@ int main(void) {
 
 
 
+  //pegando dados do banco de dados
+  strOverwrite(&sql_cmd,  
+    "SELECT * FROM USUARIO_TB; "\
+
+  "");
+
+  ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+
+  if(ret){
+    fprintf(stderr, "\n\nnao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
+  } 
+  else{
+    fprintf(stderr, "\n\nbanco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
+  }
+
+  ret = sqlite3_step(sql_stmt);
+    
+    if (ret == SQLITE_ROW) {
+        printf("%s\n", sqlite3_column_text(sql_stmt, 1));
+    }
 
 
 
