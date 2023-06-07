@@ -70,32 +70,32 @@ struct SUsuario{
 struct SResidente{
   Usuario usuario;
   int matricula;
-  struct Turma* turma;
-  struct Atividade *listaAtividades;
-  struct Submissao *listaSubmissoes;
-  struct Preceptor* preceptorResponsavel;
+  Turma* turma;
+  Atividade *listaAtividades;
+  Submissao *listaSubmissoes;
+  Preceptor* preceptorResponsavel;
   float notasTrimestrais[4];
-  struct FeedbackGeral *listaFeedbacks;
+  FeedbackGeral *listaFeedbacks;
 };
  
 struct SPreceptor{
   Usuario usuario;
-  struct Residente *listaResidentesAtuais;
-  struct Atividade *listaAtividades;
-  struct ProgramaResidencia *listaResidencias;
-  struct FeedbackGeral *listaFeedbacks;
+  Residente *listaResidentesAtuais;
+  Atividade *listaAtividades;
+  ProgramaResidencia *listaResidencias;
+  FeedbackGeral *listaFeedbacks;
 };
 
 struct SCoordenacao{
   Usuario usuario;
   char cargo[30];
-  struct ProgramaResidencia* residencia;
+  ProgramaResidencia* residencia;
 };
 
 struct SGestao{
   Usuario usuario;
   char cargo[30];
-  struct ProgramaResidencia *listaResidencias;
+  ProgramaResidencia *listaResidencias;
 };
 
 
@@ -104,18 +104,18 @@ struct SGestao{
 
 struct SProgramaResidencia{
   char nomePrograma[30];
-  struct Coordenacao* listaCoordenacao;
-  struct Turma* listaTurmas;
+  Coordenacao* listaCoordenacao;
+  Turma* listaTurmas;
 };
 
 
 struct STurma{
   char nomeTurma[40];
   char anoDaTurma[10];
-  struct Residente *residentes;
-  struct Preceptor *listaPreceptores;
-  struct Atividade *listasAtividades;
-  struct ProgramaResidencia* residencia;
+  Residente *residentes;
+  Preceptor *listaPreceptores;
+  Atividade *listasAtividades;
+  ProgramaResidencia* residencia;
   char *criteriosAvaliativos;
 };
 
@@ -125,17 +125,17 @@ struct STurma{
 struct SAtividade{
   char nomeDaAtividade[40];
   char* descricaoDaAtividade;
-  struct Turma* turma;
-  struct Submissao *listaSubmissao;
+  Turma* turma;
+  Submissao *listaSubmissao;
   char dataDaPostagem[16];
   char dataDaEntrega[16];
   int ativa;
 };
 
 struct SSubmissao{
-  struct Residente* residente;
-  struct Preceptor* preceptor;
-  struct Atividade* atividade;
+  Residente* residente;
+  Preceptor* preceptor;
+  Atividade* atividade;
   float nota;
   char *resposta;
   char *feedback;
@@ -143,7 +143,7 @@ struct SSubmissao{
 };
 
 struct SFeedbackGeral{
-  struct Preceptor* preceptor;
+  Preceptor* preceptor;
   char *criterios;
   float nota;
   char *feedback;
