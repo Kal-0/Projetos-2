@@ -10,32 +10,33 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-typedef struct {
-  char *nome;
-  int id;
-  char *email;
-  char *senha;
-  char *tipoDeUsuario;
-  void *categoriaUsuario;
-  int status;
-
-} Usuario;
-
-// Tipos de Usuarios
 
 
+struct SUsuario;
+typedef struct SUsuario Usuario;
 
-struct Gestao;
-struct Coordenacao;
-struct Preceptor;
-struct Residente;
 
-struct ProgramaResidencia;
-struct Turma;
+struct SGestao;
+typedef struct SGestao Gestao;
+struct SCoordenacao;
+typedef struct SCoordenacao Coordenacao;
+struct SPreceptor;
+typedef struct SPreceptor Preceptor;
+struct SResidente;
+typedef struct SResidente Residente;
 
-struct Atividade;
-struct Submissao;
-struct FeedbackGeral;
+
+struct SProgramaResidencia;
+typedef struct SProgramaResidencia ProgramaResidencia;
+struct STurma;
+typedef struct STurma Turma;
+struct SAtividade;
+typedef struct SAtividade Atividade;
+struct SSubmissao;
+typedef struct SSubmissao Submissao;
+struct SFeedbackGeral;
+typedef struct SFeedbackGeral FeedbackGeral;
+
 
 /*
 typedef struct Gestao Gestao;
@@ -51,7 +52,22 @@ typedef struct Submissao Submissao;
 typedef struct FeedbackGeral FeedbackGeral;
 */
 
-typedef struct {
+// Usuario base
+struct SUsuario{
+  char *nome;
+  int id;
+  char *email;
+  char *senha;
+  char *tipoDeUsuario;
+  void *categoriaUsuario;
+  int status;
+
+};
+
+
+
+// Tipos de Usuarios
+struct SResidente{
   Usuario usuario;
   int matricula;
   struct Turma* turma;
@@ -60,40 +76,40 @@ typedef struct {
   struct Preceptor* preceptorResponsavel;
   float notasTrimestrais[4];
   struct FeedbackGeral *listaFeedbacks;
-}Residente;
+};
  
-typedef struct {
+struct SPreceptor{
   Usuario usuario;
   struct Residente *listaResidentesAtuais;
   struct Atividade *listaAtividades;
   struct ProgramaResidencia *listaResidencias;
   struct FeedbackGeral *listaFeedbacks;
-}Preceptor;
+};
 
-typedef struct {
+struct SCoordenacao{
   Usuario usuario;
   char cargo[30];
   struct ProgramaResidencia* residencia;
-}Coordenacao;
+};
 
-typedef struct {
+struct SGestao{
   Usuario usuario;
   char cargo[30];
   struct ProgramaResidencia *listaResidencias;
-}Gestao;
+};
 
 
 
 // estruturas
 
-typedef struct {
+struct SProgramaResidencia{
   char nomePrograma[30];
   struct Coordenacao* listaCoordenacao;
   struct Turma* listaTurmas;
-}ProgramaResidencia;
+};
 
 
-typedef struct {
+struct STurma{
   char nomeTurma[40];
   char anoDaTurma[10];
   struct Residente *residentes;
@@ -101,12 +117,12 @@ typedef struct {
   struct Atividade *listasAtividades;
   struct ProgramaResidencia* residencia;
   char *criteriosAvaliativos;
-}Turma;
+};
 
 
 // objetos
 
-typedef struct {
+struct SAtividade{
   char nomeDaAtividade[40];
   char* descricaoDaAtividade;
   struct Turma* turma;
@@ -114,9 +130,9 @@ typedef struct {
   char dataDaPostagem[16];
   char dataDaEntrega[16];
   int ativa;
-}Atividade;
+};
 
-typedef struct {
+struct SSubmissao{
   struct Residente* residente;
   struct Preceptor* preceptor;
   struct Atividade* atividade;
@@ -124,9 +140,9 @@ typedef struct {
   char *resposta;
   char *feedback;
   char *status;
-}Submissao;
+};
 
-typedef struct {
+struct SFeedbackGeral{
   struct Preceptor* preceptor;
   char *criterios;
   float nota;
@@ -137,7 +153,7 @@ typedef struct {
   char destinatario;
   char data[16];
   char status;
-}FeedbackGeral;
+};
 
 
 
