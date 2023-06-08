@@ -1,13 +1,20 @@
 #include "utils.h"
 
 
-int input = 0;
+//variaveis globais do banco de dados
+sqlite3* db = NULL;
+sqlite3_stmt* sql_stmt = NULL;
+char* sql_cmd = NULL;
+char* fdb_msg = NULL;
 
+int ret;
 
+//variaveis globais
 Usuario* perfil = NULL;
-
-
+void start();
+void login();
 void navBar();
+void verPerfil();
 void home();
 
 
@@ -47,12 +54,6 @@ int main(void) {
   // printf("result: %s\n", str3);
 
 
-  sqlite3* db = NULL;
-  sqlite3_stmt* sql_stmt = NULL;
-  char* sql_cmd = NULL;
-  char* fdb_msg = NULL;
-  
-  int ret;
   
 
   //links para estudo do banco de dados sqlite3:
@@ -248,8 +249,8 @@ int main(void) {
 
 
 
-  
-  home();
+  start();
+  //home();
     
 
   
@@ -260,17 +261,106 @@ int main(void) {
 
 
 
+void login(){
+  char* email = NULL;
+  char* senha = NULL;
+  char op = '_';
+
+
+  while(1){
+    printf("===LOGIN===\n"\
+      "insira seus dados.\n"\
+
+      "\n"
+    );
+
+    printf("insira seu e-mail: ");
+    scanf("%s", email);
+    //getchar();
+    printf("==DEBUG==! %s\n", email);
+
+    printf("insira sua senha: ");
+    scanf("%s", senha);
+    getchar();
+
+    printf("\n\n");
+
+    perfil = fazerLogin(&db, email, senha);
+    printf("==DEBUG==!\n");
+    if(perfil == NULL){
+      printf("credenciais invalidas!\n"\
+        "deseja tantar novamente? (S/N): "
+      );
+
+      scanf("%c", &op);
+      getchar();
+
+      if(op == 'N'){
+        break;
+      }
+    }else{
+      printf("login realizado com sucesso!\n"\
+        "nome de usuario: %s"
+
+        ,perfil->nome
+      );
+
+      home();
+    }
+    printf("\n\n");
+  }
+}
+
+void start(){
+  int input = 0;
+
+  while(1){
+    printf("===START===\n"\
+      "selecione uma opcao:\n"\
+      "-1 -> sair\n"\
+      "1 -> fazer login\n"\
+      "2 -> fazer cadastro\n"\
+      
+      "\n:"
+    );
+  
+    
+    scanf("%d", &input);
+    getchar();
+    
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+        login();
+        break;
+      
+      case 2:
+        //cadastro();
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
+}
 
 
 void navBar(){
+  int input = 0;
+
   while(1){
-    printf("NavBar\n\n"\
+    printf("===NavBar===\n\n"\
       "selecione uma opcao:\n"\
       "-1 -> voltar\n"\
       "1 -> perfil\n"\
       "2 -> atividades\n"\
   
-       "\n:"
+      "\n:"
     );
   
     
@@ -282,7 +372,7 @@ void navBar(){
     }
     switch(input){
       case 1:
-        verperfil();
+        verPerfil();
         break;
       
       case 2:
@@ -302,15 +392,17 @@ void navBar(){
 
 
 void home(){
+  int input = 0;
+
   while(1){
-    printf("HOME\n"\
-        "selecione uma opcao:\n"\
-        "-1 -> voltar\n"\
-        "0 -> navBar\n"\
-        "1 -> ver residencias\n"\
-        
-        "\n:"
-      );
+    printf("===HOME===\n"\
+      "selecione uma opcao:\n"\
+      "-1 -> voltar\n"\
+      "0 -> navBar\n"\
+      "1 -> ver residencias\n"\
+      
+      "\n:"
+    );
   
     
     scanf("%d", &input);
@@ -331,7 +423,7 @@ void home(){
 
       default:
         printf("opcao invalida\n");
-        home();
+        //home();
         break;
     }
 
@@ -339,7 +431,9 @@ void home(){
   }
 }
 
-void verperfil(){
+void verPerfil(){
+  int input = 0;
+
   while(1){
     printf("PERFIL\n"\
         "Nome: ANA\n"\
@@ -361,7 +455,7 @@ void verperfil(){
         int aux;
         scanf("%d", &aux);
         if(aux == 1){
-          verperfil();
+          verPerfil();
         }
         else{
           break;
@@ -373,7 +467,9 @@ void verperfil(){
   }
 }
 
-void veratividades(){
+void verAtividades(){
+  int input = 0;
+
   while(1){
     printf("---ATIVIDADES---\n"\
         "ATIVIDADES DISPONIVEIS ( 1 )\n"\

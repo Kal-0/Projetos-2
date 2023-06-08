@@ -127,10 +127,10 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
 
           
           usuarioLogin->id = sqlite3_column_int(sql_stmt, 0);
-          usuarioLogin->nome = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 1), NULL);
-          usuarioLogin->email = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 2), NULL);
-          usuarioLogin->senha = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 3), NULL);
-          usuarioLogin->tipoDeUsuario = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 4), NULL);
+          usuarioLogin->nome = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 1), NULL);
+          usuarioLogin->email = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
+          usuarioLogin->senha = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 3), NULL);
+          usuarioLogin->tipoDeUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
 
           
 
