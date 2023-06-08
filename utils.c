@@ -239,3 +239,22 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
   
   return;
 };
+
+
+
+void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
+  // Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+
+  sqlite3_close(db);
+}
+
