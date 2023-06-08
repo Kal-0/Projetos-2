@@ -83,16 +83,20 @@ int main(void) {
       "NOME TEXT NOT NULL, "\
       "EMAIL TEXT NOT NULL, "\
       "SENHA TEXT NOT NULL, "\
-      "TIPO TEXT NOT NULL "\
+      "TIPO TEXT NOT NULL, "\
+      "TIPO_FK INTEGER "\
     "); "\
     
     "CREATE TABLE GESTAO_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
-      "CARGO TEXT NOT NULL "\
+      "USUARIO_FK INTEGER NOT NULL, "\
+      "CARGO TEXT NOT NULL, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID) "\
     "); "\
 
 
   "", NULL);
+
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   //printf("%s\n", sql_cmd);
