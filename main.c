@@ -206,7 +206,7 @@ int main(void) {
   //testando
 
   printf("CADASTRO===\n");
-  fazerCadastro(&db, "caio", "caio@gmail.com", "paulinho123", "residente");
+  fazerCadastro(&db, "jose", "jose@gmail.com", "jose123", "residente");
 
   printf("LOGIN===\n");
   perfil = fazerLogin(&db, "caio@gmail.com", "paulinho123");
@@ -244,7 +244,7 @@ int main(void) {
 
   ((Usuario*)(decoyUser1->categoriaUsuario))->email = "bebe\n";
   
-  printf("%s", decoyUser2->email);
+  printf("%s\n\n", decoyUser2->email);
 
 
 
@@ -262,8 +262,8 @@ int main(void) {
 
 
 void login(){
-  char* email = NULL;
-  char* senha = NULL;
+  char email[120];
+  char senha[120];
   char op = '_';
 
 
@@ -276,9 +276,8 @@ void login(){
 
     printf("insira seu e-mail: ");
     scanf("%s", email);
-    //getchar();
-    printf("==DEBUG==! %s\n", email);
-
+    getchar();
+    
     printf("insira sua senha: ");
     scanf("%s", senha);
     getchar();
@@ -286,24 +285,27 @@ void login(){
     printf("\n\n");
 
     perfil = fazerLogin(&db, email, senha);
-    printf("==DEBUG==!\n");
+
     if(perfil == NULL){
       printf("credenciais invalidas!\n"\
-        "deseja tantar novamente? (S/N): "
+        "deseja tantar novamente? (s/n): "
       );
 
       scanf("%c", &op);
       getchar();
 
-      if(op == 'N'){
+      if(op == 'n'){
         break;
       }
     }else{
       printf("login realizado com sucesso!\n"\
-        "nome de usuario: %s"
+        "nome de usuario: %s"\
+        "\n\n"
 
         ,perfil->nome
       );
+      
+      
 
       home();
     }
@@ -470,11 +472,11 @@ void verAtividades(){
 
   while(1){
     printf("---ATIVIDADES---\n"\
-        "ATIVIDADES DISPONIVEIS ( 1 )\n"\
-        "   ver atividades [ 1 ] [ 2 ]\n"\
-        "ATIVIDADES PASSADAS ( 3 )\n"\
-        "\n:"
-      );
-    
+      "ATIVIDADES DISPONIVEIS ( 1 )\n"\
+      "   ver atividades [ 1 ] [ 2 ]\n"\
+      "ATIVIDADES PASSADAS ( 3 )\n"\
+      "\n:"
+    );
+
   }
 }
