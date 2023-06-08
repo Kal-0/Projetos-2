@@ -23,6 +23,8 @@ void home();
 
 
 
+
+
 int countFilesInFolder(const char* folderPath) {
     DIR* directory = opendir(folderPath);
     if (directory == NULL) {
@@ -397,39 +399,85 @@ void home(){
   int input = 0;
 
   while(1){
-    printf("===HOME===\n"\
-      "selecione uma opcao:\n"\
-      "-1 -> voltar\n"\
-      "0 -> navBar\n"\
-      "1 -> ver residencias\n"\
-      
-      "\n:"
-    );
-  
-    
-    scanf("%d", &input);
-    getchar();
-    
-    if(input == -1){
-      break;
-    }
-    switch(input){
-      case 0:
-        navBar();
-        break;
-      
-      case 1:
-        escolhausuario(2);
-        printf("==============================");
-        break;
 
-      default:
-        printf("opcao invalida\n");
-        //home();
+    //home gestao
+    if(!strcmp(perfil->tipoDeUsuario, "gestao")){
+      printf("===HOME===\n"\
+        "selecione uma opcao:\n"\
+        "-1 -> voltar\n"\
+        "0 -> navBar\n"\
+        "1 -> ver residencias\n"\
+        
+        "\n:"
+      );
+    
+      
+      scanf("%d", &input);
+      getchar();
+      
+      if(input == -1){
         break;
+      }
+      switch(input){
+        case 0:
+          navBar();
+          break;
+        
+        case 1:
+          //residencias();
+          printf("==============================");
+          break;
+
+        default:
+          printf("opcao invalida\n");
+          //home();
+          break;
+      }
+
+      printf("\n\n");
+    }
+    
+
+
+    //home residente
+    if(!strcmp(perfil->tipoDeUsuario, "residente")){
+      printf("===HOME===\n"\
+        "selecione uma opcao:\n"\
+        "-1 -> voltar\n"\
+        "0 -> navBar\n"\
+        "1 -> ver residencias\n"\
+        
+        "\n:"
+      );
+    
+      
+      scanf("%d", &input);
+      getchar();
+      
+      if(input == -1){
+        break;
+      }
+      switch(input){
+        case 0:
+          navBar();
+          break;
+        
+        case 1:
+          //residencias();
+          printf("==============================");
+          break;
+
+        default:
+          printf("opcao invalida\n");
+          //home();
+          break;
+      }
+
+      printf("\n\n");
     }
 
-    printf("\n\n");
+
+
   }
 }
 
@@ -484,164 +532,5 @@ void verAtividades(){
 }
 
 
-void residencias(){
-  while (1)
-  {
-    printf("RESIDENCIAS\n"\
-    "1) NUTRICAO\n"\
-    "2) PSICOLOGIA\n"\
-    "-1) Sair\n"\
-    "Digite uma das opcoes\n"\
-    
-  );
-    int aux;
-    scanf("%d", &aux);
-    getchar();
-    switch (aux)
-    {
-    case 1:
-      printf("NUTRICAO\n"\
-      "Iformacoes da residencia: \n"\
-      "    Numeros de turma ( 2 )\n"\
-      "Turma 1  : Visualizar [ 1 ] \n"\
-      "Turma 2  : Visualizar [ 2 ]\n"\
-      "Opcao -1 : Sair\n"\
-      "\ndigite umas das opcoes acima\n"
-    );
-      int aux;
-      scanf("%d", &aux);
-      getchar();
-      switch (aux)
-      {
-      case 1:
-        printf("TURMA {1}\n"\
-        "Iformacoes da turma: \n"\
-        "    Numeros de residentes: ( 4 )\n"\
-        "    Numeros de preseptores responsaveis: ( 2 )\n"\
-        "1) Visualizar residentes desta turma\n"\
-        "2) Visualizar preceptores responsaveis por esta turma\n"\
-        "3) Adicionar uma atividade para esta turma\n"\
-        "-1) Sair\n"\
-        "Digite uma das opcoes\n"\
-        );
-        int aux;
-        scanf("%d", &aux);
-        getchar();
-        switch (aux)
-        {
-        case 1:
-        printf("Residentes \n"\
-        "Iformacoes da turma: \n"\
-        "    Numeros de residentes: ( 4 )\n"\
-        "    Ano de ingresso 2022.2\n"\
-        "1) Rebeca ID23\n"\
-        "2) Ana ID24\n"\
-        "3) Marcos ID25\n"\
-        "4) Rubens ID26\n"\
-        "-1) Sair\n"\
-        "Digite uma das opcoes\n"\
-        );
-        int aux;
-        scanf("%d", &aux);
-        getchar();
-        if(aux=2){
-          verperfil();
-        }
-        else{
-        printf("Nao existe por enquanto\n");
-          break;
-        }
-          break;
-
-        case 2:
-        printf("Preceptores \n"\
-        "Iformacoes da turma: \n"\
-        "    Numeros de residentes: ( 2 )\n"\
-        "    Ano de ingresso 2022.2\n"\
-        "1) Habrosio ID33\n"\
-        "2) Ana ID34\n"\
-        "-1) Sair\n"\
-        "Digite uma das opcoes\n"\
-        );
-        int aux;
-        scanf("%d", &aux);
-        getchar();
-        if(aux=2){
-          verperfil();
-        }
-        else{
-        printf("Nao existe por enquanto\n");
-          break;
-        }
-          break;
-
-        case 3:
-           printf("Nao existe add atividade por enquanto\n");
-          break;
-         
-        default:
-          break;
-        }
-        
-        break;
-      
-      default:
-        break;
-      }
-
-      break;
-    
-    default:
-      break;
-    }
-
-  }
-  
-}
 
 
-void homegestao(){
-  printf("BEM VINDO A TELA INICIAL DA GESTÃO\n"\
-    "Digite uma das seguintes opcoes\n"\
-    "Opcao 1  : Visualizar residencias\n"\
-    "Opcao 2  : Visualizar perfil\n"\
-    "Opcao -1 : Sair\n"\
-  );
-  int aux;
-  scanf("%d", &aux);
-  getchar();
-  switch (aux)
-  {
-  case 1:
-  //Residencias
-  residencias();
-    break;
-
-  case 2:
-  //Perfil
-
-    break;
-
-  default:
-    break;
-  }
-
-}
-
-
-void escolhausuario(int escolha){
-  switch (escolha)
-  {
-  case 1:
-    //fluxo residente
-    break;
-  
-  case 2:
-    // fluxo gestão
-    homegestao();
-    break;
-
-  default:
-    break;
-  }
-}
