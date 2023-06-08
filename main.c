@@ -79,7 +79,7 @@ int main(void) {
   //criando tables
   strFOverwrite(&sql_cmd, 
     "CREATE TABLE USUARIO_TB( "\
-      "ID INT PRIMARY KEY NOT NULL, "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "NOME TEXT NOT NULL, "\
       "EMAIL TEXT NOT NULL, "\
       "SENHA TEXT NOT NULL, "\
@@ -87,7 +87,7 @@ int main(void) {
     "); "\
     
     "CREATE TABLE GESTAO_TB( "\
-      "ID INT PRIMARY KEY NOT NULL, "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "CARGO TEXT NOT NULL "\
     "); "\
 
@@ -104,7 +104,7 @@ int main(void) {
   //inserindo tables
   strFOverwrite(&sql_cmd,  
     "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
-    "VALUES (1, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
+    "VALUES (999, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
 
   "", NULL);
   
@@ -116,7 +116,7 @@ int main(void) {
 
 
 
-//atualizando tables
+  //atualizando tables
   strFOverwrite(&sql_cmd,  
     "UPDATE USUARIO_TB "\
     "SET "\
@@ -162,7 +162,18 @@ int main(void) {
   //fechando o banco de dados
   sqlite3_close(db);
 
-  perfil = fazerLogin(&db, "paulao@gmail.com", "paulinho123");
+
+
+
+
+
+  //testando
+
+  printf("CADASTRO===\n");
+  fazerCadastro(&db, "caio", "caio@gmail.com", "paulinho123", "residente");
+
+  printf("LOGIN===\n");
+  perfil = fazerLogin(&db, "caio@gmail.com", "paulinho123");
 
   printf("nome: %s\n", perfil->nome);
 

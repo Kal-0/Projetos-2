@@ -25,21 +25,32 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
 
     va_end(args);
     
+    va_start(args, base_str);
+    char* arg1 = va_arg(args, char*);
 
     formatted_str = (char*)malloc(str_size+ 1);
     strcpy(formatted_str, base_str);
+    printf("result: %s\n", formatted_str);
 
     if (formatted_str == NULL)
         return NULL;
 
 
-    va_start(args, base_str);
+    if(arg1 != NULL){
+      va_end(args);
+    
 
-    vsnprintf(formatted_str, str_size, base_str, args);
+      va_start(args, base_str);
 
-    va_end(args);
+      vsnprintf(formatted_str, str_size, base_str, args);
 
-    printf("result: %s\n", formatted_str);
+      va_end(args);
+
+      printf("result: %s\n", formatted_str);
+    }
+    else{
+      va_end(args);
+    }
 
     if(output_str != NULL){
 
@@ -76,7 +87,6 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
-  char* fdb_msg = NULL;
   
   int ret;
 
@@ -87,10 +97,91 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
   
 
   //pegando dados do banco de dados
-  //strFormater()
+  
 
   strFOverwrite(&sql_cmd,
     "SELECT * FROM USUARIO_TB "\
+    "WHERE (EMAIL = '%s'); "\
+
+  "", email);
+
+  ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+  sysStatus(&db, ret);
+  
+  if(ret == SQLITE_OK){
+
+    ret = sqlite3_step(sql_stmt);
+    sysStatus(&db, ret);
+    printf("email: %s\n", sqlite3_column_text(sql_stmt, 2));
+
+    if(ret == SQLITE_ROW) {
+      if(!strcmp(email, sqlite3_column_text(sql_stmt, 2))){
+        printf("usuario encotrado.\n");
+
+        if(!strcmp(senha, sqlite3_column_text(sql_stmt, 3))){
+        
+
+
+          usuarioLogin = (Usuario *)malloc(sizeof(Usuario));
+
+
+          
+          usuarioLogin->id = sqlite3_column_int(sql_stmt, 0);
+          usuarioLogin->nome = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 1), NULL);
+          usuarioLogin->email = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 2), NULL);
+          usuarioLogin->senha = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 3), NULL);
+          usuarioLogin->tipoDeUsuario = strFOverwrite(NULL, sqlite3_column_text(sql_stmt, 4), NULL);
+
+          
+
+          
+          sysStatus(&db, ret);
+        }else{
+          printf("senha incorreta...\n");
+        }
+      }else{
+        printf("email incorreto...\n");
+      }
+
+    }else{
+      printf("email incorreto...\n");
+    }
+    
+  }
+  
+  sqlite3_finalize(sql_stmt);
+  
+  sqlite3_close(db);
+  
+  
+  return usuarioLogin;
+};
+
+
+
+
+
+void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
+  // Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+  
+
+  //pegando dados do banco de dados
+  //strFormater()
+
+
+  // verificando cadastro
+  strFOverwrite(&sql_cmd,
+    "SELECT EMAIL FROM USUARIO_TB "\
     "WHERE (EMAIL = '%s'); "\
 
   "", email);
@@ -102,40 +193,49 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
 
     ret = sqlite3_step(sql_stmt);
     sysStatus(&db, ret);
+    
+    // verificando
+    if(ret == SQLITE_ROW){
+      printf("EMAIL:  %s\n", sqlite3_column_text(sql_stmt, 0));
 
+      if(!strcmp(email, sqlite3_column_text(sql_stmt, 0))){
 
-    if(!strcmp(email, sqlite3_column_text(sql_stmt, 2))){
-      printf("usuario encotrado.\n");
+        printf("email ja cadastrado!\n");
 
-      if(!strcmp(senha, sqlite3_column_text(sql_stmt, 3))){
-      
+        sqlite3_finalize(sql_stmt);
+        sqlite3_close(db);
+        return;
 
-
-        usuarioLogin = (Usuario *)malloc(sizeof(Usuario));
-
-
-        
-        usuarioLogin->id = sqlite3_column_int(sql_stmt, 0);
-        usuarioLogin->nome = sqlite3_column_text(sql_stmt, 1);
-        usuarioLogin->email = sqlite3_column_text(sql_stmt, 2);
-        usuarioLogin->senha = sqlite3_column_text(sql_stmt, 3);
-        usuarioLogin->tipoDeUsuario = sqlite3_column_text(sql_stmt, 4);
-
-
-
-        
-        sysStatus(&db, ret);
-      }else{
-        printf("senha incorreta...\n");
       }
-    }else{
-      printf("email incorreto...\n");
+
     }
+      
+  
+
+    printf("cadastrando!\n");
+    sqlite3_finalize(sql_stmt);
 
     
+  }else{
+    sqlite3_finalize(sql_stmt);
+    sqlite3_close(db);
+    return;
   }
 
+
+
+  // criando cadastro
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO USUARIO_TB (NOME,EMAIL,SENHA,TIPO) "\
+    "VALUES ('%s', '%s', '%s', '%s' ); "\
+
+  "", nome, email, senha, tipoDeUsuario);
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  
   sqlite3_close(db);
   
-  return usuarioLogin;
+  return;
 };
