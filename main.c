@@ -244,7 +244,7 @@ void navBar(){
     }
     switch(input){
       case 1:
-        printf("ver perfil\n");
+        verperfil();
         break;
       
       case 2:
@@ -292,9 +292,55 @@ void home(){
       
       default:
         printf("opcao invalida\n");
+        home();
         break;
     }
 
     printf("\n\n");
+  }
+}
+
+void verperfil(){
+  while(1){
+    printf("PERFIL\n"\
+        "Nome: RODRIGO\n"\
+        "Matricula: 00892023\n"\
+        "Residencia: Nutricao\n"\
+        "Atividades disponiveis: 1 \n"\
+        "Notificacoes:  1\n"
+        "     Gostaria de ver as notificacoes? [1] S [2] N"
+        "\n:"
+      );
+      int esc;
+      scanf("%d", &esc);
+      if (esc==1){
+        printf("----NOTIFICACAO----\n"\
+        "NOTIFICACOES:\n"\
+        "1 EU QUERO MORRER\n"\
+        "Deseja voltar para seu perfil? [1] S [2] N ");
+        int aux;
+        scanf("%d", &aux);
+        if(aux == 1){
+          verperfil();
+        }
+        else{
+          break;
+        }
+      }
+      else{
+        break;
+      }
+  }
+}
+
+void veratividades(){
+  while(1){
+    printf("---ATIVIDADES---\n"\
+        "ATIVIDADES DISPONIVEIS ( 1 )\n"\
+        "   ver atividades [ 1 ] [ 2 ]\n"\
+        "ATIVIDADES PASSADAS ( 3 )\n"\
+        "\n:"
+      );
+    
   }
 }
