@@ -16,8 +16,11 @@ void login();
 void navBar();
 void verPerfil();
 void home();
-
-
+void residencias();
+void nutricao();
+void nutricao_turma1();
+void nutricao_turma1_residente();
+void nutricao_turma1_preceptor();
 
 
 
@@ -52,6 +55,7 @@ int main(void) {
   // char* str3 = NULL;
   // strFOverwrite(&str3, str1, str2, "cleber");
   // printf("result: %s\n", str3);
+
 
 
   
@@ -249,9 +253,9 @@ int main(void) {
 
 
 
-  start();
-  //home();
-    
+start();
+//home();
+ 
 
   
   printf("Hello World\n");
@@ -360,7 +364,7 @@ void navBar(){
       "1 -> perfil\n"\
       "2 -> atividades\n"\
   
-      "\n:"
+       "\n:"
     );
   
     
@@ -396,13 +400,13 @@ void home(){
 
   while(1){
     printf("===HOME===\n"\
-      "selecione uma opcao:\n"\
-      "-1 -> voltar\n"\
-      "0 -> navBar\n"\
-      "1 -> ver residencias\n"\
-      
-      "\n:"
-    );
+        "selecione uma opcao:\n"\
+        "-1 -> voltar\n"\
+        "0 -> navBar\n"\
+        "1 -> ver residencias\n"\
+        
+        "\n:"
+      );
   
     
     scanf("%d", &input);
@@ -417,7 +421,6 @@ void home(){
         break;
       
       case 1:
-        escolhausuario(2);
         printf("==============================");
         break;
 
@@ -498,7 +501,20 @@ void residencias(){
     switch (aux)
     {
     case 1:
-      printf("NUTRICAO\n"\
+      nutricao();
+      break;
+    
+    default:
+      break;
+    }
+
+  }
+  
+}
+
+
+void nutricao(){
+    printf("NUTRICAO\n"\
       "Iformacoes da residencia: \n"\
       "    Numeros de turma ( 2 )\n"\
       "Turma 1  : Visualizar [ 1 ] \n"\
@@ -512,7 +528,16 @@ void residencias(){
       switch (aux)
       {
       case 1:
-        printf("TURMA {1}\n"\
+        nutricao_turma1();
+        break;
+
+      default:
+        break;
+       }       
+}
+
+void nutricao_turma1(){
+  printf("TURMA {1}\n"\
         "Iformacoes da turma: \n"\
         "    Numeros de residentes: ( 4 )\n"\
         "    Numeros de preseptores responsaveis: ( 2 )\n"\
@@ -528,7 +553,26 @@ void residencias(){
         switch (aux)
         {
         case 1:
-        printf("Residentes \n"\
+        //
+          nutricao_turma1_residente();
+          break;
+
+        case 2:
+        //
+          nutricao_turma1_preceptor();
+          break;
+
+        case 3:
+           printf("Nao existe add atividade por enquanto\n");
+          break;
+         
+        default:
+          break;
+        }
+}
+
+void nutricao_turma1_residente(){
+  printf("Residentes \n"\
         "Iformacoes da turma: \n"\
         "    Numeros de residentes: ( 4 )\n"\
         "    Ano de ingresso 2022.2\n"\
@@ -543,16 +587,16 @@ void residencias(){
         scanf("%d", &aux);
         getchar();
         if(aux=2){
-          verperfil();
+          verPerfil();
         }
         else{
         printf("Nao existe por enquanto\n");
-          break;
+          return;
         }
-          break;
+}
 
-        case 2:
-        printf("Preceptores \n"\
+void nutricao_turma1_preceptor(){
+   printf("Preceptores \n"\
         "Iformacoes da turma: \n"\
         "    Numeros de residentes: ( 2 )\n"\
         "    Ano de ingresso 2022.2\n"\
@@ -565,81 +609,10 @@ void residencias(){
         scanf("%d", &aux);
         getchar();
         if(aux=2){
-          verperfil();
+          verPerfil();
         }
         else{
         printf("Nao existe por enquanto\n");
-          break;
+          return;
         }
-          break;
-
-        case 3:
-           printf("Nao existe add atividade por enquanto\n");
-          break;
-         
-        default:
-          break;
-        }
-        
-        break;
-      
-      default:
-        break;
-      }
-
-      break;
-    
-    default:
-      break;
-    }
-
-  }
-  
-}
-
-
-void homegestao(){
-  printf("BEM VINDO A TELA INICIAL DA GESTÃO\n"\
-    "Digite uma das seguintes opcoes\n"\
-    "Opcao 1  : Visualizar residencias\n"\
-    "Opcao 2  : Visualizar perfil\n"\
-    "Opcao -1 : Sair\n"\
-  );
-  int aux;
-  scanf("%d", &aux);
-  getchar();
-  switch (aux)
-  {
-  case 1:
-  //Residencias
-  residencias();
-    break;
-
-  case 2:
-  //Perfil
-
-    break;
-
-  default:
-    break;
-  }
-
-}
-
-
-void escolhausuario(int escolha){
-  switch (escolha)
-  {
-  case 1:
-    //fluxo residente
-    break;
-  
-  case 2:
-    // fluxo gestão
-    homegestao();
-    break;
-
-  default:
-    break;
-  }
 }
