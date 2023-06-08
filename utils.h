@@ -38,19 +38,6 @@ struct SFeedbackGeral;
 typedef struct SFeedbackGeral FeedbackGeral;
 
 
-/*
-typedef struct Gestao Gestao;
-typedef struct Coordenacao Coordenacao;
-typedef struct Preceptor Preceptor;
-typedef struct Residente Residente;
-
-typedef struct ProgramaResidencia ProgramaResidencia;
-typedef struct Turma Turma;
-
-typedef struct Atividade Atividade;
-typedef struct Submissao Submissao;
-typedef struct FeedbackGeral FeedbackGeral;
-*/
 
 // Usuario base
 struct SUsuario{
@@ -167,6 +154,7 @@ char* strFOverwrite(char** output_str, char* base_str, ...);
 int sysStatus(sqlite3** db_ptr, int ret);
 
 void fazerCadastro();
+void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
 
 Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha);
 

@@ -255,6 +255,42 @@ void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
 
   // funcao
 
+  // criando tabela gestao
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO GESTAO_TB (USUARIO_FK, CARGO) "\
+    "VALUES ('%d', '%s'); "\
+
+  "", usuario_fk, cargo);
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  sqlite3_close(db);
+}
+
+void fazerResidenteTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
+  // Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+
+  // criando tabela gestao
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO GESTAO_TB (USUARIO_FK, CARGO) "\
+    "VALUES ('%d', '%s'); "\
+
+  "", usuario_fk, cargo);
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
   sqlite3_close(db);
 }
 
