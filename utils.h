@@ -45,8 +45,8 @@ struct SUsuario{
   int id;
   char *email;
   char *senha;
-  char *tipoDeUsuario;
-  void *categoriaUsuario;
+  char *categoriaUsuario;
+  void *tipoUsuario;
   int status;
 
 };

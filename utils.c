@@ -130,7 +130,7 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
           usuarioLogin->nome = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 1), NULL);
           usuarioLogin->email = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
           usuarioLogin->senha = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 3), NULL);
-          usuarioLogin->tipoDeUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
+          usuarioLogin->categoriaUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
 
           
 
@@ -161,7 +161,7 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
 
 
 
-void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
+void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char *categoriaUsuario) {
   // Banco de dados
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -229,7 +229,7 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
     "INSERT INTO USUARIO_TB (NOME,EMAIL,SENHA,TIPO) "\
     "VALUES ('%s', '%s', '%s', '%s' ); "\
 
-  "", nome, email, senha, tipoDeUsuario);
+  "", nome, email, senha, categoriaUsuario);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(&db, ret);
