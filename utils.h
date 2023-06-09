@@ -67,9 +67,9 @@ struct SResidente{
  
 struct SPreceptor{
   Usuario* usuario;
+  Turma* turma;
   Residente *listaResidentes;
   Atividade *listaAtividades;
-  ProgramaResidencia *listaResidencias;
   FeedbackGeral *listaFeedbacks;
 };
 
@@ -149,13 +149,17 @@ struct SFeedbackGeral{
 // -Gerais:
 char* strFOverwrite(char** output_str, char* base_str, ...);
 
-
 int sysStatus(sqlite3** db_ptr, int ret);
+int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p);
 
-int fazerCadastro();
-int fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
+int addUsuarioTB();
+int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
+int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residencia_fk);
+int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int turma_fk);
+int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas);
 
-Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha);
+
+Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha);
 
 /*
 void criarCriteriosDeFeedback(Turma *turma);
