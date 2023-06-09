@@ -82,6 +82,9 @@ int sysStatus(sqlite3** db_ptr, int ret){
 }
 
 
+
+
+
 Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
   // Banco de dados
   sqlite3* db = *db_ptr;
@@ -112,7 +115,7 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
 
     ret = sqlite3_step(sql_stmt);
     sysStatus(&db, ret);
-    printf("email: %s\n", sqlite3_column_text(sql_stmt, 2));
+    //printf("email: %s\n", sqlite3_column_text(sql_stmt, 2));
 
     if(ret == SQLITE_ROW) {
       if(!strcmp(email, sqlite3_column_text(sql_stmt, 2))){
@@ -130,10 +133,71 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
           usuarioLogin->nome = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 1), NULL);
           usuarioLogin->email = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
           usuarioLogin->senha = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 3), NULL);
-          usuarioLogin->tipoDeUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
+          usuarioLogin->categoriaUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
+          
+          
+          usuarioLogin->tipoUsuario = NULL;
+
+          sqlite3_finalize(sql_stmt);
+
+
+
+          //verificando se o tipo do usuario existe
+          strFOverwrite(&sql_cmd,
+            "SELECT * FROM %s_TB "\
+            "WHERE (USUARIO_FK = '%d'); "\
+
+          "",usuarioLogin->categoriaUsuario, usuarioLogin->id);
+
+          ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+          sysStatus(&db, ret);
+          
+          if(ret == SQLITE_OK){
+
+            ret = sqlite3_step(sql_stmt);
+            sysStatus(&db, ret);
+            //printf("ID: %d\n", sqlite3_column_int(sql_stmt, 0));
+            
+            //verificando
+            if(ret == SQLITE_ROW) {
+              printf("tipo de usuario existente.\n");
+
+              void* tipoUsuarioLogin = NULL;
+
+              //residente
+              if(!strcmp(usuarioLogin->categoriaUsuario, "residente")){
+                tipoUsuarioLogin = malloc(sizeof(Residente));
+
+                ((Residente*)tipoUsuarioLogin)->usuario = usuarioLogin;
+
+
+              }else if(!strcmp(usuarioLogin->categoriaUsuario, "preceptor")){
+                tipoUsuarioLogin = malloc(sizeof(Preceptor));
+
+                ((Preceptor*)tipoUsuarioLogin)->usuario = usuarioLogin;
+
+              }else if(!strcmp(usuarioLogin->categoriaUsuario, "coordenacao")){
+                tipoUsuarioLogin = malloc(sizeof(Coordenacao));
+
+                ((Coordenacao*)tipoUsuarioLogin)->usuario = usuarioLogin;
+
+              }else if(!strcmp(usuarioLogin->categoriaUsuario, "gestao")){
+                tipoUsuarioLogin = malloc(sizeof(Gestao));
+
+                ((Gestao*)tipoUsuarioLogin)->usuario = usuarioLogin;
+                ((Gestao*)tipoUsuarioLogin)->cargo = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
+
+              }
+
+
+
+              
+            }else{
+              printf("tipo de usuario nao existente.\n");
+            }
+          }
 
           
-
           
           sysStatus(&db, ret);
         }else{
@@ -161,7 +225,7 @@ Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha) {
 
 
 
-void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
+int fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
   // Banco de dados
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -194,7 +258,7 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
     ret = sqlite3_step(sql_stmt);
     sysStatus(&db, ret);
     
-    // verificando
+    // cadastro ja existente
     if(ret == SQLITE_ROW){
       printf("EMAIL:  %s\n", sqlite3_column_text(sql_stmt, 0));
 
@@ -204,14 +268,14 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
 
         sqlite3_finalize(sql_stmt);
         sqlite3_close(db);
-        return;
+        return 1;
 
       }
 
     }
       
   
-
+    //cadastro novo(OK)
     printf("cadastrando!\n");
     sqlite3_finalize(sql_stmt);
 
@@ -219,12 +283,12 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
   }else{
     sqlite3_finalize(sql_stmt);
     sqlite3_close(db);
-    return;
+    return 1;
   }
 
 
 
-  // criando cadastro
+  // criando cadastroGeral(USUARIO_TB)
   strFOverwrite(&sql_cmd,  
     "INSERT INTO USUARIO_TB (NOME,EMAIL,SENHA,TIPO) "\
     "VALUES ('%s', '%s', '%s', '%s' ); "\
@@ -234,15 +298,17 @@ void fazerCadastro(sqlite3** db_ptr, char *nome, char *email, char *senha, char 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(&db, ret);
 
+
+
   
   sqlite3_close(db);
   
-  return;
+  return 0;
 };
 
 
 
-void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
+int fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   // Banco de dados
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -266,9 +332,12 @@ void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   sysStatus(&db, ret);
 
   sqlite3_close(db);
+
+  return 0;
 }
 
-void fazerResidenteTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
+
+int fazerResidenteTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   // Banco de dados
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -292,5 +361,7 @@ void fazerResidenteTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   sysStatus(&db, ret);
 
   sqlite3_close(db);
+
+  return 0;
 }
 

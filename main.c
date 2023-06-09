@@ -12,6 +12,7 @@ int ret;
 //variaveis globais
 Usuario* perfil = NULL;
 void start();
+void cadastro();
 void login();
 void navBar();
 void verPerfil();
@@ -94,27 +95,50 @@ int main(void) {
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
       "CARGO TEXT NOT NULL, "\
+      "RESIDENCIAS_LS TEXT, "\
       "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID) "\
+    "); "\
+
+    "CREATE TABLE COORDENACAO_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
+      "CARGO TEXT NOT NULL, "\
+      "RESIDENCIA_FK INTEGER NOT NULL, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
+    "); "\
+
+    "CREATE TABLE PRECEPTOR_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "RESIDENTES_LS TEXT, "\
+      "ATIVIDADES_LS TEXT, "\
+      "FEEDBACKS_LS TEXT, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID) "\
     "); "\
 
     "CREATE TABLE RESIDENTE_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
       "MATRICULA INTEGER NOT NULL UNIQUE, "\
-      "TURMA TEXT NOT NULL, "\
-      "PRECEPTOR TEXT NOT NULL, "\
-      "ATIVIDADES TEXT NOT NULL, "\
-      "SUBMISSOES TEXT NOT NULL, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER, "\
+      "ATIVIDADES_LS TEXT, "\
+      "SUBMISSOES_LS TEXT, "\
       "NOTAS TEXT NOT NULL, "\
-      "FEEDBACKS TEXT NOT NULL, "\
-      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID) "\
+      "FEEDBACKS_LS TEXT NOT NULL, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID) "\
     "); "\
 
     "CREATE TABLE RESIDENCIA_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "NOME TEXT NOT NULL, "\
-      "COORDENACAO TEXT NOT NULL, "\
-      "TURMAS TEXT NOT NULL "\
+      "COORDENACAO_LS TEXT, "\
+      "TURMAS_LS TEXT "\
     "); "\
 
     "CREATE TABLE TURMA_TB( "\
@@ -122,12 +146,55 @@ int main(void) {
       "RESIDENCIA_FK INTEGER NOT NULL, "\
       "NOME TEXT NOT NULL, "\
       "ANO TEXT NOT NULL, "\
-      "RESIDENTES TEXT NOT NULL, "\
-      "PRECEPTORES TEXT NOT NULL, "\
-      "ATIVIDADES TEXT NOT NULL, "\
+      "RESIDENTES_LS TEXT NOT NULL, "\
+      "PRECEPTORES_LS TEXT NOT NULL, "\
+      "ATIVIDADES_LS TEXT NOT NULL, "\
       "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
     "); "\
 
+    "CREATE TABLE ATIVIDADE_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "NOME TEXT NOT NULL, "\
+      "DESCRICAO TEXT NOT NULL, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "SUBMISSOES_LS TEXT, "\
+      "DATA_POSTAGEM TEXT NOT NULL, "\
+      "DATA_ENTREGA TEXT, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID)"\
+
+    "); "\
+    
+    "CREATE TABLE SUBMISSAO_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER NOT NULL, "\
+      "ATIVIDADE_FK INTEGER NOT NULL, "\
+      "NOTA FLOAT, "\
+      "RESPOSTA TEXT, "\
+      "FEEBACK TEXT, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID), "\
+      "FOREIGN KEY (ATIVIDADE_FK) REFERENCES ATIVIDADE_TB(ID) "\
+
+    "); "\
+
+    "CREATE TABLE FEEDBACK_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER NOT NULL, "\
+      "NOTA FLOAT NOT NULL, "\
+      "CRITERIOS TEXT NOT NULL, "\
+      "FEEBACK TEXT NOT NULL, "\
+      "CONTESTACAO TEXT, "\
+      "RESPOSTA_CONTESTACAO TEXT, "\
+      "DATA TEXT NOT NULL, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID) "\
+
+    "); "\
 
   "", NULL);
 
@@ -213,7 +280,7 @@ int main(void) {
   printf("LOGIN===\n");
   perfil = fazerLogin(&db, "caio@gmail.com", "paulinho123");
 
-  printf("nome: %s\n", perfil->nome);
+  //printf("nome: %s\n", perfil->nome);
 
   printf("fazer gestao===\n");
 
@@ -234,7 +301,7 @@ int main(void) {
 
 
   decoyUser2->email = "arromba@123";
-  decoyUser2->categoriaUsuario = r1;
+  decoyUser2->categoriaUsuario = (void*)r1;
   
   r1->matricula = 1234567;
 
@@ -260,6 +327,136 @@ int main(void) {
 
   return 0;
 }
+
+void cadastro(){
+  int input = 0;
+  int vef = 0;
+
+  char tipo[30];
+  char nome[200];
+  char email[120];
+  char senha[120];
+  char op = '_';
+
+
+  while(1){
+    printf("===CADASTRO===\n"\
+      "selecione o tipo de usuario:\n"\
+      "[-1] -> cancelar\n"\
+      "[1] -> residente\n"\
+      "[2] -> preceptor\n"\
+      "[3] -> coordenacao\n"\
+      "[4] -> gestao\n"\
+
+      "\n"
+    );
+    
+    scanf("%d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+        strcpy(tipo, "residente");
+        break;
+      
+      case 2:
+        strcpy(tipo, "preceptor");
+        break;
+      
+      case 3:
+        strcpy(tipo, "coordenacao");
+        break;
+      
+      case 4:
+        strcpy(tipo, "gestao");
+        break;
+
+      default:
+        printf("opcao invalida...\n");
+
+        strcpy(tipo, "invalido");
+        break;
+    }
+
+    if(strcmp(tipo, "invalido")){
+
+      printf("insira seu nome: ");
+      scanf("%s", nome);
+      getchar();
+
+      printf("insira seu e-mail: ");
+      scanf("%s", email);
+      getchar();
+      
+      printf("insira sua senha: ");
+      scanf("%s", senha);
+      getchar();
+
+      printf("\n\n");
+
+      vef = fazerCadastro(&db, nome, email, senha, tipo);
+      printf("vef: %d", vef);
+      if(vef == 0){
+        Usuario* usuarioCriado = NULL;
+        usuarioCriado = fazerLogin(&db, email, senha);
+        int usuario_fk = usuarioCriado->id;
+
+        
+
+
+
+        if(!strcmp(tipo, "residente")){
+
+        }
+
+        if(!strcmp(tipo, "preceptor")){
+
+        }
+
+        if(!strcmp(tipo, "coordenacao")){
+
+        }
+
+
+        if(!strcmp(tipo, "gestao")){
+          char cargo[50];
+          
+
+
+          printf("insira seu cargo: ");
+          scanf("%s", cargo);
+          getchar();
+
+          vef = fazerGestaoTB(&db, usuario_fk, cargo);
+
+          if(vef == 0){
+            printf("cadastro realisado com sucesso!\n\n");
+            break;
+          }
+          
+
+        }
+      }
+
+      if(vef){
+        printf("credenciais invalidas!\n"\
+          "deseja tantar novamente? (s/n): "
+        );
+
+        scanf("%c", &op);
+        getchar();
+
+        if(op == 'n'){
+          break;
+        }
+      }
+    }
+  }
+}
+
 
 
 
@@ -321,9 +518,9 @@ void start(){
   while(1){
     printf("===START===\n"\
       "selecione uma opcao:\n"\
-      "-1 -> sair\n"\
-      "1 -> fazer login\n"\
-      "2 -> fazer cadastro\n"\
+      "[-1] -> sair\n"\
+      "[1] -> fazer login\n"\
+      "[2] -> fazer cadastro\n"\
       
       "\n:"
     );
@@ -341,7 +538,7 @@ void start(){
         break;
       
       case 2:
-        //cadastro();
+        cadastro();
         break;
       
       default:
@@ -360,9 +557,9 @@ void navBar(){
   while(1){
     printf("===NavBar===\n\n"\
       "selecione uma opcao:\n"\
-      "-1 -> voltar\n"\
-      "1 -> perfil\n"\
-      "2 -> atividades\n"\
+      "[-1] -> voltar\n"\
+      "[1] -> perfil\n"\
+      "[2] -> atividades\n"\
   
       "\n:"
     );
@@ -401,12 +598,12 @@ void home(){
   while(1){
 
     //home gestao
-    if(!strcmp(perfil->tipoDeUsuario, "gestao")){
+    if(!strcmp(perfil->categoriaUsuario, "gestao")){
       printf("===HOME===\n"\
         "selecione uma opcao:\n"\
-        "-1 -> voltar\n"\
-        "0 -> navBar\n"\
-        "1 -> ver residencias\n"\
+        "[-1] -> voltar\n"\
+        "[0] -> navBar\n"\
+        "[1] -> ver residencias\n"\
         
         "\n:"
       );
@@ -440,12 +637,12 @@ void home(){
 
 
     //home residente
-    if(!strcmp(perfil->tipoDeUsuario, "residente")){
+    if(!strcmp(perfil->categoriaUsuario, "residente")){
       printf("===HOME===\n"\
         "selecione uma opcao:\n"\
-        "-1 -> voltar\n"\
-        "0 -> navBar\n"\
-        "1 -> ver residencias\n"\
+        "[-1] -> voltar\n"\
+        "[0] -> navBar\n"\
+        "[1] -> ver residencias\n"\
         
         "\n:"
       );

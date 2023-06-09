@@ -45,8 +45,8 @@ struct SUsuario{
   int id;
   char *email;
   char *senha;
-  char *tipoDeUsuario;
-  void *categoriaUsuario;
+  char *categoriaUsuario;
+  void *tipoUsuario;
   int status;
 
 };
@@ -55,7 +55,7 @@ struct SUsuario{
 
 // Tipos de Usuarios
 struct SResidente{
-  Usuario usuario;
+  Usuario* usuario;
   int matricula;
   Turma* turma;
   Atividade *listaAtividades;
@@ -66,22 +66,22 @@ struct SResidente{
 };
  
 struct SPreceptor{
-  Usuario usuario;
-  Residente *listaResidentesAtuais;
+  Usuario* usuario;
+  Residente *listaResidentes;
   Atividade *listaAtividades;
   ProgramaResidencia *listaResidencias;
   FeedbackGeral *listaFeedbacks;
 };
 
 struct SCoordenacao{
-  Usuario usuario;
-  char cargo[30];
+  Usuario* usuario;
+  char* cargo;
   ProgramaResidencia* residencia;
 };
 
 struct SGestao{
-  Usuario usuario;
-  char cargo[30];
+  Usuario* usuario;
+  char* cargo;
   ProgramaResidencia *listaResidencias;
 };
 
@@ -131,15 +131,14 @@ struct SSubmissao{
 
 struct SFeedbackGeral{
   Preceptor* preceptor;
-  char *criterios;
+  Residente* residente;
   float nota;
+  char *criterios;
   char *feedback;
   char *contestacao;
   char *respostaConstentacao;
-  char remetente;
-  char destinatario;
   char data[16];
-  char status;
+  char* status;
 };
 
 
@@ -153,8 +152,8 @@ char* strFOverwrite(char** output_str, char* base_str, ...);
 
 int sysStatus(sqlite3** db_ptr, int ret);
 
-void fazerCadastro();
-void fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
+int fazerCadastro();
+int fazerGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
 
 Usuario *fazerLogin(sqlite3** db_ptr, char *email, char *senha);
 
