@@ -29,7 +29,10 @@ void homeGestao();
 void homeResidente();
 void homeCoordenacao();
 void homePreceptor();
-
+void navbarGestao();
+void navbarPreceptor();
+void navbarCoordenacao();
+void navbarResidente();
 
 
 
@@ -220,7 +223,7 @@ int main(void) {
   fazerCadastro(&db, "jose", "jose@gmail.com", "jose123", "residente");
 
   printf("LOGIN===\n");
-  perfil = fazerLogin(&db, "caio@gmail.com", "paulinho123");
+  perfil = fazerLogin(&db, "jose@gmail.com", "jose123");
 
   printf("nome: %s\n", perfil->nome);
 
@@ -244,6 +247,7 @@ int main(void) {
 
   decoyUser2->email = "arromba@123";
   decoyUser2->tipoUsuario = r1;
+  decoyUser2->categoriaUsuario = (void*)r1;
   
   r1->matricula = 1234567;
 
@@ -363,42 +367,24 @@ void start(){
 
 
 void navBar(){
-  int input = 0;
-
-  while(1){
-    printf("===NavBar===\n\n"\
-      "selecione uma opcao:\n"\
-      "[-1] -> voltar\n"\
-      "[1]-> perfil\n"\
-      "[2]-> atividades\n"\
   
-       "\n:"
-    );
-    scanf("%d", &input);
-    getchar();
-  
-    if(input == -1){
-      break;
-    }
-    switch(input){
-      case 1:
-      menuPerfil();
-      break;   
-      
-      case 2:
-        printf("ver atividades\n");
-        break;
-      
-      default:
-        printf("opcao invalida\n");
-        break;
-    }
-
-    printf("\n\n");
+  if(!strcmp(perfil->categoriaUsuario,"gestao"))
+  {
+    navbarGestao();
+  }else if (!strcmp(perfil->categoriaUsuario,"residente"))
+  {
+   navbarResidente();
   }
+  else if (!strcmp(perfil->categoriaUsuario,"preceptor"))
+  {
+    navbarPreceptor();
+  }
+  else if (!strcmp(perfil->categoriaUsuario,"coordenacao"))
+  {
+    navbarCoordenacao();
+  }
+
 }
-
-
 
 
 void home(){
@@ -423,17 +409,13 @@ void home(){
  
 
 void verAtividades(){
-  int input = 0;
-
-  while(1){
     printf("---ATIVIDADES---\n"\
       "ATIVIDADES DISPONIVEIS ( 1 )\n"\
       "   ver atividades [ 1 ] [ 2 ]\n"\
       "ATIVIDADES PASSADAS ( 3 )\n"\
       "\n:"
     );
-
-  }
+    
 }
 
 
@@ -586,34 +568,38 @@ void nutricao_turma1_preceptor(){
 
 void perfilGestao(){
   char aux;
-  printf("\n [0] -> navBar\n\
-        \nPERFIL DA GESTAO\n"\
-        "Nome: %s\n"\
-        "ID: %d\n"\
-        "CARGO: %s\n"\
-        "\n", 
-         perfil->nome,
-         perfil->id, 
-         perfil->categoriaUsuario);
-
-  printf("Gostaria de sair? (s/n):  \n");
-  scanf("%c", &aux);
-
-  getchar();
-
-  if(aux == 's'){
-  return;
-  }
-  else if (aux == 'n')
+  while (1)
   {
-    perfilGestao();
-  }
-  else if (aux == '0')
-  {
-    navBar();
-  }
-  else{
-    printf("Opcao invalida\n");
+   
+    printf("\n [0] -> navBar\n\
+          \nPERFIL DA GESTAO\n"\
+          "Nome: %s\n"\
+          "ID: %d\n"\
+          "CARGO: %s\n"\
+          "\n", 
+          perfil->nome,
+          perfil->id, 
+          perfil->categoriaUsuario);
+
+    printf("Gostaria de sair? (s/n):  \n");
+    scanf("%c", &aux);
+
+    getchar();
+
+    if(aux == 's'){
+    break;
+    }
+    else if (aux == 'n')
+    {
+      perfilGestao();
+    }
+    else if (aux == '0')
+    {
+      navBar();
+    }
+    else{
+      printf("Opcao invalida\n");
+    }
   }
 }
 
@@ -720,38 +706,40 @@ void perfilPreceptor() {
 }
 
 
-
 void perfilCoordenacao() {
   char aux;
-  printf("\n [0] -> navBar\n\
-        \nPERFIL DA COORDENACAO\n"\
-        "Nome: %s\n"\
-        "ID: %d\n"\
-        "CARGO: %s\n"\
-        "\n", 
-         perfil->nome,
-         perfil->id, 
-         perfil->categoriaUsuario);
+  while (1)
+  {
 
-  printf("Gostaria de sair? (s/n): ");
-  scanf(" %c", &aux);
+    printf("\n [0] -> navBar\n\
+          \nPERFIL DA COORDENACAO\n"\
+          "Nome: %s\n"\
+          "ID: %d\n"\
+          "CARGO: %s\n"\
+          "\n", 
+          perfil->nome,
+          perfil->id, 
+          perfil->categoriaUsuario);
 
-  getchar();
+    printf("Gostaria de sair? (s/n): ");
+    scanf(" %c", &aux);
 
-  if (aux == 's') {
-    return;
-  }
-  else if (aux == 'n') {
-    perfilCoordenacao();
-  }
-  else if (aux == '0') {
-    navBar();
-  }
-  else {
-    printf("Opcao invalida\n");
+    getchar();
+
+    if (aux == 's') {
+      return;
+    }
+    else if (aux == 'n') {
+      perfilCoordenacao();
+    }
+    else if (aux == '0') {
+      navBar();
+    }
+    else {
+      printf("Opcao invalida\n");
+    }
   }
 }
-
 
 
 void menuPerfil(){
@@ -814,40 +802,51 @@ void homeGestao(){
 
 void homeResidente(){
   int input = 0;
-   printf("===HOME RESIDENTE===\n"\
-        "selecione uma opcao:\n"\
-        "[-1] -> voltar\n"\
-        "[0]-> navBar\n"\
-        "[1]-> minhas atividades\n"\
-        
-        "\n:"
-      );
+  while (1)
+  {
+  
+  
+    printf("===HOME RESIDENTE===\n"\
+      "selecione uma opcao:\n"\
+      "-1 -> Sair\n"\
+      "0 -> Barra de navegacao\n"\
+      "1 -> Todas atividades\n"\
+      "2 -> Atividades do dia\n"\
+      
+      "\n:"
+    );
+  
     
-      
-      scanf("%d", &input);
-      getchar();
-      
-      if(input == -1){
-        return;
-      }
-      switch(input){
-        case 0:
-          navBar();
-          break;
-        
-        case 1:
-          printf("========AINDA N TEM ND AQUI=========\n");
-          break;
+    scanf("%d", &input);
+    getchar();
+    
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 0:
 
-        default:
-          printf("opcao invalida\n");
-          break;
-      }
+        navBar();
+        break;
+      
+      case 1:
+        verAtividades();
+        break;
 
-      printf("\n\n");
+      case 2:
+        printf("========DO DIA=========\n");
+        break;
+
+      default:
+        printf("opcao invalida\n");
+        break;
     }
 
+    printf("\n\n");
+  }
+}
 //A FAZER
+
 void homePreceptor(){
   printf("home a fazer\n");
 }
@@ -886,5 +885,168 @@ void homeCoordenacao(){
 
 
       printf("\n\n");
+}
+
+
+void navbarResidente(){
+   int input = 0;
+
+  while(1){
+    printf("===NavBar===\n\n"\
+      "selecione uma opcao:\n"\
+      "[-1] -> Voltar\n"\
+      "[1]-> Perfil\n"\
+      "[2]-> Home\n"\
+      "[3]-> Atividade\n"\
+      "[4]-> Feeedbacks\n"\
+      "[5]-> Notas\n"\
+  
+       "\n:"
+    );
+    scanf("%d", &input);
+    getchar();
+  
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+      menuPerfil();
+      break;   
+      
+      case 2:
+        home();
+        break;
+      
+      case 3:
+        verAtividades();
+        break;
+      
+      case 4:
+        printf("NOTIFICACAO\n");
+        break;
+      
+      case 5:
+        printf("NOTAS\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
+}
+
+
+void navbarGestao(){
+int input = 0;
+
+  while(1){
+    printf("===NavBar===\n\n"\
+      "selecione uma opcao:\n"\
+      "[-1] -> voltar\n"\
+      "[1]-> perfil\n"\
+      "[2]-> atividades\n"\
+  
+       "\n:"
+    );
+    scanf("%d", &input);
+    getchar();
+  
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+      menuPerfil();
+      break;   
+      
+      case 2:
+        printf("ver atividades\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
+}
+
+
+void navbarPreceptor(){
+int input = 0;
+
+  while(1){
+    printf("===NavBar===\n\n"\
+      "selecione uma opcao:\n"\
+      "[-1] -> voltar\n"\
+      "[1]-> perfil\n"\
+      "[2]-> atividades\n"\
+  
+       "\n:"
+    );
+    scanf("%d", &input);
+    getchar();
+  
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+      menuPerfil();
+      break;   
+      
+      case 2:
+        printf("ver atividades\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
+}
+
+
+void navbarCoordenacao(){
+  int input = 0;
+
+  while(1){
+    printf("===NavBar===\n\n"\
+      "selecione uma opcao:\n"\
+      "[-1] -> voltar\n"\
+      "[1]-> perfil\n"\
+      "[2]-> atividades\n"\
+  
+       "\n:"
+    );
+    scanf("%d", &input);
+    getchar();
+  
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+      menuPerfil();
+      break;   
+      
+      case 2:
+        printf("ver atividades\n");
+        break;
+      
+      default:
+        printf("opcao invalida\n");
+        break;
+    }
+
+    printf("\n\n");
+  }
 }
 
