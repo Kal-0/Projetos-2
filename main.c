@@ -122,8 +122,8 @@ int main(void) {
     "CREATE TABLE COORDENACAO_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
-      "CARGO TEXT NOT NULL, "\
       "RESIDENCIA_FK INTEGER NOT NULL, "\
+      "CARGO TEXT NOT NULL, "\
       "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
       "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
     "); "\
@@ -361,7 +361,21 @@ int main(void) {
 
 
 
+
+
+
+
+
+
+
+
+
   //testando
+  
+
+
+
+
 
 
   tarefinha = (struct lsAtividade*)malloc(sizeof(struct lsAtividade));
@@ -390,27 +404,46 @@ int main(void) {
   printf("uepa: %s", tarefinha->atividade.nomeDaAtividade);
 
 
+
+
+
+
+
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(&db, "nutricao");
+
+  printf("ADICIONANDO_TURMA===\n");
+  addTurmaTB(&db, 1, "nutricao_1", "2022");
 
 
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
+  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "gestao");
+  addUsuarioTB(&db, "carol", "carol@gmail.com", "carol123", "coordenacao");
+  addUsuarioTB(&db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
-  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "preceptor");
 
   printf("CADASTRO_GESTAO===\n");
   addGestaoTB(&db, 1, "financeiro");
+  addGestaoTB(&db, 2, "gestora_lider");
 
 
   printf("CADASTRO_COORDENACAO===\n");
-  addCoordenacaoTB(&db, 3, "gestora_lider", 1);
+  addCoordenacaoTB(&db, 3, "diretora", 1);
 
+
+  printf("CADASTRO_PRECEPTOR===\n");
+  addPreceptorTB(&db, 4, 1);
 
   printf("CADASTRO_RESIDENTE===\n");
-  addResidenteTB(&db, 2, "1234567", 1, 1, "[0,0,0,0]");
+  addResidenteTB(&db, 5, "1234567", 1, 1, "[0,0,0,0]");
 
-  
+
+  printf("PRINT_GESTAO===\n");
+  lsID* lsGestao = NULL;
+  lsGestao = getTableIDLs(&db, "USUARIO_TB", "TIPO = 'gestao'");
+
+  printLs(&lsGestao);
 
   printf("LOGIN===\n");
   perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
@@ -542,8 +575,10 @@ void cadastro(){
       if(vef == 0){
         Usuario* usuarioCriado = NULL;
         usuarioCriado = getUsuarioTB(&db, email, senha);
+
         int usuario_fk = usuarioCriado->id;
 
+        free(usuarioCriado);
         
 
 
@@ -557,7 +592,25 @@ void cadastro(){
         }
 
         if(!strcmp(tipo, "coordenacao")){
+          int residencia_fk;
+          char cargo[50];
+          
+          printf("selecione sua residencia: ");
+          scanf("%d", residencia_fk);
+          getchar();
 
+          printf("insira seu cargo: ");
+          scanf("%s", cargo);
+          getchar();
+
+
+
+          vef = addGestaoTB(&db, usuario_fk, cargo);
+
+          if(vef == 0){
+            printf("cadastro realisado com sucesso!\n\n");
+            break;
+          }
         }
 
 
@@ -569,6 +622,8 @@ void cadastro(){
           printf("insira seu cargo: ");
           scanf("%s", cargo);
           getchar();
+
+
 
           vef = addGestaoTB(&db, usuario_fk, cargo);
 

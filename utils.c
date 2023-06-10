@@ -194,7 +194,7 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
         //verificando se o tipo do usuario existe
         strFOverwrite(&sql_cmd,
           "SELECT * FROM %s_TB "\
-          "WHERE (USUARIO_FK = '%d'); "\
+          "WHERE (USUARIO_FK = %d); "\
 
         "",usuarioLogin->categoriaUsuario, usuarioLogin->id);
 
@@ -253,7 +253,7 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
 
   }
     
-  printf("===DEBUG===\n");
+  //printf("===DEBUG===\n");
   
   sqlite3_finalize(sql_stmt);
   
@@ -309,7 +309,7 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
 
       sqlite3_finalize(sql_stmt);
       sqlite3_close(db);
-      return 1;
+      return ret;
 
     }
 
@@ -342,7 +342,7 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
   sqlite3_finalize(sql_stmt);
   sqlite3_close(db);
   
-  return 0;
+  return ret;
 };
 
 int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
@@ -358,15 +358,71 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
 
   // funcao
 
-  // criando tabela gestao
+  // criando tabela do tipo
   strFOverwrite(&sql_cmd,  
     "INSERT INTO GESTAO_TB (USUARIO_FK, CARGO) "\
-    "VALUES ('%d', '%s'); "\
+    "VALUES (%d, '%s'); "\
 
   "", usuario_fk, cargo);
-  
+
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(&db, ret);
+
+
+  //verificando criacao de tabela
+  if(ret != SQLITE_OK){
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+
+    sqlite3_close(db);
+    return ret;
+  }
+
+
+  //pegando ID do tipo criado
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM GESTAO_TB "\
+    "WHERE (USUARIO_FK = %d); "\
+  "", usuario_fk);
+  
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return ret;
+  }
+  
+  int tipoID = sqlite3_column_int(sql_stmt, 0);
+
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+
+  //alterando ID do tipo de usuario
+  strFOverwrite(&sql_cmd,  
+    "UPDATE USUARIO_TB "\
+    "SET "\
+      "TIPO_FK = %d "\
+    ""\
+
+    "WHERE (ID = %d); "\
+
+  "", tipoID, usuario_fk);
+    
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  //tipo criado
 
 
   if(sql_cmd != NULL){
@@ -375,7 +431,7 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
 
   sqlite3_close(db);
 
-  return 0;
+  return ret;
 }
 
 int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residencia_fk) {
@@ -391,16 +447,74 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
 
   // funcao
 
-  // criando tabela gestao
+  // criando tabela do tipo
   strFOverwrite(&sql_cmd,  
-    "INSERT INTO COORDENACAO_TB (USUARIO_FK, CARGO, RESIDENCIA_FK) "\
-    "VALUES ('%d', '%s', '%d'); "\
+    "INSERT INTO COORDENACAO_TB (USUARIO_FK, RESIDENCIA_FK, CARGO) "\
+    "VALUES (%d, %d, '%s'); "\
 
-  "", usuario_fk, cargo, residencia_fk);
+  "", usuario_fk, residencia_fk, cargo);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(&db, ret);
 
+
+
+  //verificando criacao de tabela
+  if(ret != SQLITE_OK){
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+
+    sqlite3_close(db);
+    return ret;
+  }
+
+
+  //pegando ID do tipo criado
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM COORDENACAO_TB "\
+    "WHERE (USUARIO_FK = %d); "\
+  "", usuario_fk);
+
+
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return ret;
+  }
+
+  
+  
+  int tipoID = sqlite3_column_int(sql_stmt, 0);
+
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+
+  //alterando ID do tipo do usuario
+  strFOverwrite(&sql_cmd,  
+    "UPDATE USUARIO_TB "\
+    "SET "\
+      "TIPO_FK = %d "\
+    ""\
+
+    "WHERE (ID = %d); "\
+
+  "", tipoID, usuario_fk);
+    
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  //tipo criado
 
   if(sql_cmd != NULL){
     free(sql_cmd);
@@ -408,7 +522,7 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
 
   sqlite3_close(db);
 
-  return 0;
+  return ret;
 }
 
 int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
@@ -424,10 +538,10 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
 
   // funcao
 
-  // criando tabela gestao
+  // criando tabela do tipo 
   strFOverwrite(&sql_cmd,  
     "INSERT INTO PRECEPTOR_TB (USUARIO_FK, TURMA_FK) "\
-    "VALUES ('%d', '%s'); "\
+    "VALUES (%d, %d); "\
 
   "", usuario_fk, turma_fk);
   
@@ -435,12 +549,68 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   sysStatus(&db, ret);
 
 
+  //verificando criacao de tabela
+  if(ret != SQLITE_OK){
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+
+    sqlite3_close(db);
+    return ret;
+  }
+
+
+  //pegando ID do tipo criado
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM PRECEPTOR_TB "\
+    "WHERE (USUARIO_FK = %d); "\
+  "", usuario_fk);
+
+
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return ret;
+  }
+
+  int tipoID = sqlite3_column_int(sql_stmt, 0);
+
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+
+  //alterando ID do tipo de usuario
+  strFOverwrite(&sql_cmd,  
+    "UPDATE USUARIO_TB "\
+    "SET "\
+      "TIPO_FK = %d "\
+    ""\
+
+    "WHERE (ID = %d); "\
+
+  "", tipoID, usuario_fk);
+    
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  //tipo criado
+
+
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
   sqlite3_close(db);
 
-  return 0;
+  return ret;
 }
 
 int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas) {
@@ -456,10 +626,10 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
 
   // funcao
 
-  // criando tabela gestao
+  // criando tabela do tipo
   strFOverwrite(&sql_cmd,  
     "INSERT INTO RESIDENTE_TB (USUARIO_FK, MATRICULA, TURMA_FK, PRECEPTOR_FK, NOTAS) "\
-    "VALUES ('%d', '%s', '%d', '%d', '%s'); "\
+    "VALUES (%d, '%s', %d, %d, '%s'); "\
 
   "", usuario_fk, matricula, turma_fk, preceptor_fk, notas);
   
@@ -467,12 +637,69 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   sysStatus(&db, ret);
 
 
+  //verificando criacao de tabela
+  if(ret != SQLITE_OK){
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+
+    sqlite3_close(db);
+    return ret;
+  }
+
+
+  //pegando ID do tipo criado
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM RESIDENTE_TB "\
+    "WHERE (USUARIO_FK = %d); "\
+  "", usuario_fk);
+
+
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return ret;
+  }
+
+
+  int tipoID = sqlite3_column_int(sql_stmt, 0);
+
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+
+  //alterando ID do tipo de usuario
+  strFOverwrite(&sql_cmd,  
+    "UPDATE USUARIO_TB "\
+    "SET "\
+      "TIPO_FK = %d "\
+    ""\
+
+    "WHERE (ID = %d); "\
+
+  "", tipoID, usuario_fk);
+    
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+  //tipo criado
+
+
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
   sqlite3_close(db);
 
-  return 0;
+  return ret;
 }
 
 
@@ -507,7 +734,137 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
   }
   sqlite3_close(db);
 
-  return 0;
+  return ret;
+}
+
+int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
+// Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+
+  // criando tabela residencia
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO TURMA_TB (RESIDENCIA_FK, NOME, ANO) "\
+    "VALUES (%d, '%s', '%s'); "\
+
+  "", residencia_fk, nome, ano);
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(&db, ret);
+
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+  sqlite3_close(db);
+
+  
+
+  return ret;
 }
 
 
+
+//adicionando objetos
+void printLs(lsID **head) {
+  lsID *temp = *head;
+  while (temp != NULL) {
+    printf("%d\n", temp->id);
+    temp = temp->next;
+  }
+}
+
+
+void append(lsID **head, int item) {
+  lsID *newItem = (lsID *)malloc(sizeof(lsID));
+  newItem->id = item;
+  newItem->next = NULL;
+  newItem->last = NULL;
+  
+  if (*head == NULL) {
+    *head = newItem;
+    
+  } else {
+    lsID *temp = *head;
+    while (temp->next != NULL) {
+      temp = temp->next;
+    }
+
+    temp->next = newItem;
+    temp->next->last = temp;
+  }
+}
+
+lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
+  // Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+
+  lsID* list = NULL;
+
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM %s "\
+    "WHERE (%s); "\
+  "", tableName, condition);
+
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return list;
+  }
+  
+  
+
+  while(ret == SQLITE_ROW){
+    //printf("===DEBUG===: %d\n", sqlite3_column_int(sql_stmt, 0));
+    
+    append(&list, sqlite3_column_int(sql_stmt, 0));
+
+    ret = sqlite3_step(sql_stmt);
+  }
+  
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+  sqlite3_close(db);
+
+  return list;
+  
+}
+
+int getLsResidencias(){
+
+}
+
+
+//interface
+int printResidencias(){
+
+}

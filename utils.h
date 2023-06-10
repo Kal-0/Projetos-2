@@ -11,10 +11,9 @@
 #define UTILS_H_
 
 
-
+//usuarios
 struct SUsuario;
 typedef struct SUsuario Usuario;
-
 
 struct SGestao;
 typedef struct SGestao Gestao;
@@ -26,10 +25,14 @@ struct SResidente;
 typedef struct SResidente Residente;
 
 
+//estruturas
 struct SProgramaResidencia;
 typedef struct SProgramaResidencia ProgramaResidencia;
 struct STurma;
 typedef struct STurma Turma;
+
+
+//objetos
 struct SAtividade;
 typedef struct SAtividade Atividade;
 struct SSubmissao;
@@ -37,6 +40,10 @@ typedef struct SSubmissao Submissao;
 struct SFeedbackGeral;
 typedef struct SFeedbackGeral FeedbackGeral;
 
+
+typedef int ID;
+struct SlsID;
+typedef struct SlsID lsID;
 
 
 // Usuario base
@@ -58,19 +65,19 @@ struct SResidente{
   Usuario* usuario;
   int matricula;
   Turma* turma;
-  Atividade *listaAtividades;
-  Submissao *listaSubmissoes;
+  lsID *listaAtividades;
+  lsID *listaSubmissoes;
   Preceptor* preceptorResponsavel;
   float notasTrimestrais[4];
-  FeedbackGeral *listaFeedbacks;
+  lsID *listaFeedbacks;
 };
  
 struct SPreceptor{
   Usuario* usuario;
   Turma* turma;
-  Residente *listaResidentes;
-  Atividade *listaAtividades;
-  FeedbackGeral *listaFeedbacks;
+  lsID *listaResidentes;
+  lsID *listaAtividades;
+  lsID *listaFeedbacks;
 };
 
 struct SCoordenacao{
@@ -82,7 +89,7 @@ struct SCoordenacao{
 struct SGestao{
   Usuario* usuario;
   char* cargo;
-  ProgramaResidencia *listaResidencias;
+  lsID *listaResidencias;
 };
 
 
@@ -91,17 +98,17 @@ struct SGestao{
 
 struct SProgramaResidencia{
   char nomePrograma[30];
-  Coordenacao* listaCoordenacao;
-  Turma* listaTurmas;
+  lsID* listaCoordenacao;
+  lsID* listaTurmas;
 };
 
 
 struct STurma{
   char nomeTurma[40];
   char anoDaTurma[10];
-  Residente *residentes;
-  Preceptor *listaPreceptores;
-  Atividade *listasAtividades;
+  lsID *residentes;
+  lsID *listaPreceptores;
+  lsID *listasAtividades;
   ProgramaResidencia* residencia;
   char *criteriosAvaliativos;
 };
@@ -113,7 +120,7 @@ struct SAtividade{
   char* nomeDaAtividade;
   char* descricaoDaAtividade;
   Turma* turma;
-  Submissao *listaSubmissao;
+  lsID *listaSubmissao;
   char dataDaPostagem[16];
   char dataDaEntrega[16];
   int ativa;
@@ -141,25 +148,38 @@ struct SFeedbackGeral{
   char* status;
 };
 
+struct SlsID{
+  int id;
 
+  lsID* next;
+  lsID* last;
+};
 
 // Funções:
 
 
 // -Gerais:
+void printLs(lsID **head);
+void append(lsID **head, int item);
+
 char* strFOverwrite(char** output_str, char* base_str, ...);
 
 int sysStatus(sqlite3** db_ptr, int ret);
 int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p);
+lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition);
 
+//cadastro
 int addUsuarioTB();
 int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo);
 int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residencia_fk);
 int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk);
 int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas);
 
-
 Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha);
+
+//estruturas
+int addResidenciaTB(sqlite3** db_ptr, char* nome);
+int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano);
 
 /*
 void criarCriteriosDeFeedback(Turma *turma);
