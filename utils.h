@@ -159,13 +159,20 @@ struct SlsID{
 
 
 // -Gerais:
-void printLs(lsID **head);
-void append(lsID **head, int item);
-
 char* strFOverwrite(char** output_str, char* base_str, ...);
 
+
+//listas
+void printLs(lsID **head);
+int lenLs(lsID **head);
+void append(lsID **head, int item);
+void freeLs(lsID **head);
+
+
+//banco de dados
 int sysStatus(sqlite3** db_ptr, int ret);
 int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p);
+void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field, char* condition);
 lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition);
 
 //cadastro

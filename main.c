@@ -392,7 +392,7 @@ int main(void) {
   printf("stmt: %s", sqlite3_column_text(sql_stmt, 1));
 
   sysStatus(&db, ret);
-  char* str = strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 1),NULL);
+  char* str = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 1),NULL);
   printf("noem: %s\n", str);
   
   if (ret == SQLITE_ROW){
@@ -444,6 +444,8 @@ int main(void) {
   lsGestao = getTableIDLs(&db, "USUARIO_TB", "TIPO = 'gestao'");
 
   printLs(&lsGestao);
+  freeLs(&lsGestao);
+
 
   printf("LOGIN===\n");
   perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
@@ -593,9 +595,42 @@ void cadastro(){
 
         if(!strcmp(tipo, "coordenacao")){
           int residencia_fk;
-          char cargo[50];
+          char* residencia;
+          int str_len = 0;
+          char* cargo;
+
+          lsID* listaResidencias =NULL;
+          listaResidencias = getTableIDLs(&db, "RESIDENCIA_TB", "ID != -1");
+          int numResidencias = lenLs(&listaResidencias);
+          printLs(&listaResidencias);
           
-          printf("selecione sua residencia: ");
+
+
+          printf("===RESIDENCIAS===\n"\
+            "selecione sua residencia: "\
+
+            "\n"
+          );
+
+          for(int i=0; i<numResidencias; i++){
+
+            residencia = ((char*)getCellVoid(&db, &str_len, "RESIDENCIA_TB", "NOME", "ID = 1"));
+            residencia[str_len] = '\0';
+
+            printf(
+              "[%d] -> %s\n"\
+
+              "\n"\
+            "", i, residencia);
+
+            free(residencia);
+
+          }
+          
+
+          printf(": ");
+
+
           scanf("%d", residencia_fk);
           getchar();
 

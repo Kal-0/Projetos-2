@@ -15,6 +15,8 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
   char* formatted_str = NULL;
   int str_size = 0;
 
+  int SWITCH = 1;
+
   if(base_str != NULL){
 
     va_list args;
@@ -30,8 +32,9 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
 
     formatted_str = (char*)malloc(str_size+ 1);
     strcpy(formatted_str, base_str);
-    printf("result: %s\n", formatted_str);
-
+    if(SWITCH){
+      printf("result: %s\n", formatted_str);
+    }
     if (formatted_str == NULL)
         return NULL;
 
@@ -46,7 +49,9 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
 
       va_end(args);
 
-      printf("result: %s\n", formatted_str);
+      if(SWITCH){
+        printf("result: %s\n", formatted_str);
+      }
     }
     else{
       va_end(args);
@@ -71,14 +76,21 @@ int sysStatus(sqlite3** db_ptr, int ret){
   sqlite3* db = *db_ptr;
 
   //funcao
-  printf("\nCODE: %d\n", ret);
+  int SWITCH = 1;
 
-  if(ret){
-    fprintf(stderr, "nao foi possivel acessar o banco de dados, \n ERRO: %s\n\n", sqlite3_errmsg(db));
-    return 1;
-  } 
-  else{
-    fprintf(stderr, "banco de dados acessado.\n STATUS: %s\n\n", sqlite3_errmsg(db));
+  if(SWITCH){
+    printf("\nCODE: %d\n", ret);
+
+    if(ret){
+      fprintf(stderr, "ERRO: %s\n\n", sqlite3_errmsg(db));
+      return 1;
+    } 
+    else{
+      fprintf(stderr, "STATUS: %s\n\n", sqlite3_errmsg(db));
+      return 0;
+    }
+  }else{
+
     return 0;
   }
 }
@@ -131,6 +143,67 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
   }
 }
 
+void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field, char* condition){
+  // Banco de dados
+  sqlite3* db = *db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  sqlite3_open("BD/db.sqlite3", &db);
+
+
+  // funcao
+
+  void* cellValue = NULL;
+
+  strFOverwrite(&sql_cmd,  
+    "SELECT %s FROM %s "\
+    "WHERE (%s); "\
+  "", field, tableName, condition);
+
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    sqlite3_close(db);
+
+    return cellValue;
+  }
+
+  
+  
+  int cell_bytes = sqlite3_column_bytes(sql_stmt, 0);
+  *cell_size = cell_bytes;
+
+  //printf("===DEBUG===: %d\n", cell_bytes);
+  //printf("===DEBUG===: %s\n", (char*)sqlite3_column_blob(sql_stmt, 0));
+
+  cellValue = malloc(cell_bytes);
+
+  memcpy(cellValue, (void*)sqlite3_column_blob(sql_stmt, 0), cell_bytes);
+
+  //printf("===DEBUG===: %s\n", (char*)cellValue);
+
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+  sqlite3_close(db);
+
+  
+
+  return cellValue;
+
+}
 
 
 //login
@@ -773,7 +846,41 @@ int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
 
 
 
-//adicionando objetos
+//listas
+int getItemLs(lsID** head, int index){
+  lsID *temp = *head;
+  int cursor = 0;
+
+  if(abs(index)>lenLs(*head)){
+    return 0;
+  }
+
+  if(index >= 0){
+    while (temp != NULL) {
+      if(cursor == index){
+        return temp->id;
+      }
+      cursor++;
+      temp = temp->next;
+    }
+
+  }else{
+    while (temp->next != NULL) {
+      temp = temp->next;
+    }
+
+    cursor = -1;
+    while (temp != NULL) {
+      if(cursor == index){
+        return temp->id;
+      }
+      cursor--;
+      temp = temp->last;
+    }
+    
+  }
+}
+
 void printLs(lsID **head) {
   lsID *temp = *head;
   while (temp != NULL) {
@@ -782,6 +889,16 @@ void printLs(lsID **head) {
   }
 }
 
+int lenLs(lsID **head) {
+  lsID *temp = *head;
+  int length = 0;
+
+  while (temp != NULL) {
+    length++;
+    temp = temp->next;
+  }
+  return length;
+}
 
 void append(lsID **head, int item) {
   lsID *newItem = (lsID *)malloc(sizeof(lsID));
@@ -800,6 +917,23 @@ void append(lsID **head, int item) {
 
     temp->next = newItem;
     temp->next->last = temp;
+  }
+}
+
+void freeLs(lsID **head) {
+  lsID *temp = *head;
+  lsID *aux = NULL;
+  if (*head == NULL) {
+    return;
+  } else {
+
+    while (temp != NULL) {
+      aux = temp;
+      temp = temp->next;
+      free(aux);
+    }
+
+    *head = NULL;
   }
 }
 
@@ -841,7 +975,7 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
 
   while(ret == SQLITE_ROW){
     //printf("===DEBUG===: %d\n", sqlite3_column_int(sql_stmt, 0));
-    
+
     append(&list, sqlite3_column_int(sql_stmt, 0));
 
     ret = sqlite3_step(sql_stmt);
@@ -859,10 +993,8 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
   
 }
 
-int getLsResidencias(){
 
-}
-
+//adicionando objetos
 
 //interface
 int printResidencias(){
