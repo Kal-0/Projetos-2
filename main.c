@@ -866,7 +866,7 @@ void homeResidente(){
         break;
       
       case 1:
-        printNomeAtividade(Tarefinha);
+        //printNomeAtividade(Tarefinha);
         break;
 
       case 2:
