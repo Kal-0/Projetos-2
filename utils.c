@@ -493,7 +493,7 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
 
   // criando tabela residencia
   strFOverwrite(&sql_cmd,  
-    "INSERT INTO GESTAO_TB (NOME) "\
+    "INSERT INTO RESIDENCIA_TB (NOME) "\
     "VALUES ('%s'); "\
 
   "", nome);

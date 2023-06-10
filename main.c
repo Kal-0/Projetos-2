@@ -389,6 +389,11 @@ int main(void) {
   printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
   printf("uepa: %s", tarefinha->atividade.nomeDaAtividade);
 
+
+  printf("ADICIONANDO_RESIDENCIA===\n");
+  addResidenciaTB(&db, "nutricao");
+
+
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
@@ -397,8 +402,15 @@ int main(void) {
   printf("CADASTRO_GESTAO===\n");
   addGestaoTB(&db, 1, "financeiro");
 
+
+  printf("CADASTRO_COORDENACAO===\n");
+  addCoordenacaoTB(&db, 3, "gestora_lider", 1);
+
+
   printf("CADASTRO_RESIDENTE===\n");
   addResidenteTB(&db, 2, "1234567", 1, 1, "[0,0,0,0]");
+
+  
 
   printf("LOGIN===\n");
   perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
