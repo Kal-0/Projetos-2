@@ -1,6 +1,6 @@
 #include "utils.h"
 
-
+//printf("===DEBUG===\n");
 
 
 
@@ -114,15 +114,19 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
 
       *sql_stmt_ptr = sql_stmt;
 
+      sqlite3_close(db);
       return ret;
     }else{
 
       sqlite3_finalize(sql_stmt);
+      sqlite3_close(db);
       return ret;
     }
 
 
   }else{
+    //printf("===DEBUG===\n");
+    sqlite3_close(db);
     return ret;
   }
 }
@@ -249,7 +253,7 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
 
   }
     
-  
+  printf("===DEBUG===\n");
   
   sqlite3_finalize(sql_stmt);
   
@@ -407,7 +411,7 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   return 0;
 }
 
-int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int turma_fk) {
+int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   // Banco de dados
   sqlite3* db = *db_ptr;
   sqlite3_stmt* sql_stmt = NULL;

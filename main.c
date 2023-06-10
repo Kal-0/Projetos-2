@@ -115,7 +115,28 @@ int main(void) {
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
       "CARGO TEXT NOT NULL, "\
+      "RESIDENCIAS_LS TEXT, "\
       "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID) "\
+    "); "\
+
+    "CREATE TABLE COORDENACAO_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
+      "CARGO TEXT NOT NULL, "\
+      "RESIDENCIA_FK INTEGER NOT NULL, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
+    "); "\
+
+    "CREATE TABLE PRECEPTOR_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "RESIDENTES_LS TEXT, "\
+      "ATIVIDADES_LS TEXT, "\
+      "FEEDBACKS_LS TEXT, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID) "\
     "); "\
 
     "CREATE TABLE RESIDENTE_TB( "\
@@ -136,8 +157,8 @@ int main(void) {
     "CREATE TABLE RESIDENCIA_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "NOME TEXT NOT NULL, "\
-      "COORDENACAO TEXT NOT NULL, "\
-      "TURMAS TEXT NOT NULL "\
+      "COORDENACAO_LS TEXT, "\
+      "TURMAS_LS TEXT "\
     "); "\
 
     "CREATE TABLE TURMA_TB( "\
@@ -145,12 +166,55 @@ int main(void) {
       "RESIDENCIA_FK INTEGER NOT NULL, "\
       "NOME TEXT NOT NULL, "\
       "ANO TEXT NOT NULL, "\
-      "RESIDENTES TEXT NOT NULL, "\
-      "PRECEPTORES TEXT NOT NULL, "\
-      "ATIVIDADES TEXT NOT NULL, "\
+      "RESIDENTES_LS TEXT, "\
+      "PRECEPTORES_LS TEXT, "\
+      "ATIVIDADES_LS TEXT, "\
       "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
     "); "\
 
+    "CREATE TABLE ATIVIDADE_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "NOME TEXT NOT NULL, "\
+      "DESCRICAO TEXT NOT NULL, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "SUBMISSOES_LS TEXT, "\
+      "DATA_POSTAGEM TEXT NOT NULL, "\
+      "DATA_ENTREGA TEXT, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID)"\
+
+    "); "\
+    
+    "CREATE TABLE SUBMISSAO_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER NOT NULL, "\
+      "ATIVIDADE_FK INTEGER NOT NULL, "\
+      "NOTA FLOAT, "\
+      "RESPOSTA TEXT, "\
+      "FEEBACK TEXT, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID), "\
+      "FOREIGN KEY (ATIVIDADE_FK) REFERENCES ATIVIDADE_TB(ID) "\
+
+    "); "\
+
+    "CREATE TABLE FEEDBACK_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER NOT NULL, "\
+      "NOTA FLOAT NOT NULL, "\
+      "CRITERIOS TEXT NOT NULL, "\
+      "FEEBACK TEXT NOT NULL, "\
+      "CONTESTACAO TEXT, "\
+      "RESPOSTA_CONTESTACAO TEXT, "\
+      "DATA TEXT NOT NULL, "\
+      "STATUS TEXT NOT NULL, "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID) "\
+
+    "); "\
 
 
 
@@ -210,8 +274,6 @@ int main(void) {
     //printf("%s\n", sql_cmd);
     sysStatus(&db, ret);
 
-    
-
   if(0){
 
 
@@ -231,7 +293,6 @@ int main(void) {
     strFOverwrite(&sql_cmd,  
       "INSERT INTO ATIVIDADE_TB (ID,NOME,DESCRICAO,TURMA_FK,SUBMISSOES_LS,DATA_POSTAGEM,DATA_ENTREGA,STATUS) "\
       "VALUES (51, 'E DE PEIXE?', 'TU É DOIDOOOO', '61', 'gestao','09/06/2023','12/06/2023','A FAZER' ); "\
-
 
     "", NULL);
 
@@ -301,33 +362,42 @@ int main(void) {
 
 
   //testando
-//"WHERE (ID = 1); "
-  printf("2222222222222222222222\n");
+
+
+  tarefinha = (struct lsAtividade*)malloc(sizeof(struct lsAtividade));
+  tarefinha->atividade.nomeDaAtividade = "teste";
+
+  printf("noem: %s\n",tarefinha->atividade.nomeDaAtividade);
+
   strFOverwrite(&sql_cmd,  
-      "SELECT NOME FROM ATIVIDADE_TB "\
-      "WHERE (NOME = '%s');"
-    "", "E DE PEIXE?");
+    "SELECT * FROM ATIVIDADE_TB; "\
+
+  "", NULL);
     
-    ret = getStmt(&db, &sql_stmt, sql_cmd);
-    printf("%s", sqlite3_column_text(sql_stmt, 0));
-    sysStatus(&db, ret);
-    tarefinha->atividade.nomeDaAtividade=strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 0),NULL);
-    
-    // if (ret == SQLITE_ROW){
-    //  
-    //   tarefinha->atividade.descricaoDaAtividade=strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 2),NULL);
-    // }
-    printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-    printf("%s", &tarefinha->atividade.nomeDaAtividade);
+  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  printf("stmt: %s", sqlite3_column_text(sql_stmt, 1));
+
+  sysStatus(&db, ret);
+  char* str = strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 1),NULL);
+  printf("noem: %s\n", str);
+  
+  if (ret == SQLITE_ROW){
+   
+    (tarefinha->atividade).nomeDaAtividade = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 1),NULL);
+  }
+
+  printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+  printf("uepa: %s", tarefinha->atividade.nomeDaAtividade);
 
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
+  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "preceptor");
 
   printf("CADASTRO_GESTAO===\n");
   addGestaoTB(&db, 1, "financeiro");
 
-  printf("CADASTRO_GESTAO===\n");
+  printf("CADASTRO_RESIDENTE===\n");
   addResidenteTB(&db, 2, "1234567", 1, 1, "[0,0,0,0]");
 
   printf("LOGIN===\n");
@@ -1076,7 +1146,7 @@ void homeResidente(){
         break;
       
       case 1:
-        printNomeAtividade(&tarefinha);
+        //printNomeAtividade(Tarefinha);
         break;
 
       case 2:
