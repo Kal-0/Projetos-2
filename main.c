@@ -47,24 +47,22 @@ struct lsAtividade* tarefinha = NULL;
 
 
 
-int countFilesInFolder(const char* folderPath) {
-    DIR* directory = opendir(folderPath);
-    if (directory == NULL) {
-        perror("Unable to open the directory");
-        return -1;
-    }
-
-    int fileCount = 0;
-    struct dirent* entry;
-    while ((entry = readdir(directory)) != NULL) {
-        if (entry->d_type == DT_REG) {  // Regular file
-            fileCount++;
-        }
-    }
-
-    closedir(directory);
-    return fileCount;
-}
+// int countFilesInFolder(const char* folderPath) {
+//     DIR* directory = opendir(folderPath);
+//     if (directory == NULL) {
+//         perror("Unable to open the directory");
+//         return -1;
+//     }
+//     int fileCount = 0;
+//     struct dirent* entry;
+//     while ((entry = readdir(directory)) != NULL) {
+//         if (entry->d_type == DT_REG) {  // Regular file
+//             fileCount++;
+//         }
+//     }
+//     closedir(directory);
+//     return fileCount;
+// }
 
 
 
@@ -228,15 +226,15 @@ int main(void) {
     sysStatus(&db, ret);
 
 
-  strFOverwrite(&sql_cmd,  
-    "INSERT INTO ATIVIDADE_TB (ID,NOME,DESCRICAO,TURMA_FK,SUBMISSOES_LS,DATA_POSTAGEM,DATA_ENTREGA,STATUS) "\
-    "VALUES (51, 'E DE PEIXE?', 'TU É DOIDOOOO', '61', 'gestao','09/06/2023','12/06/2023','A FAZER' ); "\
+    strFOverwrite(&sql_cmd,  
+      "INSERT INTO ATIVIDADE_TB (ID,NOME,DESCRICAO,TURMA_FK,SUBMISSOES_LS,DATA_POSTAGEM,DATA_ENTREGA,STATUS) "\
+      "VALUES (51, 'E DE PEIXE?', 'TU É DOIDOOOO', '61', 'gestao','09/06/2023','12/06/2023','A FAZER' ); "\
 
-  "", NULL);
+    "", NULL);
 
-  
-  //printf("%s\n", sql_cmd);
-  sysStatus(&db, ret);
+    ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+    //printf("%s\n", sql_cmd);
+    sysStatus(&db, ret);
 
 
     //atualizando tables
@@ -255,12 +253,15 @@ int main(void) {
     //printf("%s\n", sql_cmd);
     sysStatus(&db, ret);
 
-  strFOverwrite(&sql_cmd,  
-    "SELECT * FROM ATIVIDADE_TB; "\
-
-  "", NULL);
 
 
+
+    strFOverwrite(&sql_cmd,  
+      "SELECT * FROM ATIVIDADE_TB; "\
+
+    "", NULL);
+
+    
     ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
     
     if (sqlite3_step(sql_stmt) == SQLITE_ROW) {
@@ -274,6 +275,8 @@ int main(void) {
         sqlite3_column_text(sql_stmt, 6);
         sqlite3_column_text(sql_stmt, 7);
     }
+
+
 
     //pegando dados do banco de dados
     strFOverwrite(&sql_cmd,  
