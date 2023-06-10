@@ -361,7 +361,21 @@ int main(void) {
 
 
 
+
+
+
+
+
+
+
+
+
   //testando
+  
+
+
+
+
 
 
   tarefinha = (struct lsAtividade*)malloc(sizeof(struct lsAtividade));
@@ -390,6 +404,11 @@ int main(void) {
   printf("uepa: %s", tarefinha->atividade.nomeDaAtividade);
 
 
+
+
+
+
+
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(&db, "nutricao");
 
@@ -399,25 +418,32 @@ int main(void) {
 
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
-  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "coordenacao");
+  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "gestao");
+  addUsuarioTB(&db, "carol", "carol@gmail.com", "carol123", "coordenacao");
   addUsuarioTB(&db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
 
   printf("CADASTRO_GESTAO===\n");
   addGestaoTB(&db, 1, "financeiro");
+  addGestaoTB(&db, 2, "gestora_lider");
 
 
   printf("CADASTRO_COORDENACAO===\n");
-  addCoordenacaoTB(&db, 2, "gestora_lider", 1);
+  addCoordenacaoTB(&db, 3, "diretora", 1);
 
 
   printf("CADASTRO_PRECEPTOR===\n");
-  addPreceptorTB(&db, 3, 1);
+  addPreceptorTB(&db, 4, 1);
 
   printf("CADASTRO_RESIDENTE===\n");
-  addResidenteTB(&db, 4, "1234567", 1, 1, "[0,0,0,0]");
+  addResidenteTB(&db, 5, "1234567", 1, 1, "[0,0,0,0]");
 
-  
+
+  printf("PRINT_GESTAO===\n");
+  lsID* lsGestao = NULL;
+  lsGestao = getTableIDLs(&db, "USUARIO_TB", "TIPO = 'gestao'");
+
+  printLs(&lsGestao);
 
   printf("LOGIN===\n");
   perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
@@ -549,8 +575,10 @@ void cadastro(){
       if(vef == 0){
         Usuario* usuarioCriado = NULL;
         usuarioCriado = getUsuarioTB(&db, email, senha);
+
         int usuario_fk = usuarioCriado->id;
 
+        free(usuarioCriado);
         
 
 
@@ -564,7 +592,25 @@ void cadastro(){
         }
 
         if(!strcmp(tipo, "coordenacao")){
+          int residencia_fk;
+          char cargo[50];
+          
+          printf("selecione sua residencia: ");
+          scanf("%d", residencia_fk);
+          getchar();
 
+          printf("insira seu cargo: ");
+          scanf("%s", cargo);
+          getchar();
+
+
+
+          vef = addGestaoTB(&db, usuario_fk, cargo);
+
+          if(vef == 0){
+            printf("cadastro realisado com sucesso!\n\n");
+            break;
+          }
         }
 
 
@@ -576,6 +622,8 @@ void cadastro(){
           printf("insira seu cargo: ");
           scanf("%s", cargo);
           getchar();
+
+
 
           vef = addGestaoTB(&db, usuario_fk, cargo);
 
