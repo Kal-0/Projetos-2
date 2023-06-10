@@ -788,10 +788,10 @@ void append(lsID **head, int item) {
   newItem->id = item;
   newItem->next = NULL;
   newItem->last = NULL;
-  printf("===DEBUG2===\n");
+  
   if (*head == NULL) {
     *head = newItem;
-    printf("===DEBUG3===\n");
+    
   } else {
     lsID *temp = *head;
     while (temp->next != NULL) {
@@ -837,21 +837,19 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
     return list;
   }
   
-  printf("===DEBUG===\n");
+  
 
   while(ret == SQLITE_ROW){
-    printf("===DEBUG===\n");
-    ret = sqlite3_step(sql_stmt);
-    printf("===DEBUG===\n");
-    append(&list, sqlite3_column_int(sql_stmt, 0));
-    printf("===DEBUG===\n");
+    //printf("===DEBUG===: %d\n", sqlite3_column_int(sql_stmt, 0));
     
+    append(&list, sqlite3_column_int(sql_stmt, 0));
+
+    ret = sqlite3_step(sql_stmt);
   }
   
-printf("===DEBUG===\n");
   sqlite3_finalize(sql_stmt);
   sql_stmt = NULL;
-printf("===DEBUG===\n");
+
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
