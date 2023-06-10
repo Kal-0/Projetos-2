@@ -9,6 +9,12 @@ char* fdb_msg = NULL;
 
 int ret;
 
+struct lsAtividade{
+  Atividade atividade;
+  struct lsAtividade* next;
+  struct lsAtividade* last;
+};
+
 //variaveis globais
 Usuario* perfil = NULL;
 void start();
@@ -33,6 +39,9 @@ void navbarGestao();
 void navbarPreceptor();
 void navbarCoordenacao();
 void navbarResidente();
+void printNomeAtividade(struct lsAtividade **head);
+
+struct lsAtividade* tarefinha = NULL;
 
 
 
@@ -157,13 +166,22 @@ int main(void) {
     "VALUES (999, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
 
   "", NULL);
+
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   //printf("%s\n", sql_cmd);
   sysStatus(&db, ret);
 
 
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO ATIVIDADE_TB (ID,NOME,DESCRICAO,TURMA_FK,SUBMISSOES_LS,DATA_POSTAGEM,DATA_ENTREGA,STATUS) "\
+    "VALUES (51, 'E DE PEIXE?', 'TU É DOIDOOOO', '61', 'gestao','09/06/2023','12/06/2023','A FAZER' ); "\
 
+  "", NULL);
+
+  
+  //printf("%s\n", sql_cmd);
+  sysStatus(&db, ret);
 
 
   //atualizando tables
@@ -182,8 +200,25 @@ int main(void) {
   //printf("%s\n", sql_cmd);
   sysStatus(&db, ret);
 
+  strFOverwrite(&sql_cmd,  
+    "SELECT * FROM ATIVIDADE_TB; "\
+
+  "", NULL);
 
 
+    ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+    
+    if (sqlite3_step(sql_stmt) == SQLITE_ROW) {
+        
+        sqlite3_column_int(sql_stmt, 0);
+        sqlite3_column_text(sql_stmt, 1);
+        sqlite3_column_text(sql_stmt, 2);
+        sqlite3_column_int(sql_stmt, 3);
+        sqlite3_column_text(sql_stmt, 4);
+        sqlite3_column_text(sql_stmt, 5);
+        sqlite3_column_text(sql_stmt, 6);
+        sqlite3_column_text(sql_stmt, 7);
+    }
 
   //pegando dados do banco de dados
   strFOverwrite(&sql_cmd,  
@@ -325,6 +360,7 @@ void login(){
     printf("\n\n");
   }
 }
+
 
 void start(){
   int input = 0;
@@ -830,7 +866,7 @@ void homeResidente(){
         break;
       
       case 1:
-        verAtividades();
+        printNomeAtividade(Tarefinha);
         break;
 
       case 2:
@@ -1047,6 +1083,20 @@ void navbarCoordenacao(){
     }
 
     printf("\n\n");
+  }
+}
+
+// TIRAR O PARAMETRO DA FUNÇÃO E PEGAR DIRETO DO PERFIL
+void printNomeAtividade(struct lsAtividade **head) {
+  struct lsAtividade *temp = *head;
+  if(temp==NULL){
+    printf("NÃO EXISTE NENHUMA ATIVIDADE\n");
+  }
+  else{
+    while (temp != NULL) {
+    printf("%d\n", temp->atividade.nomeDaAtividade);
+    temp = temp->next;
+    }
   }
 }
 
