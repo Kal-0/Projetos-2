@@ -212,6 +212,8 @@ int main(void) {
     //printf("%s\n", sql_cmd);
     sysStatus(&db, ret);
 
+    
+
   if(0){
 
 
@@ -233,7 +235,7 @@ int main(void) {
     "VALUES (51, 'E DE PEIXE?', 'TU É DOIDOOOO', '61', 'gestao','09/06/2023','12/06/2023','A FAZER' ); "\
 
   "", NULL);
-
+  
   
   //printf("%s\n", sql_cmd);
   sysStatus(&db, ret);
@@ -314,7 +316,7 @@ int main(void) {
 
 
   //testando
-
+  
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
