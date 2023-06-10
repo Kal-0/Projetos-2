@@ -45,6 +45,8 @@ struct lsAtividade* tarefinha = NULL;
 
 
 
+
+
 int countFilesInFolder(const char* folderPath) {
     DIR* directory = opendir(folderPath);
     if (directory == NULL) {
@@ -121,14 +123,16 @@ int main(void) {
     "CREATE TABLE RESIDENTE_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
-      "MATRICULA INTEGER NOT NULL UNIQUE, "\
-      "TURMA TEXT NOT NULL, "\
-      "PRECEPTOR TEXT NOT NULL, "\
-      "ATIVIDADES TEXT NOT NULL, "\
-      "SUBMISSOES TEXT NOT NULL, "\
+      "MATRICULA TEXT NOT NULL UNIQUE, "\
+      "TURMA_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER, "\
+      "ATIVIDADES_LS TEXT, "\
+      "SUBMISSOES_LS TEXT, "\
       "NOTAS TEXT NOT NULL, "\
-      "FEEDBACKS TEXT NOT NULL, "\
-      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID) "\
+      "FEEDBACKS_LS TEXT, "\
+      "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID) "\
     "); "\
 
     "CREATE TABLE RESIDENCIA_TB( "\
@@ -150,27 +154,78 @@ int main(void) {
     "); "\
 
 
-  "", NULL);
 
 
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  //printf("%s\n", sql_cmd);
-  sysStatus(&db, ret);
+    "CREATE TABLE RESIDENCIAS_LS_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENCIA_FK INTEGER NOT NULL, "\
+      "GESTAO_FK INTEGER NOT NULL, "\
+      "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID), "\
+      "FOREIGN KEY (GESTAO_FK) REFERENCES GESTAO_TB(ID) "\
+      
+    "); "\
 
+    "CREATE TABLE RESIDENTES_LS_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER, "\
+      "ATIVIDADE_FK INTEGER, "\
+      "TURMA_FK INTEGER, "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID), "\
+      "FOREIGN KEY (ATIVIDADE_FK) REFERENCES ATIVIDADE_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID) "\
 
+    "); "\
 
+    "CREATE TABLE ATIVIDADES_LS_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "ATIVIDADE_FK INTEGER NOT NULL, "\
+      "RESIDENTE_FK INTEGER, "\
+      "PRECEPTOR_FK INTEGER, "\
+      "TURMA_FK INTEGER, "\
+      "FOREIGN KEY (ATIVIDADE_FK) REFERENCES ATIVIDADE_TB(ID), "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID), "\
+      "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID) "\
 
-  //inserindo tables
-  strFOverwrite(&sql_cmd,  
-    "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
-    "VALUES (999, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
+    "); "\
+
+    "CREATE TABLE SUBMISSOES_LS_TB( "\
+      "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "SUBMISSAO_FK INTEGER NOT NULL, "\
+      "ATIVIDADE_FK INTEGER NOT NULL, "\
+      "RESIDENTE_FK INTEGER NOT NULL, "\
+      "PRECEPTOR_FK INTEGER, "\
+      "FOREIGN KEY (SUBMISSAO_FK) REFERENCES SUBMISSAO_TB(ID), "\
+      "FOREIGN KEY (ATIVIDADE_FK) REFERENCES ATIVIDADE_TB(ID), "\
+      "FOREIGN KEY (RESIDENTE_FK) REFERENCES RESIDENTE_TB(ID), "\
+      "FOREIGN KEY (PRECEPTOR_FK) REFERENCES PRECEPTOR_TB(ID) "\
+
+    "); "\
+
 
   "", NULL);
 
   
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  //printf("%s\n", sql_cmd);
-  sysStatus(&db, ret);
+    ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+    //printf("%s\n", sql_cmd);
+    sysStatus(&db, ret);
+
+  if(0){
+
+
+
+    //inserindo tables
+    strFOverwrite(&sql_cmd,  
+      "INSERT INTO USUARIO_TB (ID,NOME,EMAIL,SENHA,TIPO) "\
+      "VALUES (999, 'Paulo', 'paulinho@gmail.com', 'paulinho123', 'gestao' ); "\
+
+    "", NULL);
+    
+    ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+    //printf("%s\n", sql_cmd);
+    sysStatus(&db, ret);
 
 
   strFOverwrite(&sql_cmd,  
@@ -184,21 +239,21 @@ int main(void) {
   sysStatus(&db, ret);
 
 
-  //atualizando tables
-  strFOverwrite(&sql_cmd,  
-    "UPDATE USUARIO_TB "\
-    "SET "\
-      "NOME = 'Paula', "\
-      "EMAIL = 'paulao@gmail.com' "\
-    ""\
+    //atualizando tables
+    strFOverwrite(&sql_cmd,  
+      "UPDATE USUARIO_TB "\
+      "SET "\
+        "NOME = 'Paula', "\
+        "EMAIL = 'paulao@gmail.com' "\
+      ""\
 
-    "WHERE (ID = 1); "\
+      "WHERE (ID = 1); "\
 
-  "", NULL);
-  
-  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  //printf("%s\n", sql_cmd);
-  sysStatus(&db, ret);
+    "", NULL);
+    
+    ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+    //printf("%s\n", sql_cmd);
+    sysStatus(&db, ret);
 
   strFOverwrite(&sql_cmd,  
     "SELECT * FROM ATIVIDADE_TB; "\
@@ -220,51 +275,64 @@ int main(void) {
         sqlite3_column_text(sql_stmt, 7);
     }
 
-  //pegando dados do banco de dados
-  strFOverwrite(&sql_cmd,  
-    "SELECT * FROM USUARIO_TB; "\
+    //pegando dados do banco de dados
+    strFOverwrite(&sql_cmd,  
+      "SELECT * FROM USUARIO_TB; "\
 
-  "", NULL);
+    "", NULL);
 
-  ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
-  sysStatus(&db, ret);
+    ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
+    sysStatus(&db, ret);
 
 
-  ret = sqlite3_step(sql_stmt);
-  sysStatus(&db, ret);
-  
-  if (ret == SQLITE_ROW) {
-    printf("%s\n", sqlite3_column_text(sql_stmt, 1));
     ret = sqlite3_step(sql_stmt);
     sysStatus(&db, ret);
     
+    if (ret == SQLITE_ROW) {
+      printf("%s\n", sqlite3_column_text(sql_stmt, 1));
+      ret = sqlite3_step(sql_stmt);
+      sysStatus(&db, ret);
+      
+    }
+    printf("%s\n", sqlite3_column_text(sql_stmt, 1));
+
+    sqlite3_finalize(sql_stmt);
+    sql_stmt = NULL;
   }
-  printf("%s\n", sqlite3_column_text(sql_stmt, 1));
-
-  sqlite3_finalize(sql_stmt);
-    
-
   //fechando o banco de dados
   sqlite3_close(db);
 
+//pegando dados usando a funcao getStmt();
+  
+  // getStmt(&db, &sql_stmt, sql_cmd);
 
+  // printf("getStmt: %s\n", sqlite3_column_text(sql_stmt, 1));
+  // sqlite3_finalize(sql_stmt);
+  // sql_stmt = NULL;
 
 
 
 
   //testando
 
-  printf("CADASTRO===\n");
-  fazerCadastro(&db, "jose", "jose@gmail.com", "jose123", "residente");
+  printf("CADASTRO_USUARIO===\n");
+  addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
+  addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
+
+  printf("CADASTRO_GESTAO===\n");
+  addGestaoTB(&db, 1, "financeiro");
+
+  printf("CADASTRO_GESTAO===\n");
+  addResidenteTB(&db, 2, "1234567", 1, 1, "[0,0,0,0]");
 
   printf("LOGIN===\n");
-  perfil = fazerLogin(&db, "jose@gmail.com", "jose123");
+  perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
+
+
 
   printf("nome: %s\n", perfil->nome);
 
-  printf("fazer gestao===\n");
 
-  fazerGestaoTB(&db, 999, "financeiro");
 
 
 
@@ -296,18 +364,152 @@ int main(void) {
   
   printf("%s\n\n", decoyUser2->email);
 
+  perfil = NULL;
 
 
 
-start();
-//home();
- 
+
+  start();
+  //home();
+  
+
 
   
   printf("Hello World\n");
 
   return 0;
 }
+
+void cadastro(){
+  int input = 0;
+  int vef = 0;
+
+  char tipo[30];
+  char nome[200];
+  char email[120];
+  char senha[120];
+  char op = '_';
+
+
+  while(1){
+    printf("===CADASTRO===\n"\
+      "selecione o tipo de usuario:\n"\
+      "[-1] -> cancelar\n"\
+      "[1] -> residente\n"\
+      "[2] -> preceptor\n"\
+      "[3] -> coordenacao\n"\
+      "[4] -> gestao\n"\
+
+      "\n"
+    );
+    
+    scanf("%d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch(input){
+      case 1:
+        strcpy(tipo, "residente");
+        break;
+      
+      case 2:
+        strcpy(tipo, "preceptor");
+        break;
+      
+      case 3:
+        strcpy(tipo, "coordenacao");
+        break;
+      
+      case 4:
+        strcpy(tipo, "gestao");
+        break;
+
+      default:
+        printf("opcao invalida...\n");
+
+        strcpy(tipo, "invalido");
+        break;
+    }
+
+    if(strcmp(tipo, "invalido")){
+
+      printf("insira seu nome: ");
+      scanf("%s", nome);
+      getchar();
+
+      printf("insira seu e-mail: ");
+      scanf("%s", email);
+      getchar();
+      
+      printf("insira sua senha: ");
+      scanf("%s", senha);
+      getchar();
+
+      printf("\n\n");
+
+      vef = addUsuarioTB(&db, nome, email, senha, tipo);
+      //printf("vef: %d\n", vef);
+      
+      if(vef == 0){
+        Usuario* usuarioCriado = NULL;
+        usuarioCriado = getUsuarioTB(&db, email, senha);
+        int usuario_fk = usuarioCriado->id;
+
+        
+
+
+
+        if(!strcmp(tipo, "residente")){
+
+        }
+
+        if(!strcmp(tipo, "preceptor")){
+
+        }
+
+        if(!strcmp(tipo, "coordenacao")){
+
+        }
+
+
+        if(!strcmp(tipo, "gestao")){
+          char cargo[50];
+          
+
+
+          printf("insira seu cargo: ");
+          scanf("%s", cargo);
+          getchar();
+
+          vef = addGestaoTB(&db, usuario_fk, cargo);
+
+          if(vef == 0){
+            printf("cadastro realisado com sucesso!\n\n");
+            break;
+          }
+          
+
+        }
+      }
+
+      if(vef){
+        printf("credenciais invalidas!\n"\
+          "deseja tantar novamente? (s/n): "
+        );
+
+        scanf("%c", &op);
+        getchar();
+
+        if(op == 'n'){
+          break;
+        }
+      }
+    }
+  }
+}
+
 
 
 
@@ -334,7 +536,7 @@ void login(){
 
     printf("\n\n");
 
-    perfil = fazerLogin(&db, email, senha);
+    perfil = getUsuarioTB(&db, email, senha);
 
     if(perfil == NULL){
       printf("credenciais invalidas!\n"\
@@ -368,9 +570,9 @@ void start(){
   while(1){
     printf("===START===\n"\
       "selecione uma opcao:\n"\
-      "-1 -> sair\n"\
-      "1 -> fazer login\n"\
-      "2 -> fazer cadastro\n"\
+      "[-1] -> sair\n"\
+      "[1] -> fazer login\n"\
+      "[2] -> fazer cadastro\n"\
       
       "\n:"
     );
@@ -385,11 +587,14 @@ void start(){
     switch(input){
       case 1:
         login();
-        home();
+
+        if(perfil != NULL){
+          home();
+        }
         break;
       
       case 2:
-        //cadastro();
+        cadastro();
         break;
       
       default:
