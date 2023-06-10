@@ -47,24 +47,22 @@ struct lsAtividade* tarefinha = NULL;
 
 
 
-int countFilesInFolder(const char* folderPath) {
-    DIR* directory = opendir(folderPath);
-    if (directory == NULL) {
-        perror("Unable to open the directory");
-        return -1;
-    }
-
-    int fileCount = 0;
-    struct dirent* entry;
-    while ((entry = readdir(directory)) != NULL) {
-        if (entry->d_type == DT_REG) {  // Regular file
-            fileCount++;
-        }
-    }
-
-    closedir(directory);
-    return fileCount;
-}
+// int countFilesInFolder(const char* folderPath) {
+//     DIR* directory = opendir(folderPath);
+//     if (directory == NULL) {
+//         perror("Unable to open the directory");
+//         return -1;
+//     }
+//     int fileCount = 0;
+//     struct dirent* entry;
+//     while ((entry = readdir(directory)) != NULL) {
+//         if (entry->d_type == DT_REG) {  // Regular file
+//             fileCount++;
+//         }
+//     }
+//     closedir(directory);
+//     return fileCount;
+// }
 
 
 
@@ -261,25 +259,6 @@ int main(void) {
 
 
 
-    strFOverwrite(&sql_cmd,  
-      "SELECT * FROM ATIVIDADE_TB; "\
-
-    "", NULL);
-
-    
-    ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
-    
-    if (sqlite3_step(sql_stmt) == SQLITE_ROW) {
-        
-        sqlite3_column_int(sql_stmt, 0);
-        sqlite3_column_text(sql_stmt, 1);
-        sqlite3_column_text(sql_stmt, 2);
-        sqlite3_column_int(sql_stmt, 3);
-        sqlite3_column_text(sql_stmt, 4);
-        sqlite3_column_text(sql_stmt, 5);
-        sqlite3_column_text(sql_stmt, 6);
-        sqlite3_column_text(sql_stmt, 7);
-    }
 
 
 
@@ -322,6 +301,24 @@ int main(void) {
 
 
   //testando
+//"WHERE (ID = 1); "
+  printf("2222222222222222222222\n");
+  strFOverwrite(&sql_cmd,  
+      "SELECT NOME FROM ATIVIDADE_TB "\
+      "WHERE (NOME = '%s');"
+    "", "E DE PEIXE?");
+    
+    ret = getStmt(&db, &sql_stmt, sql_cmd);
+    printf("%s", sqlite3_column_text(sql_stmt, 0));
+    sysStatus(&db, ret);
+    tarefinha->atividade.nomeDaAtividade=strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 0),NULL);
+    
+    // if (ret == SQLITE_ROW){
+    //  
+    //   tarefinha->atividade.descricaoDaAtividade=strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 2),NULL);
+    // }
+    printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+    printf("%s", &tarefinha->atividade.nomeDaAtividade);
 
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
@@ -1079,7 +1076,7 @@ void homeResidente(){
         break;
       
       case 1:
-        //printNomeAtividade(Tarefinha);
+        printNomeAtividade(&tarefinha);
         break;
 
       case 2:

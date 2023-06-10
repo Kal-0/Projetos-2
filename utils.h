@@ -110,7 +110,7 @@ struct STurma{
 // objetos
 
 struct SAtividade{
-  char nomeDaAtividade[40];
+  char* nomeDaAtividade;
   char* descricaoDaAtividade;
   Turma* turma;
   Submissao *listaSubmissao;
