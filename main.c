@@ -39,6 +39,8 @@ void navbarGestao();
 void navbarPreceptor();
 void navbarCoordenacao();
 void navbarResidente();
+void feedbackResidente();
+void feedbackPreceptor();
 void printNomeAtividade(struct lsAtividade **head);
 
 struct lsAtividade* tarefinha = NULL;
@@ -1214,10 +1216,11 @@ void homeResidente(){
       
       case 1:
         //printNomeAtividade(Tarefinha);
+        printf("========TODAS ATIVIDADES=========\n");
         break;
 
       case 2:
-        printf("========DO DIA=========\n");
+        printf("========ATIVIDADES DO DIA=========\n");
         break;
 
       default:
@@ -1231,7 +1234,38 @@ void homeResidente(){
 //A FAZER
 
 void homePreceptor(){
-  printf("home a fazer\n");
+  int input = 0;
+    printf("===HOME COORDENACAO===\n"\
+        "selecione uma opcao:\n"\
+        "[-1] -> voltar\n"\
+        "[0] -> navBar\n"\
+        "[1]-> ver turma\n"\
+        
+        "\n:"
+      );
+    
+      scanf("%d", &input);
+      getchar();
+      
+      if(input == -1){
+        return;
+      }
+      switch(input){
+        case 0:
+          navBar();
+          break;
+        
+        case 1:
+          printf("TURMAS FICARA AQUI\n");
+          break;
+
+        default:
+          printf("opcao invalida\n");
+          break;
+      }
+
+
+      printf("\n\n");
 }
 
 
@@ -1306,7 +1340,7 @@ void navbarResidente(){
         break;
       
       case 4:
-        printf("NOTIFICACAO\n");
+        feedbackResidente();
         break;
       
       case 5:
@@ -1368,7 +1402,7 @@ int input = 0;
       "selecione uma opcao:\n"\
       "[-1] -> voltar\n"\
       "[1]-> perfil\n"\
-      "[2]-> atividades\n"\
+      "[2]-> Feedback\n"\
   
        "\n:"
     );
@@ -1384,7 +1418,7 @@ int input = 0;
       break;   
       
       case 2:
-        printf("ver atividades\n");
+        feedbackPreceptor();
         break;
       
       default:
@@ -1447,3 +1481,61 @@ void printNomeAtividade(struct lsAtividade **head) {
   }
 }
 
+void feedbackPreceptor(){
+    FILE *file;
+    char texto[200];
+
+    file = fopen("arquivo.txt", "w");
+
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    printf("Digite o texto a ser escrito no arquivo:\n");
+    fgets(texto, sizeof(texto), stdin);
+
+    fprintf(file, "%s", texto);
+
+    fclose(file);
+    return;
+}
+
+void feedbackResidente(){
+    FILE *file;
+    char texto[200];
+    char resposta;
+
+    file = fopen("arquivo.txt", "r");
+
+    if (file == NULL) {
+        printf("O arquivo não existe.\n");
+        return;
+    }
+
+    while (fgets(texto, sizeof(texto), file) != NULL) {
+        printf("%s", texto);
+    }
+
+    fclose(file);
+
+    printf("Deseja contestar? (s/n): ");
+    scanf(" %c", &resposta);
+
+    if (resposta == 's' || resposta == 'S') {
+        file= fopen("contestacao.txt", "w");
+
+        if (file == NULL) {
+            printf("Erro ao criar o arquivo de contestação.\n");
+            return;
+        }
+
+        printf("Digite a contestação:\n");
+        scanf(" %[^\n]", texto);
+
+        fprintf(file, "%s", texto);
+
+        fclose(file);
+    }
+  return;
+}
