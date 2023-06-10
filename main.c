@@ -122,8 +122,8 @@ int main(void) {
     "CREATE TABLE COORDENACAO_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
       "USUARIO_FK INTEGER NOT NULL UNIQUE, "\
-      "CARGO TEXT NOT NULL, "\
       "RESIDENCIA_FK INTEGER NOT NULL, "\
+      "CARGO TEXT NOT NULL, "\
       "FOREIGN KEY (USUARIO_FK) REFERENCES USUARIO_TB(ID), "\
       "FOREIGN KEY (RESIDENCIA_FK) REFERENCES RESIDENCIA_TB(ID) "\
     "); "\
@@ -393,22 +393,29 @@ int main(void) {
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(&db, "nutricao");
 
+  printf("ADICIONANDO_TURMA===\n");
+  addTurmaTB(&db, 1, "nutricao_1", "2022");
+
 
   printf("CADASTRO_USUARIO===\n");
   addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
+  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "coordenacao");
+  addUsuarioTB(&db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
   addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
-  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "preceptor");
 
   printf("CADASTRO_GESTAO===\n");
   addGestaoTB(&db, 1, "financeiro");
 
 
   printf("CADASTRO_COORDENACAO===\n");
-  addCoordenacaoTB(&db, 3, "gestora_lider", 1);
+  addCoordenacaoTB(&db, 2, "gestora_lider", 1);
 
+
+  printf("CADASTRO_PRECEPTOR===\n");
+  addPreceptorTB(&db, 3, 1);
 
   printf("CADASTRO_RESIDENTE===\n");
-  addResidenteTB(&db, 2, "1234567", 1, 1, "[0,0,0,0]");
+  addResidenteTB(&db, 4, "1234567", 1, 1, "[0,0,0,0]");
 
   
 
