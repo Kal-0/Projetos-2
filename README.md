@@ -11,10 +11,15 @@ Application to make it easier to store and evaluate the activities of residencie
 
 # Contribuintes | Contributors
 Isabela Spinelli
+
 Caio Hirata
+
 Diogo 
+
 Camila Cirne
+
 Maria júlia Pessoa
+
 Maria Luísa Arruda
 
 # Website
