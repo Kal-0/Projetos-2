@@ -64,11 +64,11 @@ struct SUsuario{
 struct SResidente{
   Usuario* usuario;
   int matricula;
-  Turma* turma;
+  int turmaFk;
+  int preceptorFk;
+  float notasTrimestrais[4];
   lsID *listaAtividades;
   lsID *listaSubmissoes;
-  Preceptor* preceptorResponsavel;
-  float notasTrimestrais[4];
   lsID *listaFeedbacks;
 };
  
@@ -104,12 +104,13 @@ struct SProgramaResidencia{
 
 
 struct STurma{
-  char* nomeTurma;
-  char* anoDaTurma;
+  int turma_id;
+  char* nome;
+  char* ano;
   lsID *residentes;
   lsID *listaPreceptores;
   lsID *listasAtividades;
-  int fkResidencia;
+  int residencia_fk;
   char *criteriosAvaliativos;
 };
 
