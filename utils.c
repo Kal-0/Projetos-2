@@ -81,9 +81,9 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
 }
 
 //banco de dados
-int sysStatus(sqlite3** db_ptr, int ret){
+int sysStatus(sqlite3* db_ptr, int ret){
   //banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
 
   //funcao
   int SWITCH = 1;
@@ -105,9 +105,9 @@ int sysStatus(sqlite3** db_ptr, int ret){
   }
 }
 
-int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
+int getStmt(sqlite3* db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   char* sql_cmd = sql_cmd_p;
   sqlite3_stmt* sql_stmt = NULL;
 
@@ -126,12 +126,12 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
   }
 
   ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
   
   if(ret == SQLITE_OK){
     
     ret = sqlite3_step(sql_stmt);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
 
     if(ret == SQLITE_ROW){
@@ -161,9 +161,9 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
   }
 }
 
-void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field, char* condition){
+void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field, char* condition){
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -181,11 +181,11 @@ void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field
     "SELECT %s FROM %s "\
     "WHERE (%s); "\
   "", field, tableName, condition);
-sysStatus(&db, ret);
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+sysStatus(db, ret);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
 
   printf("=============\n");
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
   if(ret != SQLITE_ROW){
     
 
@@ -233,9 +233,9 @@ sysStatus(&db, ret);
 
 
 //login
-Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
+Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -261,7 +261,7 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
   
   
   
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   //printf("email: %s\n", sqlite3_column_text(sql_stmt, 2));
 
   if(ret == SQLITE_ROW){
@@ -301,7 +301,7 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
 
 
 
-        ret = getStmt(&db, &sql_stmt, sql_cmd);
+        ret = getStmt(db, &sql_stmt, sql_cmd);
         //printf("ID: %d\n", sqlite3_column_int(sql_stmt, 0));
         
         //verificando
@@ -375,9 +375,9 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
 
 
 //cadastro de usuarios
-int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
+int addUsuarioTB(sqlite3* db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -402,7 +402,7 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
 
   "", email);
 
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
     
   // cadastro ja existente
   if(ret == SQLITE_ROW){
@@ -439,7 +439,7 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
   "", nome, email, senha, tipoDeUsuario);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   if(sql_cmd != NULL){
@@ -454,9 +454,9 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
   return ret;
 };
 
-int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
+int addGestaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -477,7 +477,7 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   "", usuario_fk, cargo);
 
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   //verificando criacao de tabela
@@ -500,7 +500,7 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
     "WHERE (USUARIO_FK = %d); "\
   "", usuario_fk);
   
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
 
   if(ret != SQLITE_ROW){
     
@@ -535,7 +535,7 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   "", tipoID, usuario_fk);
     
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
   //tipo criado
 
@@ -551,9 +551,9 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   return ret;
 }
 
-int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residencia_fk) {
+int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo, int residencia_fk) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -574,7 +574,7 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   "", usuario_fk, residencia_fk, cargo);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
 
@@ -599,7 +599,7 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   "", usuario_fk);
 
 
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   if(ret != SQLITE_ROW){
     
 
@@ -635,7 +635,7 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   "", tipoID, usuario_fk);
     
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
   //tipo criado
 
@@ -650,9 +650,9 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   return ret;
 }
 
-int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
+int addPreceptorTB(sqlite3* db_ptr, int usuario_fk, int turma_fk) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -673,7 +673,7 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   "", usuario_fk, turma_fk);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   //verificando criacao de tabela
@@ -697,7 +697,7 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   "", usuario_fk);
 
 
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   if(ret != SQLITE_ROW){
     
 
@@ -731,7 +731,7 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   "", tipoID, usuario_fk);
     
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
   //tipo criado
 
@@ -746,9 +746,9 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   return ret;
 }
 
-int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas) {
+int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas) {
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -769,7 +769,7 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   "", usuario_fk, matricula, turma_fk, preceptor_fk, notas);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   //verificando criacao de tabela
@@ -793,7 +793,7 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   "", usuario_fk);
 
 
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   if(ret != SQLITE_ROW){
     
 
@@ -828,7 +828,7 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   "", tipoID, usuario_fk);
     
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
   //tipo criado
 
@@ -846,9 +846,9 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
 
 
 //adicionado estruturas
-int addResidenciaTB(sqlite3** db_ptr, char* nome){
+int addResidenciaTB(sqlite3* db_ptr, char* nome){
 // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -869,7 +869,7 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
   "", nome);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   if(sql_cmd != NULL){
@@ -882,9 +882,9 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
   return ret;
 }
 
-int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
+int addTurmaTB(sqlite3* db_ptr, int residencia_fk, char* nome, char* ano){
 // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -905,7 +905,7 @@ int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
   "", residencia_fk, nome, ano);
   
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
 
 
   if(sql_cmd != NULL){
@@ -1013,9 +1013,9 @@ void freeLs(lsID **head) {
   }
 }
 
-lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
+lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition){
   // Banco de dados
-  sqlite3* db = *db_ptr;
+  sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
   char* sql_cmd = NULL;
   
@@ -1035,7 +1035,7 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
     "WHERE (%s); "\
   "", tableName, condition);
 
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   if(ret != SQLITE_ROW){
     
 

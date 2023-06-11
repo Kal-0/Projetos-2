@@ -274,7 +274,7 @@ int main(void) {
   
     ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
     //printf("%s\n", sql_cmd);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
   if(0){
 
@@ -289,7 +289,7 @@ int main(void) {
     
     ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
     //printf("%s\n", sql_cmd);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
 
     strFOverwrite(&sql_cmd,  
@@ -300,7 +300,7 @@ int main(void) {
 
     ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
     //printf("%s\n", sql_cmd);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
 
     //atualizando tables
@@ -317,7 +317,7 @@ int main(void) {
     
     ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
     //printf("%s\n", sql_cmd);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
 
 
@@ -332,16 +332,16 @@ int main(void) {
     "", NULL);
 
     ret = sqlite3_prepare_v2(db, sql_cmd, -1, &sql_stmt, 0);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
 
 
     ret = sqlite3_step(sql_stmt);
-    sysStatus(&db, ret);
+    sysStatus(db, ret);
     
     if (ret == SQLITE_ROW) {
       printf("%s\n", sqlite3_column_text(sql_stmt, 1));
       ret = sqlite3_step(sql_stmt);
-      sysStatus(&db, ret);
+      sysStatus(db, ret);
       
     }
     printf("%s\n", sqlite3_column_text(sql_stmt, 1));
@@ -354,7 +354,7 @@ int main(void) {
 
 //pegando dados usando a funcao getStmt();
   
-  // getStmt(&db, &sql_stmt, sql_cmd);
+  // getStmt(db, &sql_stmt, sql_cmd);
 
   // printf("getStmt: %s\n", sqlite3_column_text(sql_stmt, 1));
   // sqlite3_finalize(sql_stmt);
@@ -392,10 +392,10 @@ int main(void) {
 
   "", NULL);
     
-  ret = getStmt(&db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
   printf("stmt: %s", sqlite3_column_text(sql_stmt, 1));
 
-  sysStatus(&db, ret);
+  sysStatus(db, ret);
   char* str = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 1),NULL);
   printf("noem: %s\n", str);
   
@@ -414,46 +414,46 @@ int main(void) {
 
 
   printf("ADICIONANDO_RESIDENCIA===\n");
-  addResidenciaTB(&db, "nutricao");
-  addResidenciaTB(&db, "psicologia");
+  addResidenciaTB(db, "nutricao");
+  addResidenciaTB(db, "psicologia");
 
   printf("ADICIONANDO_TURMA===\n");
-  addTurmaTB(&db, 1, "nutricao_1", "2022");
+  addTurmaTB(db, 1, "nutricao_1", "2022");
 
 
   printf("CADASTRO_USUARIO===\n");
-  addUsuarioTB(&db, "caio", "caio@gmail.com", "caio123", "gestao");
-  addUsuarioTB(&db, "camila", "camila@gmail.com", "camila123", "gestao");
-  addUsuarioTB(&db, "carol", "carol@gmail.com", "carol123", "coordenacao");
-  addUsuarioTB(&db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
-  addUsuarioTB(&db, "diogo", "diogo@gmail.com", "diogo123", "residente");
+  addUsuarioTB(db, "caio", "caio@gmail.com", "caio123", "gestao");
+  addUsuarioTB(db, "camila", "camila@gmail.com", "camila123", "gestao");
+  addUsuarioTB(db, "carol", "carol@gmail.com", "carol123", "coordenacao");
+  addUsuarioTB(db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
+  addUsuarioTB(db, "diogo", "diogo@gmail.com", "diogo123", "residente");
 
   printf("CADASTRO_GESTAO===\n");
-  addGestaoTB(&db, 1, "financeiro");
-  addGestaoTB(&db, 2, "gestora_lider");
+  addGestaoTB(db, 1, "financeiro");
+  addGestaoTB(db, 2, "gestora_lider");
 
 
   printf("CADASTRO_COORDENACAO===\n");
-  addCoordenacaoTB(&db, 3, "diretora", 1);
+  addCoordenacaoTB(db, 3, "diretora", 1);
 
 
   printf("CADASTRO_PRECEPTOR===\n");
-  addPreceptorTB(&db, 4, 1);
+  addPreceptorTB(db, 4, 1);
 
   printf("CADASTRO_RESIDENTE===\n");
-  addResidenteTB(&db, 5, "1234567", 1, 1, "[0,0,0,0]");
+  addResidenteTB(db, 5, "1234567", 1, 1, "[0,0,0,0]");
 
 
   printf("PRINT_GESTAO===\n");
   lsID* lsGestao = NULL;
-  lsGestao = getTableIDLs(&db, "USUARIO_TB", "TIPO = 'gestao'");
+  lsGestao = getTableIDLs(db, "USUARIO_TB", "TIPO = 'gestao'");
 
   printLs(&lsGestao);
   freeLs(&lsGestao);
 
 
   printf("LOGIN===\n");
-  perfil = getUsuarioTB(&db, "caio@gmail.com", "caio123");
+  perfil = getUsuarioTB(db, "caio@gmail.com", "caio123");
 
 
 
@@ -503,7 +503,7 @@ int main(void) {
 
   
   printf("Hello World\n");
-
+  sqlite3_close(db);
   return 0;
 }
 
@@ -576,12 +576,12 @@ void cadastro(){
 
       printf("\n\n");
 
-      vef = addUsuarioTB(&db, nome, email, senha, tipo);
+      vef = addUsuarioTB(db, nome, email, senha, tipo);
       //printf("vef: %d\n", vef);
       
       if(vef == 0){
         Usuario* usuarioCriado = NULL;
-        usuarioCriado = getUsuarioTB(&db, email, senha);
+        usuarioCriado = getUsuarioTB(db, email, senha);
         int usuario_fk = usuarioCriado->id;
 
 
@@ -604,7 +604,7 @@ void cadastro(){
 
           
           lsID* listaResidencias =NULL;
-          listaResidencias = getTableIDLs(&db, "RESIDENCIA_TB", "ID != -1");
+          listaResidencias = getTableIDLs(db, "RESIDENCIA_TB", "ID != -1");
           int numResidencias = lenLs(&listaResidencias);
           //printLs(&listaResidencias);
           
@@ -620,7 +620,7 @@ void cadastro(){
           
           for(int i=0; i<numResidencias; i++){
             condition = strFOverwrite(NULL, "ID = %d", i+1);
-            residencia = ((char*)getCellVoid(&db, &str_len, "RESIDENCIA_TB", "NOME", condition));
+            residencia = ((char*)getCellVoid(db, &str_len, "RESIDENCIA_TB", "NOME", condition));
             residencia[str_len] = '\0';
 
             printf(
@@ -649,7 +649,7 @@ void cadastro(){
 
 
 
-          vef = addGestaoTB(&db, usuario_fk, cargo);
+          vef = addGestaoTB(db, usuario_fk, cargo);
 
           if(vef == 0){
             printf("cadastro realisado com sucesso!\n\n");
@@ -669,7 +669,7 @@ void cadastro(){
 
 
 
-          vef = addGestaoTB(&db, usuario_fk, cargo);
+          vef = addGestaoTB(db, usuario_fk, cargo);
 
           if(vef == 0){
             printf("cadastro realisado com sucesso!\n\n");
@@ -722,7 +722,7 @@ void login(){
 
     printf("\n\n");
 
-    perfil = getUsuarioTB(&db, email, senha);
+    perfil = getUsuarioTB(db, email, senha);
 
     if(perfil == NULL){
       printf("credenciais invalidas!\n"\
