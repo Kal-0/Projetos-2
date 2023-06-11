@@ -9,6 +9,19 @@ Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as ativi
 
 Application to make it easier to store and evaluate the activities of residencies attending a specialization program at the Hospital das Clínicas!
 
+# Contribuintes | Contributors
+Isabela Spinelli
+
+Caio Hirata
+
+Diogo Henrique
+
+Camila Cirne
+
+Maria júlia Pessoa
+
+Maria Luísa Arruda
+
 # Website
 Acesse nosso site para maiores explicações e aprofundamento da solução.
 
