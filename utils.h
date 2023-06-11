@@ -174,12 +174,13 @@ void freeLs(lsID **head);
 int sysStatus(sqlite3* db_ptr, int ret);
 int getStmt(sqlite3* db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p);
 void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field, char* condition);
+int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condition);
 lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition);
 
 //cadastro
 int addUsuarioTB();
 int addGestaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo);
-int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo, int residencia_fk);
+int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, int residencia_fk, char *cargo);
 int addPreceptorTB(sqlite3* db_ptr, int usuario_fk, int turma_fk);
 int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas);
 

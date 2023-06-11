@@ -1,7 +1,7 @@
 #include "utils.h"
 
 //printf("===DEBUG===\n");
-int ACTIVE = 1;
+int ACTIVE = 0;
 
 
 
@@ -231,6 +231,38 @@ sysStatus(db, ret);
 
 }
 
+int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condition){
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  char* sql_cmd = NULL;
+  sqlite3_stmt* sql_stmt = NULL;
+  int ret;
+  
+  //funcao
+  int row = 0;
+
+  strFOverwrite(&sql_cmd,  
+    "SELECT %s FROM %s "\
+    "WHERE (%s);"\
+  "", field, tableName, condition);
+
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+
+  
+    while (ret == SQLITE_ROW){
+      printf(
+        "[%d] -> %s\n"\
+      "", row+1, sqlite3_column_text(sql_stmt, 0));
+
+      ret = sqlite3_step(sql_stmt);
+
+      row++;
+    }
+
+  sqlite3_finalize(sql_stmt);
+
+  return row;
+}
 
 //login
 Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha) {
@@ -372,7 +404,30 @@ Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha) {
 };
 
 
+//pegar objetos
+void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id){
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
 
+  // funcao
+
+
+  //pegando dados do banco de dados
+  
+
+  strFOverwrite(&sql_cmd,
+    "SELECT * FROM TURMA_TB "\
+    "WHERE (ID = '%d'); "\
+
+  "", turma_id);
+
+  getStmt(db, &sql_stmt, sql_cmd);
+
+}
 
 //cadastro de usuarios
 int addUsuarioTB(sqlite3* db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
@@ -551,7 +606,7 @@ int addGestaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo) {
   return ret;
 }
 
-int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, char *cargo, int residencia_fk) {
+int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, int residencia_fk, char *cargo) {
   // Banco de dados
   sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;

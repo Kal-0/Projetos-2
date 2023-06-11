@@ -22,6 +22,8 @@ void login();
 void navBar();
 void home();
 void residencias();
+void turmas(int residencia_id, char* condicao);
+void verTurma(int turma_id, char* condicao);
 void nutricao();
 void nutricao_turma1();
 void nutricao_turma1_residente();
@@ -88,6 +90,27 @@ int main(void) {
 
   //oppening or creating the database
   //abrindo ou criando o banco de dados
+
+
+
+
+  // lsID* lisa = NULL;
+  // append(&lisa, 1);
+  // append(&lisa, 2);
+  // append(&lisa, 3);
+  // append(&lisa, 4);
+  // printLs(&lisa);
+
+  // printf("ID: %d\n", getItemLs(&lisa, -1));
+
+
+
+
+
+
+
+
+if(1){
 
   ret = sqlite3_open("BD/db.sqlite3", &db);
 
@@ -377,6 +400,8 @@ int main(void) {
   //testando
   
 
+
+
   ret = sqlite3_open("BD/db.sqlite3", &db);
 
 
@@ -434,7 +459,7 @@ int main(void) {
 
 
   printf("CADASTRO_COORDENACAO===\n");
-  addCoordenacaoTB(db, 3, "diretora", 1);
+  addCoordenacaoTB(db, 3, 1, "diretora");
 
 
   printf("CADASTRO_PRECEPTOR===\n");
@@ -464,32 +489,32 @@ int main(void) {
 
 
 
-  Usuario* decoyUser1 = NULL;
-  Usuario* decoyUser2 = NULL;
-  Residente* r1 = NULL;
+  // Usuario* decoyUser1 = NULL;
+  // Usuario* decoyUser2 = NULL;
+  // Residente* r1 = NULL;
 
-  decoyUser1 = (Usuario*)malloc(sizeof(Usuario));
-  decoyUser2 = (Usuario*)malloc(sizeof(Usuario));
+  // decoyUser1 = (Usuario*)malloc(sizeof(Usuario));
+  // decoyUser2 = (Usuario*)malloc(sizeof(Usuario));
 
-  r1 = (Residente*)malloc(sizeof(Residente));
+  // r1 = (Residente*)malloc(sizeof(Residente));
 
 
 
-  decoyUser2->email = "arromba@123";
-  decoyUser2->tipoUsuario = r1;
-  decoyUser2->categoriaUsuario = (void*)r1;
+  // decoyUser2->email = "arromba@123";
+  // decoyUser2->tipoUsuario = r1;
+  // decoyUser2->categoriaUsuario = (void*)r1;
   
-  r1->matricula = 1234567;
+  // r1->matricula = 1234567;
 
-  printf("%s\n", decoyUser2->email);
-  printf("%d\n", ((Residente*)decoyUser2->tipoUsuario)->matricula);
+  // printf("%s\n", decoyUser2->email);
+  // printf("%d\n", ((Residente*)decoyUser2->tipoUsuario)->matricula);
   
   
-  decoyUser1->tipoUsuario = (void*)decoyUser2;
+  // decoyUser1->tipoUsuario = (void*)decoyUser2;
 
-  ((Usuario*)(decoyUser1->tipoUsuario))->email = "bebe\n";
+  // ((Usuario*)(decoyUser1->tipoUsuario))->email = "bebe\n";
   
-  printf("%s\n\n", decoyUser2->email);
+  // printf("%s\n\n", decoyUser2->email);
 
   perfil = NULL;
 
@@ -501,9 +526,11 @@ int main(void) {
   
 
 
-  
-  printf("Hello World\n");
   sqlite3_close(db);
+
+}
+  printf("Hello World\n");
+  
   return 0;
 }
 
@@ -530,8 +557,9 @@ void cadastro(){
       "\n"
     );
     
-    scanf("%d", &input);
+    scanf(" %d", &input);
     getchar();
+    
 
     if(input == -1){
       break;
@@ -583,24 +611,132 @@ void cadastro(){
         Usuario* usuarioCriado = NULL;
         usuarioCriado = getUsuarioTB(db, email, senha);
         int usuario_fk = usuarioCriado->id;
-
-
         free(usuarioCriado);
+
+        int input;
         
 
 
-
+        //residente
         if(!strcmp(tipo, "residente")){
+          int turma_fk;
+          int preceptor_fk;
+          char matricula[15];
 
+          char* sql_cmd = NULL;
+          sqlite3_stmt* sql_stmt = NULL;
+          int ret = 0;
+          int row = 1;
+
+          lsID* listaTurmas = NULL;
+          listaTurmas = getTableIDLs(db, "TURMA_TB", "ID != -1");
+          int numTurmas = lenLs(&listaTurmas);
+
+          lsID* listaPreceptores = NULL;
+          listaPreceptores = getTableIDLs(db, "PRECEPTOR_TB", "ID != -1");
+          int numPreceptores = lenLs(&listaPreceptores);
+
+          printf("insira sua natricula: ");
+          scanf(" %s", matricula);
+          getchar();
+
+
+
+          printf("===TURMAS===\n"\
+            "selecione sua turma: "\
+
+            "\n"
+          );
+
+          
+          strFOverwrite(&sql_cmd,  
+            "SELECT NOME FROM TURMA_TB; "\
+
+          "", NULL);
+
+          ret = getStmt(db, &sql_stmt, sql_cmd);
+
+          
+          while (ret == SQLITE_ROW){
+            printf(
+              "[%d] -> %s\n"\
+            "", row, sqlite3_column_text(sql_stmt, 0));
+
+            ret = sqlite3_step(sql_stmt);
+
+            row++;
+          }
+        
+          sqlite3_finalize(sql_stmt);
+          sql_stmt = NULL;
+          row = 1;
+
+          printf(": ");
+          scanf(" %d", &input);
+          getchar();
+          turma_fk = getItemLs(&listaTurmas, input-1);
+
+
+
+          printf("===PRECEPTOR===\n"\
+            "selecione seu preceptor "\
+
+            "\n"
+          );
+
+          
+          strFOverwrite(&sql_cmd,  
+            "SELECT NOME FROM USUARIO_TB "\
+            "WHERE (TIPO = 'preceptor'); "\
+
+          "", NULL);
+
+          ret = getStmt(db, &sql_stmt, sql_cmd);
+
+          
+          while (ret == SQLITE_ROW){
+            printf(
+              "[%d] -> %s\n"\
+            "", row, sqlite3_column_text(sql_stmt, 0));
+
+            ret = sqlite3_step(sql_stmt);
+
+            row++;
+          }
+        
+          sqlite3_finalize(sql_stmt);
+          sql_stmt = NULL;
+          row = 1;
+
+          printf(": ");
+          scanf(" %d", &input);
+          getchar();
+          preceptor_fk = getItemLs(&listaPreceptores, input-1);
+
+
+          vef = addResidenteTB(db, usuario_fk, matricula, turma_fk, preceptor_fk, "[0,0,0,0]");
+          
+          freeLs(&listaTurmas);
+          freeLs(&listaPreceptores);
+          if(vef == 0){
+            printf("cadastro realisado com sucesso!\n\n");
+            
+            break;
+          }
+          
         }
+        
 
+        //preceptor
         if(!strcmp(tipo, "preceptor")){
 
         }
 
+
+        //coordenacao
         if(!strcmp(tipo, "coordenacao")){
           int residencia_fk;
-          char* cargo;
+          char cargo[70];
 
           
           lsID* listaResidencias =NULL;
@@ -618,53 +754,82 @@ void cadastro(){
           );
           
           
-          for(int i=0; i<numResidencias; i++){
-            condition = strFOverwrite(NULL, "ID = %d", i+1);
-            residencia = ((char*)getCellVoid(db, &str_len, "RESIDENCIA_TB", "NOME", condition));
-            residencia[str_len] = '\0';
+          // for(int i=0; i<numResidencias; i++){
+          //   condition = strFOverwrite(NULL, "ID = %d", i+1);
+          //   residencia = ((char*)getCellVoid(db, &str_len, "RESIDENCIA_TB", "NOME", condition));
+          //   residencia[str_len] = '\0';
 
-            printf(
-              "[%d] -> %s\n"\
-            "", i+1, residencia);
+          //   printf(
+          //     "[%d] -> %s\n"\
+          //   "", i+1, residencia);
 
 
             
-            free(condition);
-            free(residencia);
-          }
+          //   free(condition);
+          //   free(residencia);
+          // }
           
+          
+          char* sql_cmd = NULL;
+          sqlite3_stmt* sql_stmt = NULL;
+          int ret = 0;
+          int row = 1;
+
+          strFOverwrite(&sql_cmd,  
+            "SELECT NOME FROM RESIDENCIA_TB; "\
+
+          "", NULL);
+
+          ret = getStmt(db, &sql_stmt, sql_cmd);
+
+          
+          while (ret == SQLITE_ROW){
+            printf(
+              "[%d] -> %s\n"\
+            "", row, sqlite3_column_text(sql_stmt, 0));
+
+            ret = sqlite3_step(sql_stmt);
+
+            row++;
+          }
+        
+          sqlite3_finalize(sql_stmt);
+
 
           printf(": ");
 
+
+          scanf(" %d", &input);
+          getchar();
+
           
-          scanf("%d", input);
-          getchar();
-
           residencia_fk = getItemLs(&listaResidencias, input-1);
-          printf("id: %d", residencia_fk);
-
+          
           printf("insira seu cargo: ");
-          scanf("%s", cargo);
+          scanf(" %s", cargo);
           getchar();
 
 
 
-          vef = addGestaoTB(db, usuario_fk, cargo);
-
+          vef = addCoordenacaoTB(db, usuario_fk, residencia_fk, cargo);
+          
+          freeLs(&listaResidencias);
           if(vef == 0){
             printf("cadastro realisado com sucesso!\n\n");
+            
             break;
           }
+          
         }
 
-
+        //gestao
         if(!strcmp(tipo, "gestao")){
           char cargo[50];
           
 
 
           printf("insira seu cargo: ");
-          scanf("%s", cargo);
+          scanf(" %s", cargo);
           getchar();
 
 
@@ -793,6 +958,7 @@ void start(){
 }
 
 
+
 void navBar(){
   
   if(!strcmp(perfil->categoriaUsuario,"gestao"))
@@ -847,33 +1013,195 @@ void verAtividades(){
 
 
 void residencias(){
-  while (1)
-  {
-    printf("RESIDENCIAS\n"\
-    "[1] NUTRICAO\n"\
-    "[2] PSICOLOGIA\n"\
-    "[-1] Sair\n"\
-    "Digite uma das opcoes\n"\
+  int input;
+  int residencia_id;
+  char* condicao;
+  while (1){
+    residencia_id = 0;
+
+      
+    lsID* listaResidencias =NULL;
+    listaResidencias = getTableIDLs(db, "RESIDENCIA_TB", "ID != -1");
+    int numResidencias = lenLs(&listaResidencias);
+    //printLs(&listaResidencias);
     
-  );
-    int aux;
-    scanf("%d", &aux);
+
+    char* sql_cmd = NULL;
+    sqlite3_stmt* sql_stmt = NULL;
+    int ret = 0;
+    int row = 1;
+
+    printf("===RESIDENCIAS===\n"\
+      "selecione sua residencia: \n"\
+
+      "\n"
+    );
+
+    printf(
+      "[-1] -> voltar\n"\
+      "[0] -> NavBar\n"\
+    "");
+
+
+    strFOverwrite(&sql_cmd,  
+      "SELECT NOME FROM RESIDENCIA_TB; "\
+
+    "", NULL);
+
+    ret = getStmt(db, &sql_stmt, sql_cmd);
+
+      while (ret == SQLITE_ROW){
+        printf(
+          "[%d] -> %s\n"\
+        "", row, sqlite3_column_text(sql_stmt, 0));
+
+        ret = sqlite3_step(sql_stmt);
+
+        row++;
+      }
+
+    sqlite3_finalize(sql_stmt);
+
+
+    printf(": ");
+
+    //selecao do usuario
+    scanf(" %d", &input);
     getchar();
-    if(aux==-1){
+
+    if(input == -1){
       break;
     }
-    switch (aux)
+    switch (input)
     {
-    case 1:
-      nutricao();
+    case 0:
+      navBar();
       break;
     
-    case -1 :
+    default:
+      if(input>numResidencias){
+        printf("opcao invalida...\n");
+        
+      }else{
+        residencia_id = getItemLs(&listaResidencias, input-1);
+        condicao = strFOverwrite(NULL,"RESIDENCIA_FK = %d", residencia_id);
+        turmas(residencia_id, condicao);
+        free(condicao);
+      }
+      break;
+    }
+      
+
+      
+    
+    
+    
+
+  }
+  
+}
+
+void turmas(int residencia_id, char* condicao){
+  int input;
+  int turma_id;
+
+  lsID* listaOpcoes =NULL;
+  int numOpcoes;
+
+  while(1){
+    printf("===TURMAS===\n"\
+      "selecione sua turma: "\
+
+      "\n"
+    );
+    printf(
+      "[-1] -> voltar\n"\
+      "[0] -> NavBar\n"\
+    "");
+    
+    numOpcoes = printTableColumn(db, "TURMA_TB", "NOME", condicao);
+    
+
+    printf(": ");
+
+    //selecao do usuario
+    scanf(" %d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch (input)
+    {
+    case 0:
+      navBar();
+      break;
+    
+    default:
+      if(input>numOpcoes){
+        printf("opcao invalida...\n");
+        
+      }else{
+        listaOpcoes = getTableIDLs(db, "TURMA_TB", condicao);
+        residencia_id = getItemLs(&listaOpcoes, input-1);
+      }
       break;
     }
 
   }
-  
+}
+
+void verTurma(int turma_id, char* condicao){
+  int input;
+  int residente_id;
+
+  Turma turma;
+  //turma.nomeTurma = (char*)getCellVoid(db, NULL, "TURMA_TB",)
+
+  lsID* listaOpcoes =NULL;
+  int numOpcoes;
+
+  while(1){
+    printf("===%s===\n"\
+      "selecione sua turma: "\
+
+      "\n"
+    , "turmaex");
+    printf(
+      "[-1] -> voltar\n"\
+      "[0] -> NavBar\n"\
+    "");
+    
+    numOpcoes = printTableColumn(db, "TURMA_TB", "NOME", condicao);
+    
+
+    printf(": ");
+
+    //selecao do usuario
+    scanf(" %d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch (input)
+    {
+    case 0:
+      navBar();
+      break;
+    
+    default:
+      if(input>numOpcoes){
+        printf("opcao invalida...\n");
+        
+      }else{
+        listaOpcoes = getTableIDLs(db, "TURMA_TB", condicao);
+        residente_id = getItemLs(&listaOpcoes, input-1);
+      }
+      break;
+    }
+
+  }
 }
 
 
@@ -1530,8 +1858,8 @@ void feedbackPreceptor(){
     file = fopen("arquivo.txt", "w");
 
     if (file == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
+      printf("Erro ao abrir o arquivo.\n");
+      return;
     }
 
     printf("Digite o texto a ser escrito no arquivo:\n");
@@ -1556,7 +1884,7 @@ void feedbackResidente(){
     }
 
     while (fgets(texto, sizeof(texto), file) != NULL) {
-        printf("%s", texto);
+      printf("%s", texto);
     }
 
     fclose(file);
