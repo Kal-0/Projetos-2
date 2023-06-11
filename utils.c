@@ -437,7 +437,21 @@ void getResidente(sqlite3* db_ptr, Residente* residente, int residente_id){
       residente->matricula = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 2), NULL);
       residente->turmaFk = sqlite3_column_int(sql_stmt, 3);
       residente->preceptorFk = sqlite3_column_int(sql_stmt, 4);
-      //getTableIDLs(db, "RESIDENTE_TB", "");
+      
+      strFOverwrite(&sql_cmd,
+        "WHERE (TURMA_FK = %d); "\
+      "", residente->turmaFk);
+      residente->listaAtividades = getTableIDLs(db, "ATIVIDADE_TB", sql_cmd);
+
+      strFOverwrite(&sql_cmd,
+        "WHERE (RESIDENTE_FK = %d); "\
+      "", residente->id);
+      residente->listaAtividades = getTableIDLs(db, "SUBMISSAO_TB", sql_cmd);
+
+      strFOverwrite(&sql_cmd,
+        "WHERE (RESIDENTE_FK = %d); "\
+      "", residente->id);
+      residente->listaAtividades = getTableIDLs(db, "FEEDBACK_TB", sql_cmd);
       //residente->notasTrimestrais = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 7), NULL);
     }
     else{
