@@ -181,7 +181,8 @@ void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field,
     "SELECT %s FROM %s "\
     "WHERE (%s); "\
   "", field, tableName, condition);
-sysStatus(db, ret);
+  sysStatus(db, ret);
+
   ret = getStmt(db, &sql_stmt, sql_cmd);
 
   printf("=============\n");
@@ -421,13 +422,29 @@ void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id){
 
   strFOverwrite(&sql_cmd,
     "SELECT * FROM TURMA_TB "\
-    "WHERE (ID = '%d'); "\
+    "WHERE (ID = %d); "\
 
   "", turma_id);
 
-  getStmt(db, &sql_stmt, sql_cmd);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+    if(ret == SQLITE_ROW){
+      turma->fkResidencia = sqlite3_column_int(sql_stmt, 1);
+      turma->nomeTurma = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 2), NULL);
+      turma->anoDaTurma = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 3), NULL);
+    }
+    else{
+      sysStatus(db, ret);
+    }
+  sqlite3_finalize(sql_stmt);
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
 
 }
+
+
+
 
 //cadastro de usuarios
 int addUsuarioTB(sqlite3* db_ptr, char *nome, char *email, char *senha, char *tipoDeUsuario) {
@@ -974,6 +991,52 @@ int addTurmaTB(sqlite3* db_ptr, int residencia_fk, char* nome, char* ano){
 
   return ret;
 }
+
+
+
+
+//adicionando objetos
+int addAtividadeTB(sqlite3* db_ptr, int turma_fk, char* nome, char* descricao, char* data_p, char* data_e, char* status){
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
+
+
+  // funcao
+
+  // criando tabela residencia
+  strFOverwrite(&sql_cmd,  
+    "INSERT INTO ATIVIDADE_TB (TURMA_FK, NOME, DESCRICAO, DATA_POSTAGEM, DATA_ENTREGA, STATUS) "\
+    "VALUES (%d, '%s', '%s', '%s', '%s', '%s'); "\
+
+  "", turma_fk, nome, descricao, data_p, data_e, status);
+  
+  ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
+  sysStatus(db, ret);
+
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
+
+  
+
+  return ret;
+
+}
+
+
 
 
 

@@ -104,12 +104,12 @@ struct SProgramaResidencia{
 
 
 struct STurma{
-  char nomeTurma[40];
-  char anoDaTurma[10];
+  char* nomeTurma;
+  char* anoDaTurma;
   lsID *residentes;
   lsID *listaPreceptores;
   lsID *listasAtividades;
-  ProgramaResidencia* residencia;
+  int fkResidencia;
   char *criteriosAvaliativos;
 };
 
@@ -127,9 +127,9 @@ struct SAtividade{
 };
 
 struct SSubmissao{
-  Residente* residente;
-  Preceptor* preceptor;
-  Atividade* atividade;
+  int idResidente;
+  int idPreceptor;
+  int idAtividade;
   float nota;
   char *resposta;
   char *feedback;
@@ -184,11 +184,18 @@ int addCoordenacaoTB(sqlite3* db_ptr, int usuario_fk, int residencia_fk, char *c
 int addPreceptorTB(sqlite3* db_ptr, int usuario_fk, int turma_fk);
 int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_fk, int preceptor_fk, char* notas);
 
+
+//pegando dados
 Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha);
+void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id);
+
 
 //estruturas
 int addResidenciaTB(sqlite3* db_ptr, char* nome);
 int addTurmaTB(sqlite3* db_ptr, int residencia_fk, char* nome, char* ano);
+
+//objetos
+int addAtividadeTB(sqlite3* db_ptr, int turma_fk, char* nome, char* descricao, char* data_p, char* data_e, char* status);
 
 /*
 void criarCriteriosDeFeedback(Turma *turma);

@@ -199,12 +199,12 @@ if(1){
 
     "CREATE TABLE ATIVIDADE_TB( "\
       "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "\
+      "TURMA_FK INTEGER NOT NULL, "\
       "NOME TEXT NOT NULL, "\
       "DESCRICAO TEXT NOT NULL, "\
-      "TURMA_FK INTEGER NOT NULL, "\
-      "SUBMISSOES_LS TEXT, "\
       "DATA_POSTAGEM TEXT NOT NULL, "\
       "DATA_ENTREGA TEXT, "\
+      "SUBMISSOES_LS TEXT, "\
       "STATUS TEXT NOT NULL, "\
       "FOREIGN KEY (TURMA_FK) REFERENCES TURMA_TB(ID)"\
 
@@ -444,6 +444,7 @@ if(1){
 
   printf("ADICIONANDO_TURMA===\n");
   addTurmaTB(db, 1, "nutricao_1", "2022");
+  addTurmaTB(db, 1, "nutricao_2", "2022");
 
 
   printf("CADASTRO_USUARIO===\n");
@@ -469,20 +470,29 @@ if(1){
   addResidenteTB(db, 5, "1234567", 1, 1, "[0,0,0,0]");
 
 
-  printf("PRINT_GESTAO===\n");
-  lsID* lsGestao = NULL;
-  lsGestao = getTableIDLs(db, "USUARIO_TB", "TIPO = 'gestao'");
-
-  printLs(&lsGestao);
-  freeLs(&lsGestao);
-
-
-  printf("LOGIN===\n");
-  perfil = getUsuarioTB(db, "caio@gmail.com", "caio123");
+  printf("CADASTRO_ATIVIDADE===\n");
+  addAtividadeTB(db, 2, "criar plano alimentar", "crie um plano alimentar para um obeso", "11/06/2023", "12/06/2023", "ativo");
 
 
 
-  printf("nome: %s\n", perfil->nome);
+
+  // printf("PRINT_GESTAO===\n");
+  // lsID* lsGestao = NULL;
+  // lsGestao = getTableIDLs(db, "USUARIO_TB", "TIPO = 'gestao'");
+
+  // printLs(&lsGestao);
+  // freeLs(&lsGestao);
+
+
+  // printf("LOGIN===\n");
+  // perfil = getUsuarioTB(db, "caio@gmail.com", "caio123");
+
+  // printf("nome: %s\n", perfil->nome);
+
+  // Turma t1;
+  // getTurmaTB(db, &t1, 2);
+
+  // printf("nomeTurma: %s", t1.nomeTurma);
 
 
 
