@@ -24,6 +24,7 @@ void home();
 void residencias();
 void turmas(char* condicao);
 void verTurma(int turma_id);
+void residentes(char* condicao);
 void nutricao();
 void nutricao_turma1();
 void nutricao_turma1_residente();
@@ -1253,7 +1254,7 @@ void residentes(char* condicao){
         listaOpcoes = getTableIDLs(db, "RESIDENTE_TB", condicao);
         residente_id = getItemLs(&listaOpcoes, input-1);
 
-        verResidente(residente_id);
+        //verResidente(residente_id);
       }
       break;
     }
@@ -1262,79 +1263,79 @@ void residentes(char* condicao){
 }
 
 
-void verResidente(int residente_id){
-  Usuario residente;
-  getUsuarioTB1()
+// void verResidente(int residente_id){
+//   Usuario residente;
+//   getUsuarioTB1()
   
-  int input;
-  int residente_id;
-  char* pass_condicao;
+//   int input;
+//   int residente_id;
+//   char* pass_condicao;
 
 
-  while(1){
-    printf("===%s===\n"\
-      "selecione selecione uma opcao: "\
+//   while(1){
+//     printf("===%s===\n"\
+//       "selecione selecione uma opcao: "\
 
-      "\n"
-    , turma.nome);
-    printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
-    "");
-    printf(
-      "[1] -> ver residentes\n"\
-      "[2] -> add residentes\n"\
-      "[3] -> ver residentes\n"\
-      "[4] -> add residentes\n"\
-      "[5] -> ver preceptores\n"\
-      "[6] -> add preceptores\n"\
-    "");
+//       "\n"
+//     , turma.nome);
+//     printf(
+//       "[-1] -> voltar\n"\
+//       "[0] -> NavBar\n"\
+//     "");
+//     printf(
+//       "[1] -> ver residentes\n"\
+//       "[2] -> add residentes\n"\
+//       "[3] -> ver residentes\n"\
+//       "[4] -> add residentes\n"\
+//       "[5] -> ver preceptores\n"\
+//       "[6] -> add preceptores\n"\
+//     "");
 
-    //selecao do usuario
-    printf(": ");
-    scanf(" %d", &input);
-    getchar();
+//     //selecao do usuario
+//     printf(": ");
+//     scanf(" %d", &input);
+//     getchar();
 
-    if(input == -1){
-      break;
-    }
-    switch (input){
-    case 0:
-      navBar();
-      break;
+//     if(input == -1){
+//       break;
+//     }
+//     switch (input){
+//     case 0:
+//       navBar();
+//       break;
     
-    case 1:
-      navBar();
-      break;
+//     case 1:
+//       navBar();
+//       break;
 
-    case 2:
-      navBar();
-      break;
+//     case 2:
+//       navBar();
+//       break;
 
-    case 3:
-      navBar();
-      break;
+//     case 3:
+//       navBar();
+//       break;
 
-    case 4:
-      navBar();
-      break;
+//     case 4:
+//       navBar();
+//       break;
     
-    case 5:
-      navBar();
-      break;
+//     case 5:
+//       navBar();
+//       break;
     
-    case 6:
-      navBar();
-      break;
+//     case 6:
+//       navBar();
+//       break;
     
-    default:
-      printf("opcao invalida...\n");
+//     default:
+//       printf("opcao invalida...\n");
       
-      break;
-    }
+//       break;
+//     }
 
-  }
-}
+//   }
+// }
 
 void nutricao(){
     printf("NUTRICAO\n"\

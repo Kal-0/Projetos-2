@@ -48,8 +48,8 @@ typedef struct SlsID lsID;
 
 // Usuario base
 struct SUsuario{
-  char *nome;
   int id;
+  char *nome;
   char *email;
   char *senha;
   char *categoriaUsuario;
@@ -62,8 +62,9 @@ struct SUsuario{
 
 // Tipos de Usuarios
 struct SResidente{
-  Usuario* usuario;
-  int matricula;
+  int id;
+  int usuarioFk;
+  char* matricula;
   int turmaFk;
   int preceptorFk;
   float notasTrimestrais[4];
@@ -73,7 +74,8 @@ struct SResidente{
 };
  
 struct SPreceptor{
-  Usuario* usuario;
+  int id;
+  int usuarioFk;
   Turma* turma;
   lsID *listaResidentes;
   lsID *listaAtividades;
@@ -81,13 +83,15 @@ struct SPreceptor{
 };
 
 struct SCoordenacao{
-  Usuario* usuario;
+  int id;
+  int usuarioFk;
   char* cargo;
   ProgramaResidencia* residencia;
 };
 
 struct SGestao{
-  Usuario* usuario;
+  int id;
+  int usuarioFk;
   char* cargo;
   lsID *listaResidencias;
 };
@@ -97,6 +101,7 @@ struct SGestao{
 // estruturas
 
 struct SProgramaResidencia{
+  int id;
   char nomePrograma[30];
   lsID* listaCoordenacao;
   lsID* listaTurmas;
@@ -104,7 +109,7 @@ struct SProgramaResidencia{
 
 
 struct STurma{
-  int turma_id;
+  int id;
   char* nome;
   char* ano;
   lsID *residentes;
@@ -118,6 +123,7 @@ struct STurma{
 // objetos
 
 struct SAtividade{
+  int id;
   char* nomeDaAtividade;
   char* descricaoDaAtividade;
   Turma* turma;
@@ -128,6 +134,7 @@ struct SAtividade{
 };
 
 struct SSubmissao{
+  int id;
   int idResidente;
   int idPreceptor;
   int idAtividade;
@@ -138,6 +145,7 @@ struct SSubmissao{
 };
 
 struct SFeedbackGeral{
+  int id;
   Preceptor* preceptor;
   Residente* residente;
   float nota;
