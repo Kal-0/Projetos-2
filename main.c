@@ -30,7 +30,7 @@ void nutricao_turma1();
 void nutricao_turma1_residente();
 void nutricao_turma1_preceptor();
 void perfilGestao();
-void perfilResidente();
+//void perfilResidente();
 void perfilPreceptor();
 void perfilCoordenacao();
 void menuPerfil();
@@ -1496,111 +1496,112 @@ void perfilGestao(){
 }
 
 
-void perfilResidente() {
-  while (1) {
-    printf("\n [0] -> navBar\n"\
-        "PERFIL DO RESIDENTE\n"\
-        "Nome: %s\n"\
-        "ID: %d\n"\
-        "Residencia: Nutricao\n"\
-        "Preceptor Responsável: Manoel Pereira"
+// void perfilResidente() {
+//   while (1) {
+//     printf("\n [0] -> navBar\n"\
+//         "PERFIL DO RESIDENTE\n"\
+//         "Nome: %s\n"\
+//         "ID: %d\n"\
+//         "Residencia: Nutricao\n"\
+//         "Preceptor Responsável: Manoel Pereira"
 
-      "Notas trimestrais"
-      "Nota 1\n"\
-        "Nota 2\n"\
-        "Nota 3\n"\
-        "O que você deseja visualizar? [1] Feedbacks Gerais ou [2] Atividades Gerais?\n",
-              perfil->nome,
-              perfil->id
-      );
-      int varVisualizar = 0;
-      scanf("%d", &varVisualizar);
+//       "Notas trimestrais"
+//       "Nota 1\n"\
+//         "Nota 2\n"\
+//         "Nota 3\n"\
+//         "O que você deseja visualizar? [1] Feedbacks Gerais ou [2] Atividades Gerais?\n",
+//               perfil->nome,
+//               perfil->id
+//       );
+//       int varVisualizar = 0;
+//       scanf("%d", &varVisualizar);
 
-      if (varVisualizar == 1){
-          printf("FEEDBACKS\n"\
-      "feedback 1\n"\
-      "feedback 2\n"\
-      "Selecione qual feedback você deseja visualizar [1]feedback 1, [2]feedback 2");
+//       if (varVisualizar == 1){
+//           printf("FEEDBACKS\n"\
+//       "feedback 1\n"\
+//       "feedback 2\n"\
+//       "Selecione qual feedback você deseja visualizar [1]feedback 1, [2]feedback 2");
 
-          int feedback_selecionado = 0;
-          scanf("%d", &feedback_selecionado);
+//           int feedback_selecionado = 0;
+//           scanf("%d", &feedback_selecionado);
 
-          if (feedback_selecionado == 1){
-              printf("O aluno flopou");
-              printf("Deseja contestar? [S] ou [N]");
+//           if (feedback_selecionado == 1){
+//               printf("O aluno flopou");
+//               printf("Deseja contestar? [S] ou [N]");
 
-              char contestar = ' ';
-              scanf("%c", &contestar);
+//               char contestar = ' ';
+//               scanf("%c", &contestar);
 
-              if(contestar = 'S'){
-                  printf("Escreva sua contestação\n");
-                  char contestação[200];
-                  scanf("%c", &contestação);
-                  printf("Contestação enviada. Aguarde retorno.\n");
-              }
+//               if(contestar = 'S'){
+//                   printf("Escreva sua contestação\n");
+//                   char contestação[200];
+//                   scanf("%c", &contestação);
+//                   printf("Contestação enviada. Aguarde retorno.\n");
+//               }
 
-          }else if(feedback_selecionado == 2){
-              printf("O aluno ahazou! <3");
-          }else{
-              printf("ERRO");
-          }
+//           }else if(feedback_selecionado == 2){
+//               printf("O aluno ahazou! <3");
+//           }else{
+//               printf("ERRO");
+//           }
 
-      }else if (varVisualizar == 2){
-          printf("ATIVIDADES\n"\
-      "atividade 1\n"\
-      "atividade 2\n"\
-      "Selecione qual atividade você deseja visualizar [1]atividade 1, [2]atividade 2");
+//       }else if (varVisualizar == 2){
+//           printf("ATIVIDADES\n"\
+//       "atividade 1\n"\
+//       "atividade 2\n"\
+//       "Selecione qual atividade você deseja visualizar [1]atividade 1, [2]atividade 2");
 
-          int visualizar_atividade = 0;
-          scanf("%d", &visualizar_atividade);
+//           int visualizar_atividade = 0;
+//           scanf("%d", &visualizar_atividade);
 
-          if (visualizar_atividade == 1){
-              printf("Atividade 1\n"\
-        "Status\n"\
-        "Detalhes\n");
+//           if (visualizar_atividade == 1){
+//               printf("Atividade 1\n"\
+//         "Status\n"\
+//         "Detalhes\n");
 
-          }else if(visualizar_atividade == 2){
-              printf("Atividade 2\n"\
-        "Status\n"\
-        "Detalhes\n");
+//           }else if(visualizar_atividade == 2){
+//               printf("Atividade 2\n"\
+//         "Status\n"\
+//         "Detalhes\n");
 
-          }else{
-              printf("ERRO");
-          }
-    char esc;
-    scanf(" %c", &esc);
-    getchar();
+//           }else{
+//               printf("ERRO");
+//           }
+//     char esc;
+//     scanf(" %c", &esc);
+//     getchar();
 
-    if (esc == 's') {
-      printf(
-        "\n [0] -> navBar\n"\
-        "----NOTIFICACAO----\n"\
-        "NOTIFICACOES:\n"\
-        "1) EU QUERO MORRER\n"\
-        "Deseja voltar para seu perfil? (s/n): ");
+//     if (esc == 's') {
+//       printf(
+//         "\n [0] -> navBar\n"\
+//         "----NOTIFICACAO----\n"\
+//         "NOTIFICACOES:\n"\
+//         "1) EU QUERO MORRER\n"\
+//         "Deseja voltar para seu perfil? (s/n): ");
 
-      char aux;
-      scanf(" %c", &aux);
-      getchar();
+//       char aux;
+//       scanf(" %c", &aux);
+//       getchar();
 
-      if (aux == 's') {
-        perfilResidente();
-      }
-      else if (aux == 'n') {
-        homeResidente();
-      }
-      else if (aux == '0') {
-        navBar();
-      }
-    }
-    else if (esc == 'n') {
-      homeResidente();
-    }
-    else if (esc == '0') {
-      navBar();
-    }
-  }
-}
+//       if (aux == 's') {
+//         perfilResidente();
+//       }
+//       else if (aux == 'n') {
+//         homeResidente();
+//       }
+//       else if (aux == '0') {
+//         navBar();
+//       }
+//     }
+//     else if (esc == 'n') {
+//       homeResidente();
+//     }
+//     else if (esc == '0') {
+//       navBar();
+//     }
+//   }
+//   }
+// }
 
 
 void perfilPreceptor() {
@@ -1696,7 +1697,7 @@ void menuPerfil(){
     perfilGestao();
   }else if (!strcmp(perfil->categoriaUsuario,"residente"))
   {
-    perfilResidente();
+    //perfilResidente();
   }
   else if (!strcmp(perfil->categoriaUsuario,"preceptor"))
   {
