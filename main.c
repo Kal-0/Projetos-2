@@ -624,7 +624,6 @@ void cadastro(){
           getchar();
 
 
-
           printf("===TURMAS===\n"\
             "selecione sua turma: "\
 
@@ -698,7 +697,13 @@ void cadastro(){
 
 
           vef = addResidenteTB(db, usuario_fk, matricula, turma_fk, preceptor_fk, "[0,0,0,0]");
+
+
           
+
+
+
+
           freeLs(&listaTurmas);
           freeLs(&listaPreceptores);
           if(vef == 0){
@@ -1498,14 +1503,70 @@ void perfilResidente() {
         "Nome: %s\n"\
         "ID: %d\n"\
         "Residencia: Nutricao\n"\
-        "Atividades disponiveis: 1 \n"\
-        "Notificacoes:  1\n"
-        "     Gostaria de ver as notificacoes? (s/n): "
-        "\n:",
-         perfil->nome,
-         perfil->id
-         );
+        "Preceptor Responsável: Manoel Pereira"
 
+      "Notas trimestrais"
+      "Nota 1\n"\
+        "Nota 2\n"\
+        "Nota 3\n"\
+        "O que você deseja visualizar? [1] Feedbacks Gerais ou [2] Atividades Gerais?\n",
+              perfil->nome,
+              perfil->id
+      );
+      int varVisualizar = 0;
+      scanf("%d", &varVisualizar);
+
+      if (varVisualizar == 1){
+          printf("FEEDBACKS\n"\
+      "feedback 1\n"\
+      "feedback 2\n"\
+      "Selecione qual feedback você deseja visualizar [1]feedback 1, [2]feedback 2");
+
+          int feedback_selecionado = 0;
+          scanf("%d", &feedback_selecionado);
+
+          if (feedback_selecionado == 1){
+              printf("O aluno flopou");
+              printf("Deseja contestar? [S] ou [N]");
+
+              char contestar = ' ';
+              scanf("%c", &contestar);
+
+              if(contestar = 'S'){
+                  printf("Escreva sua contestação\n");
+                  char contestação[200];
+                  scanf("%c", &contestação);
+                  printf("Contestação enviada. Aguarde retorno.\n");
+              }
+
+          }else if(feedback_selecionado == 2){
+              printf("O aluno ahazou! <3");
+          }else{
+              printf("ERRO");
+          }
+
+      }else if (varVisualizar == 2){
+          printf("ATIVIDADES\n"\
+      "atividade 1\n"\
+      "atividade 2\n"\
+      "Selecione qual atividade você deseja visualizar [1]atividade 1, [2]atividade 2");
+
+          int visualizar_atividade = 0;
+          scanf("%d", &visualizar_atividade);
+
+          if (visualizar_atividade == 1){
+              printf("Atividade 1\n"\
+        "Status\n"\
+        "Detalhes\n");
+
+          }else if(visualizar_atividade == 2){
+              printf("Atividade 2\n"\
+        "Status\n"\
+        "Detalhes\n");
+
+          }else{
+              printf("ERRO");
+          }
     char esc;
     scanf(" %c", &esc);
     getchar();
