@@ -410,6 +410,19 @@ if(1){
 
 
 
+  printf("TU GOSTA DE FARINHA??\n");
+    char* notaDB= "[4,3,3,2]";
+    int* arryNota = NULL;
+    getNota(&arryNota, notaDB);
+
+    for (int i = 0; i < sizeof(arryNota); i++) {
+        printf("%d \n", arryNota[i]);
+    }
+
+
+    free(arryNota);
+
+  printf("---------------------\n");
 
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(db, "nutricao");
