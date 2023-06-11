@@ -1201,3 +1201,6 @@ lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition){
 int printResidencias(){
 
 }
+
+//função residente visualizar feedback
+void visualizarFeedbacks(char *nome);
