@@ -360,10 +360,12 @@ int main(void) {
 
 
 
-
-
-
-
+  // for(int n = 0; n<10; n++){
+  //   char* tc = NULL;
+  //   int i = 1;
+  //   tc = strFOverwrite(NULL, "ID = %d", n);
+  //   printf("===========: %s\n",tc);
+  // }
 
 
 
@@ -373,7 +375,7 @@ int main(void) {
   //testando
   
 
-
+  ret = sqlite3_open("BD/db.sqlite3", &db);
 
 
 
@@ -411,6 +413,7 @@ int main(void) {
 
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(&db, "nutricao");
+  addResidenciaTB(&db, "psicologia");
 
   printf("ADICIONANDO_TURMA===\n");
   addTurmaTB(&db, 1, "nutricao_1", "2022");
@@ -577,8 +580,8 @@ void cadastro(){
       if(vef == 0){
         Usuario* usuarioCriado = NULL;
         usuarioCriado = getUsuarioTB(&db, email, senha);
-
         int usuario_fk = usuarioCriado->id;
+
 
         free(usuarioCriado);
         
@@ -595,44 +598,48 @@ void cadastro(){
 
         if(!strcmp(tipo, "coordenacao")){
           int residencia_fk;
-          char* residencia;
-          int str_len = 0;
           char* cargo;
 
+          
           lsID* listaResidencias =NULL;
           listaResidencias = getTableIDLs(&db, "RESIDENCIA_TB", "ID != -1");
           int numResidencias = lenLs(&listaResidencias);
-          printLs(&listaResidencias);
+          //printLs(&listaResidencias);
           
-
-
+          char* condition;
+          char* residencia;
+          int str_len;
           printf("===RESIDENCIAS===\n"\
             "selecione sua residencia: "\
 
             "\n"
           );
-
+          
+          
           for(int i=0; i<numResidencias; i++){
-
-            residencia = ((char*)getCellVoid(&db, &str_len, "RESIDENCIA_TB", "NOME", "ID = 1"));
+            condition = strFOverwrite(NULL, "ID = %d", i+1);
+            residencia = ((char*)getCellVoid(&db, &str_len, "RESIDENCIA_TB", "NOME", condition));
             residencia[str_len] = '\0';
 
             printf(
               "[%d] -> %s\n"\
+            "", i+1, residencia);
 
-              "\n"\
-            "", i, residencia);
 
+            
+            free(condition);
             free(residencia);
-
           }
           
 
           printf(": ");
 
-
-          scanf("%d", residencia_fk);
+          
+          scanf("%d", input);
           getchar();
+
+          residencia_fk = getItemLs(&listaResidencias, input-1);
+          printf("id: %d", residencia_fk);
 
           printf("insira seu cargo: ");
           scanf("%s", cargo);

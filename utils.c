@@ -1,7 +1,7 @@
 #include "utils.h"
 
 //printf("===DEBUG===\n");
-
+int ACTIVE = 1;
 
 
 
@@ -18,39 +18,49 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
   int SWITCH = 1;
 
   if(base_str != NULL){
+    
 
+    
     va_list args;
     va_start(args, base_str);
 
-    str_size = vsnprintf(NULL, 0, base_str, args);
+    //pegando tamanho total da string que sera formada
+    str_size = vsnprintf(NULL, 0, base_str, args) + 1;
     //printf("size: %d\n", str_size);
 
     va_end(args);
     
+
+    //allocando memoria
+    formatted_str = (char*)malloc(str_size);
+    strcpy(formatted_str, base_str);
+
+    if(SWITCH){
+      printf("NF_result: %s\n", formatted_str);
+    }
+
+    if (formatted_str == NULL){
+      return NULL;
+    }
+
+
     va_start(args, base_str);
     char* arg1 = va_arg(args, char*);
 
-    formatted_str = (char*)malloc(str_size+ 1);
-    strcpy(formatted_str, base_str);
-    if(SWITCH){
-      printf("result: %s\n", formatted_str);
-    }
-    if (formatted_str == NULL)
-        return NULL;
-
-
-    if(arg1 != NULL){
+    //verifica se o primeiro args e NULL
+    if(arg1 != (void*)NULL || (int)arg1 == 0){
       va_end(args);
     
 
       va_start(args, base_str);
-
+      
+      //substituindo: "%x"s pelos args
       vsnprintf(formatted_str, str_size, base_str, args);
 
       va_end(args);
 
       if(SWITCH){
-        printf("result: %s\n", formatted_str);
+        printf("F_result: %s\n", formatted_str);
       }
     }
     else{
@@ -66,7 +76,7 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
       *output_str = formatted_str;
     }
   }
-
+  //printf("FF_result: %s\n", formatted_str);
   return formatted_str;
 }
 
@@ -103,7 +113,9 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
 
   int ret;
 
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   //funcao
@@ -126,19 +138,25 @@ int getStmt(sqlite3** db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
 
       *sql_stmt_ptr = sql_stmt;
 
-      sqlite3_close(db);
+      if(ACTIVE){
+        sqlite3_close(db);
+      }
       return ret;
     }else{
 
       sqlite3_finalize(sql_stmt);
-      sqlite3_close(db);
+      if(ACTIVE){
+        sqlite3_close(db);
+      }
       return ret;
     }
 
 
   }else{
     //printf("===DEBUG===\n");
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
     return ret;
   }
 }
@@ -150,9 +168,10 @@ void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field
   char* sql_cmd = NULL;
   
   int ret;
-  
-  sqlite3_open("BD/db.sqlite3", &db);
 
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
   // funcao
 
@@ -162,8 +181,11 @@ void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field
     "SELECT %s FROM %s "\
     "WHERE (%s); "\
   "", field, tableName, condition);
-
+sysStatus(&db, ret);
   ret = getStmt(&db, &sql_stmt, sql_cmd);
+
+  printf("=============\n");
+  sysStatus(&db, ret);
   if(ret != SQLITE_ROW){
     
 
@@ -172,7 +194,9 @@ void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return cellValue;
   }
@@ -197,7 +221,9 @@ void* getCellVoid(sqlite3** db_ptr, int* cell_size, char* tableName, char* field
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   
 
@@ -215,7 +241,9 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
   
   int ret;
 
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
   // funcao
   Usuario *usuarioLogin = NULL;
@@ -335,7 +363,9 @@ Usuario *getUsuarioTB(sqlite3** db_ptr, char *email, char *senha) {
     free(sql_cmd);
   }
 
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
   
   
   return usuarioLogin;
@@ -353,7 +383,9 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -381,7 +413,9 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
       printf("email ja cadastrado!\n");
 
       sqlite3_finalize(sql_stmt);
-      sqlite3_close(db);
+      if(ACTIVE){
+        sqlite3_close(db);
+      }
       return ret;
 
     }
@@ -413,7 +447,9 @@ int addUsuarioTB(sqlite3** db_ptr, char *nome, char *email, char *senha, char *t
   }
   
   sqlite3_finalize(sql_stmt);
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
   
   return ret;
 };
@@ -426,7 +462,9 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -449,7 +487,9 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
       free(sql_cmd);
     }
 
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
     return ret;
   }
 
@@ -470,7 +510,9 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return ret;
   }
@@ -502,7 +544,9 @@ int addGestaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo) {
     free(sql_cmd);
   }
 
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return ret;
 }
@@ -515,7 +559,9 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -539,7 +585,9 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
       free(sql_cmd);
     }
 
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
     return ret;
   }
 
@@ -560,7 +608,9 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return ret;
   }
@@ -593,7 +643,9 @@ int addCoordenacaoTB(sqlite3** db_ptr, int usuario_fk, char *cargo, int residenc
     free(sql_cmd);
   }
 
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return ret;
 }
@@ -606,7 +658,9 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -629,7 +683,9 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
       free(sql_cmd);
     }
 
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
     return ret;
   }
 
@@ -650,7 +706,9 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return ret;
   }
@@ -681,7 +739,9 @@ int addPreceptorTB(sqlite3** db_ptr, int usuario_fk, int turma_fk) {
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return ret;
 }
@@ -694,7 +754,9 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -717,7 +779,9 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
       free(sql_cmd);
     }
 
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
     return ret;
   }
 
@@ -738,7 +802,9 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return ret;
   }
@@ -770,7 +836,9 @@ int addResidenteTB(sqlite3** db_ptr, int usuario_fk, char *matricula, int turma_
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return ret;
 }
@@ -786,7 +854,9 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -805,7 +875,9 @@ int addResidenciaTB(sqlite3** db_ptr, char* nome){
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return ret;
 }
@@ -818,7 +890,9 @@ int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -837,7 +911,9 @@ int addTurmaTB(sqlite3** db_ptr, int residencia_fk, char* nome, char* ano){
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   
 
@@ -851,7 +927,7 @@ int getItemLs(lsID** head, int index){
   lsID *temp = *head;
   int cursor = 0;
 
-  if(abs(index)>lenLs(*head)){
+  if(abs(index)>lenLs(head)){
     return 0;
   }
 
@@ -945,7 +1021,9 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
   
   int ret;
   
-  sqlite3_open("BD/db.sqlite3", &db);
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
 
 
   // funcao
@@ -966,7 +1044,9 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
     if(sql_cmd != NULL){
       free(sql_cmd);
     }
-    sqlite3_close(db);
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
 
     return list;
   }
@@ -987,7 +1067,10 @@ lsID* getTableIDLs(sqlite3** db_ptr, char* tableName, char* condition){
   if(sql_cmd != NULL){
     free(sql_cmd);
   }
-  sqlite3_close(db);
+
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
 
   return list;
   

@@ -163,6 +163,7 @@ char* strFOverwrite(char** output_str, char* base_str, ...);
 
 
 //listas
+int getItemLs(lsID** head, int index);
 void printLs(lsID **head);
 int lenLs(lsID **head);
 void append(lsID **head, int item);
