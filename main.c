@@ -1283,7 +1283,7 @@ void residentes(char* condicao){
 
 // void verResidente(int residente_id){
 //   Usuario residente;
-//   getUsuarioTB1()
+//   //getUsuarioTB1();
   
 //   int input;
 //   int residente_id;
@@ -1295,7 +1295,7 @@ void residentes(char* condicao){
 //       "selecione selecione uma opcao: "\
 
 //       "\n"
-//     , turma.nome);
+//     , );
 //     printf(
 //       "[-1] -> voltar\n"\
 //       "[0] -> NavBar\n"\
@@ -1509,112 +1509,56 @@ void perfilGestao(){
 }
 
 
-// void perfilResidente() {
-//   while (1) {
-//     printf("\n [0] -> navBar\n"\
-//         "PERFIL DO RESIDENTE\n"\
-//         "Nome: %s\n"\
-//         "ID: %d\n"\
-//         "Residencia: Nutricao\n"\
-//         "Preceptor Responsável: Manoel Pereira"
+void perfilResidente() {
+  while (1) {
+    printf("\n [0] -> navBar\n"\
+        "PERFIL DO RESIDENTE\n"\
+        "Nome: %s\n"\
+        "ID: %d\n"\
+        "Residencia: Nutricao\n"\
+        "Atividades disponiveis: 1 \n"\
+        "Notificacoes:  1\n"
+        "     Gostaria de ver as notificacoes? (s/n): "
+        "\n:",
+         perfil->nome,
+         perfil->id
+         );
 
-//       "Notas trimestrais"
-//       "Nota 1\n"\
-//         "Nota 2\n"\
-//         "Nota 3\n"\
-//         "O que você deseja visualizar? [1] Feedbacks Gerais ou [2] Atividades Gerais?\n",
-//               perfil->nome,
-//               perfil->id
-//       );
-//       int varVisualizar = 0;
-//       scanf("%d", &varVisualizar);
+    char esc;
+    scanf(" %c", &esc);
+    getchar();
 
-//       if (varVisualizar == 1){
-//           printf("FEEDBACKS\n"\
-//       "feedback 1\n"\
-//       "feedback 2\n"\
-//       "Selecione qual feedback você deseja visualizar [1]feedback 1, [2]feedback 2");
+    if (esc == 's') {
+      printf(
+        "\n [0] -> navBar\n"\
+        "----NOTIFICACAO----\n"\
+        "NOTIFICACOES:\n"\
+        "1) EU QUERO MORRER\n"\
+        "Deseja voltar para seu perfil? (s/n): ");
 
-//           int feedback_selecionado = 0;
-//           scanf("%d", &feedback_selecionado);
+      char aux;
+      scanf(" %c", &aux);
+      getchar();
 
-//           if (feedback_selecionado == 1){
-//               printf("O aluno flopou");
-//               printf("Deseja contestar? [S] ou [N]");
+      if (aux == 's') {
+        perfilResidente();
+      }
+      else if (aux == 'n') {
+        homeResidente();
+      }
+      else if (aux == '0') {
+        navBar();
+      }
+    }
+    else if (esc == 'n') {
+      homeResidente();
+    }
+    else if (esc == '0') {
+      navBar();
+    }
+  }
+}
 
-//               char contestar = ' ';
-//               scanf("%c", &contestar);
-
-//               if(contestar = 'S'){
-//                   printf("Escreva sua contestação\n");
-//                   char contestação[200];
-//                   scanf("%c", &contestação);
-//                   printf("Contestação enviada. Aguarde retorno.\n");
-//               }
-
-//           }else if(feedback_selecionado == 2){
-//               printf("O aluno ahazou! <3");
-//           }else{
-//               printf("ERRO");
-//           }
-
-//       }else if (varVisualizar == 2){
-//           printf("ATIVIDADES\n"\
-//       "atividade 1\n"\
-//       "atividade 2\n"\
-//       "Selecione qual atividade você deseja visualizar [1]atividade 1, [2]atividade 2");
-
-//           int visualizar_atividade = 0;
-//           scanf("%d", &visualizar_atividade);
-
-//           if (visualizar_atividade == 1){
-//               printf("Atividade 1\n"\
-//         "Status\n"\
-//         "Detalhes\n");
-
-//           }else if(visualizar_atividade == 2){
-//               printf("Atividade 2\n"\
-//         "Status\n"\
-//         "Detalhes\n");
-
-//           }else{
-//               printf("ERRO");
-//           }
-//     char esc;
-//     scanf(" %c", &esc);
-//     getchar();
-
-//     if (esc == 's') {
-//       printf(
-//         "\n [0] -> navBar\n"\
-//         "----NOTIFICACAO----\n"\
-//         "NOTIFICACOES:\n"\
-//         "1) EU QUERO MORRER\n"\
-//         "Deseja voltar para seu perfil? (s/n): ");
-
-//       char aux;
-//       scanf(" %c", &aux);
-//       getchar();
-
-//       if (aux == 's') {
-//         perfilResidente();
-//       }
-//       else if (aux == 'n') {
-//         homeResidente();
-//       }
-//       else if (aux == '0') {
-//         navBar();
-//       }
-//     }
-//     else if (esc == 'n') {
-//       homeResidente();
-//     }
-//     else if (esc == '0') {
-//       navBar();
-//     }
-//   }
-//   }
-// }
 
 
 void perfilPreceptor() {
@@ -1710,7 +1654,7 @@ void menuPerfil(){
     perfilGestao();
   }else if (!strcmp(perfil->categoriaUsuario,"residente"))
   {
-    //perfilResidente();
+    perfilResidente();
   }
   else if (!strcmp(perfil->categoriaUsuario,"preceptor"))
   {
@@ -1869,7 +1813,7 @@ void homeCoordenacao(){
           break;
         
         case 1:
-          printf("TURMAS FICARA AQUI\n");
+          telaPrecTurma();
           break;
 
         default:
@@ -2069,12 +2013,13 @@ void feedbackPreceptor(){
       return;
     }
 
-    printf("Digite o texto a ser escrito no arquivo:\n");
+    printf("Digite o texto para um residente a ser escrito no arquivo:\n");
     fgets(texto, sizeof(texto), stdin);
 
     fprintf(file, "%s", texto);
 
     fclose(file);
+
     return;
 }
 
@@ -2115,4 +2060,101 @@ void feedbackResidente(){
         fclose(file);
     }
   return;
+}
+
+void telaPrecResidente(){
+  while (1)
+  {
+    printf("====RESIDENTE====\n"
+          "Escolha um residente\n"
+          "[-1] voltar\n"
+          "[0] NavBar\n"
+          "[1] Enviar um feedback\n"
+          "[2] Notas\n"
+          
+    );
+    int aux;
+    scanf("%d", &aux);
+    switch (aux)
+    {
+    case -1:
+      
+      break;
+    
+    case 0:
+      navBar();
+      break;
+    
+    case 1:
+      feedbackPreceptor();
+      printf("FEEDBACK ENVIADO\n");
+      break;
+    
+    case 2:
+      notasResi();
+      break;
+    
+    default:
+      break;
+    }
+  }
+}
+
+void telaPrecTurma(){
+  while (1)
+  {
+    printf("====TURMA====\n"
+          "Escolha um residente\n"
+          "[1] Residente1\n"
+          "[2] Residente2\n"
+          "[3] Residente3\n"
+    );
+    int aux;
+    scanf("%d", &aux);
+    switch (aux)
+    {
+    case 1:
+      telaPrecResidente();
+      break;
+    
+    case 2:
+      telaPrecResidente();
+      break;
+    
+    case 3:
+      telaPrecResidente();
+      break;
+    
+    default:
+      break;
+    }
+  }
+  
+}
+
+notasResi(){
+  while (1)
+  {
+    printf("====NOTAS====\n"
+          "NOTA 1: 8.7\n"
+          "NOTA 2: 9.0\n"
+          "NOTA 3: 6.6\n"
+          "NOTA 4: 7.9\n"
+          "Gostaria de sair desta pagina? (s/n)\n"
+    );
+    char aux;
+    scanf("%c", &aux);
+    switch (aux)
+    {
+    case 's':
+      break;
+    
+    case 'n':
+      notasResi();
+      break;
+    
+    default:
+      break;
+    }
+  }
 }
