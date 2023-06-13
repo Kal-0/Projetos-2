@@ -28,7 +28,7 @@ O projeto possui uma pasta principal chamada "Projetos-2", que por si mesmo poss
 2- Abra o a pasta do repositório <br>
 3- Gere o executavel inserindo esse o comando no terminal: <br>
 ```
-gcc main.c utils.c ./sqlite3/sqlite3.c -o /hclass.exe
+gcc main.c utils.c ./sqlite3/sqlite3.c -o hclass.exe
 ```
 4- Execute o programa inserindo esse o comando no terminal: <br>
 ```
