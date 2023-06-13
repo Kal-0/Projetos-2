@@ -38,7 +38,7 @@ gcc main.c utils.c ./sqlite3/sqlite3.c -o ./executables/hclass.exe
 
 # Observações 👀
 
-No momento o código do projeto se encontra com apenas algumas de suas funcionalidades implementadas devido ao pouco espaço de tempo entre a conclusão da interface do protótipo, e o prazo de entrega do código implementado. Além disso, alguns membros do time apresentaram déficit de conhecimento técnico, o que acabou atrasando ainda mais o desenvolvimento.
+No momento o código do projeto se encontra com apenas algumas de suas funcionalidades implementadas devido ao pouco espaço de tempo entre a conclusão da interface do protótipo, e o prazo de entrega do código implementado.
 
 O ideal para testar a aplicação é se cadastrando como um usuário do tipo "Gestão" e/ou "Residente", por possuirem o fluxo mais completo.
 
