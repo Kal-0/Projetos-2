@@ -1488,7 +1488,7 @@ void nutricao_turma1_preceptor(){
         int aux;
         scanf("%d", &aux);
         getchar();
-        if(aux=2){
+        if(aux == 2){
           menuPerfil();
         }
         else{
@@ -2028,7 +2028,7 @@ void printNomeAtividade(struct lsAtividade **head) {
   }
   else{
     while (temp != NULL) {
-    printf("%d\n", temp->atividade.nomeDaAtividade);
+    printf("%s\n", temp->atividade.nomeDaAtividade);
     temp = temp->next;
     }
   }
