@@ -305,6 +305,9 @@ if(1){
     //printf("%s\n", sql_cmd);
     sysStatus(db, ret);
 
+
+
+  //IGNORE
   if(0){
 
 
@@ -944,9 +947,9 @@ void start(){
   while(1){
     printf("  TELA INICIAL  \n\n"
       "Selecione uma opcao:\n\n"\
+      "[-1] -> Sair\n"\
       "[1]  -> Fazer login\n"\
       "[2]  -> Fazer cadastro\n"\
-      "[-1] -> Sair\n"\
       
       "\n:"
     );
@@ -1698,7 +1701,7 @@ void homeGestao(){
     {
     printf("|    Tela Inicial Gestao   |\n"\
         "Selecione uma opcao\n"\
-        "[-1] -> Sair do app\n"\
+        "[-1] -> Logoff\n"\
         "[0]  -> NavBar\n"\
         "[1]  -> Ver residencias\n"\
         
@@ -1740,7 +1743,7 @@ void homeResidente(){
   
     printf("|  Tela Inicial Residente  |\n"\
       "Selecione uma opcao\n"\
-      "[-1] -> Sair\n"\
+      "[-1] -> Logoff\n"\
       "[0]  -> Barra de navegacao\n"\
       "[1]  -> Todas atividades\n"\
       "[2]  -> Atividades do dia\n"\
@@ -1784,7 +1787,7 @@ void homePreceptor(){
   int input = 0;
     printf("|  Tela Inicial Coordenacao  |\n"\
         "Selecione uma opcao:\n"\
-        "[-1] -> Voltar\n"\
+        "[-1] -> Logoff\n"\
         "[0]  -> NavBar\n"\
         "[1]  -> Ver turma\n"\
         
@@ -1820,7 +1823,7 @@ void homeCoordenacao(){
   int input = 0;
     printf("|  Tela Inicial Coordenacao |\n"\
         "Selecione uma opcao:\n"\
-        "[-1] -> Voltar\n"\
+        "[-1] -> Logoff\n"\
         "[0]  -> NavBar\n"\
         "[1]  -> Ver turma\n"\
         
