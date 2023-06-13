@@ -414,41 +414,41 @@ if(1){
 
 
 
+  printf("|     TESTES UNITÁRIOS    |\n");
 
-
-  printf("ADICIONANDO_RESIDENCIA===\n");
+  printf("|  ADICIONANDO RESIDENCIA  |\n");
   addResidenciaTB(db, "nutricao");
   addResidenciaTB(db, "psicologia");
 
-  printf("ADICIONANDO_TURMA===\n");
+  printf("| ADICIONANDO TURMA   |\n");
   addTurmaTB(db, 1, "nutricao_1", "2022");
   addTurmaTB(db, 1, "nutricao_2", "2022");
 
 
-  printf("CADASTRO_USUARIO===\n");
+  printf("|  CADASTRO USUARIO  |\n");
   addUsuarioTB(db, "caio", "caio@gmail.com", "caio123", "gestao");
   addUsuarioTB(db, "camila", "camila@gmail.com", "camila123", "gestao");
   addUsuarioTB(db, "carol", "carol@gmail.com", "carol123", "coordenacao");
   addUsuarioTB(db, "paulo", "paulo@gmail.com", "paulo123", "preceptor");
   addUsuarioTB(db, "diogo", "diogo@gmail.com", "diogo123", "residente");
 
-  printf("CADASTRO_GESTAO===\n");
+  printf("|  CADASTRO  GESTAO |\n");
   addGestaoTB(db, 1, "financeiro");
   addGestaoTB(db, 2, "gestora_lider");
 
 
-  printf("CADASTRO_COORDENACAO===\n");
+  printf("|  CADASTRO COORDENACAO  |\n");
   addCoordenacaoTB(db, 3, 1, "diretora");
 
 
-  printf("CADASTRO_PRECEPTOR===\n");
+  printf("|  CADASTRO PRECEPTOR  |\n");
   addPreceptorTB(db, 4, 1);
 
-  printf("CADASTRO_RESIDENTE===\n");
+  printf("|  CADASTRO RESIDENTE  |\n");
   addResidenteTB(db, 5, "1234567", 1, 1, "[0,0,0,0]");
 
 
-  printf("CADASTRO_ATIVIDADE===\n");
+  printf("|  CADASTRO ATIVIDADE  |\n");
   addAtividadeTB(db, 2, "criar plano alimentar", "crie um plano alimentar para um obeso", "11/06/2023", "12/06/2023", "ativo");
 
 
@@ -565,14 +565,13 @@ void cadastro(){
 
 
   while(1){
-    printf("===CADASTRO===\n"\
-      "selecione o tipo de usuario:\n"\
-      "[-1] -> cancelar\n"\
-      "[1] -> residente\n"\
-      "[2] -> preceptor\n"\
-      "[3] -> coordenacao\n"\
-      "[4] -> gestao\n"\
-
+    printf("| Página de Cadastro  |\n"\
+      "Selecione o seu o tipo de usuário:\n"\
+      "[1]  -> Residente\n"\
+      "[2]  -> Preceptor\n"\
+      "[3]  -> Coordenacao\n"\
+      "[4]  -> Gestao\n"\
+      "[-1] -> Cancelar\n"\
       "\n"
     );
     
@@ -601,7 +600,7 @@ void cadastro(){
         break;
 
       default:
-        printf("opcao invalida...\n");
+        printf("Opcao invalida, tente novamente\n");
 
         strcpy(tipo, "invalido");
         break;
@@ -609,15 +608,15 @@ void cadastro(){
 
     if(strcmp(tipo, "invalido")){
 
-      printf("insira seu nome: ");
+      printf("Insira seu nome: ");
       scanf("%s", nome);
       getchar();
 
-      printf("insira seu e-mail: ");
+      printf("Insira seu e-mail: ");
       scanf("%s", email);
       getchar();
       
-      printf("insira sua senha: ");
+      printf("Insira sua senha: ");
       scanf("%s", senha);
       getchar();
 
@@ -655,13 +654,13 @@ void cadastro(){
           listaPreceptores = getTableIDLs(db, "PRECEPTOR_TB", "ID != -1");
           int numPreceptores = lenLs(&listaPreceptores);
 
-          printf("insira sua natricula: ");
+          printf("Insira sua matricula: ");
           scanf(" %s", matricula);
           getchar();
 
-
-          printf("===TURMAS===\n"\
-            "selecione sua turma: "\
+          printf( "\n\n");
+          printf("|  TURMAS   |\n"\
+            "  Selecione sua turma "\
 
             "\n"
           );
@@ -695,9 +694,9 @@ void cadastro(){
           turma_fk = getItemLs(&listaTurmas, input-1);
 
 
-
-          printf("===PRECEPTOR===\n"\
-            "selecione seu preceptor "\
+          printf("\n\n");
+          printf("|  PRECEPTOR  |\n"\
+            "Selecione seu preceptor "\
 
             "\n"
           );
@@ -743,7 +742,7 @@ void cadastro(){
           freeLs(&listaTurmas);
           freeLs(&listaPreceptores);
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             
             break;
           }
@@ -771,8 +770,8 @@ void cadastro(){
           char* condition;
           char* residencia;
           int str_len;
-          printf("===RESIDENCIAS===\n"\
-            "selecione sua residencia: "\
+          printf("|   RESIDENCIAS   |\n"\
+            "Selecione sua residencia: "\
 
             "\n"
           );
@@ -829,7 +828,7 @@ void cadastro(){
           
           residencia_fk = getItemLs(&listaResidencias, input-1);
           
-          printf("insira seu cargo: ");
+          printf("Insira seu cargo: ");
           scanf(" %s", cargo);
           getchar();
 
@@ -839,7 +838,7 @@ void cadastro(){
           
           freeLs(&listaResidencias);
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             
             break;
           }
@@ -852,7 +851,7 @@ void cadastro(){
           
 
 
-          printf("insira seu cargo: ");
+          printf("Insira seu cargo: ");
           scanf(" %s", cargo);
           getchar();
 
@@ -861,7 +860,7 @@ void cadastro(){
           vef = addGestaoTB(db, usuario_fk, cargo);
 
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             break;
           }
           
@@ -870,8 +869,8 @@ void cadastro(){
       }
 
       if(vef){
-        printf("credenciais invalidas!\n"\
-          "deseja tantar novamente? (s/n): "
+        printf("Credenciais invalidas!\n"\
+          "Deseja tentar novamente? (s/n): "
         );
 
         scanf("%c", &op);
@@ -895,17 +894,17 @@ void login(){
 
 
   while(1){
-    printf("===LOGIN===\n"\
-      "insira seus dados.\n"\
+    printf("|  LOGIN   |\n"\
+      "Insira seus dados.\n"\
 
       "\n"
     );
 
-    printf("insira seu e-mail: ");
+    printf("Insira seu e-mail: ");
     scanf("%s", email);
     getchar();
     
-    printf("insira sua senha: ");
+    printf("Insira sua senha: ");
     scanf("%s", senha);
     getchar();
 
@@ -914,8 +913,8 @@ void login(){
     perfil = fazerLogin(db, email, senha);
 
     if(perfil == NULL){
-      printf("credenciais invalidas!\n"\
-        "deseja tentar novamente? (s/n): "
+      printf("Credenciais invalidas!\n"\
+        "Deseja tentar novamente? (s/n): "
       );
 
       scanf("%c", &op);
@@ -925,8 +924,8 @@ void login(){
         break;
       }
     }else{
-      printf("login realizado com sucesso!\n"\
-        "nome de usuario: %s"\
+      printf("Login realizado com sucesso!\n"\
+        "Nome de usuario: %s"\
         "\n\n"
 
         ,perfil->nome
@@ -941,13 +940,13 @@ void login(){
 
 void start(){
   int input = 0;
-
+  printf("\n\n");
   while(1){
-    printf("===START===\n"\
-      "selecione uma opcao:\n"\
-      "[-1] -> sair\n"\
-      "[1] -> fazer login\n"\
-      "[2] -> fazer cadastro\n"\
+    printf("  TELA INICIAL  \n\n"
+      "Selecione uma opcao:\n\n"\
+      "[1]  -> Fazer login\n"\
+      "[2]  -> Fazer cadastro\n"\
+      "[-1] -> Sair\n"\
       
       "\n:"
     );
@@ -973,7 +972,7 @@ void start(){
         break;
       
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida, tente novamente!\n");
         break;
     }
 
@@ -1026,10 +1025,10 @@ void home(){
  
 
 void verAtividades(){
-    printf("---ATIVIDADES---\n"\
-      "ATIVIDADES DISPONIVEIS ( 1 )\n"\
-      "   ver atividades [ 1 ] [ 2 ]\n"\
-      "ATIVIDADES PASSADAS ( 3 )\n"\
+    printf("|  Atividades  |\n"\
+      "Atividades Disponiveis ( 1 )\n"\
+      "   Ver atividades [ 1 ] [ 2 ]\n"\
+      "Atividades Passadas ( 3 )\n"\
       "\n:"
     );
     
@@ -1055,15 +1054,15 @@ void residencias(){
     int ret = 0;
     int row = 1;
 
-    printf("===RESIDENCIAS===\n"\
-      "selecione sua residencia: \n"\
+    printf("   RESIDENCIAS    \n"\
+      "Selecione sua residencia: \n"\
 
       "\n"
     );
 
     printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
+      "[-1] -> Voltar\n"\
+      "[0]  -> NavBar\n"\
     "");
 
 
@@ -1104,7 +1103,7 @@ void residencias(){
     
     default:
       if(input>numResidencias){
-        printf("opcao invalida...\n");
+        printf("Opcao invalida, tente novamente!\n");
         
       }else{
         residencia_id = getItemLs(&listaResidencias, input-1);
@@ -1134,14 +1133,14 @@ void turmas(char* condicao){
   int numOpcoes;
 
   while(1){
-    printf("===TURMAS===\n"\
-      "selecione sua turma: "\
+    printf("   TURMAS   \n"\
+      "Selecione sua turma: "\
 
       "\n"
     );
     printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
+      "[-1] -> Voltar\n"\
+      "[0]  -> NavBar\n"\
     "");
     
     numOpcoes = printTableColumn(db, "TURMA_TB", "NOME", condicao);
@@ -1163,7 +1162,7 @@ void turmas(char* condicao){
     
     default:
       if(input>numOpcoes){
-        printf("opcao invalida...\n");
+        printf("Opcao invalida, tente novamente!\n");
         
       }else{
         listaOpcoes = getTableIDLs(db, "TURMA_TB", condicao);
@@ -1189,21 +1188,21 @@ void verTurma(int turma_id){
 
   while(1){
     printf("===%s===\n"\
-      "selecione selecione uma opcao: "\
+      "Selecione uma opcao: "\
 
       "\n"
     , turma.nome);
     printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
+      "[-1] -> Voltar\n"\
+      "[0]  -> NavBar\n"\
     "");
     printf(
-      "[1] -> ver atividades\n"\
-      "[2] -> add atividades\n"\
-      "[3] -> ver residentes\n"\
-      "[4] -> add residentes\n"\
-      "[5] -> ver preceptores\n"\
-      "[6] -> add preceptores\n"\
+      "[1] -> Ver atividades\n"\
+      "[2] -> Add atividades\n"\
+      "[3] -> Ver residentes\n"\
+      "[4] -> Add residentes\n"\
+      "[5] -> Ver preceptores\n"\
+      "[6] -> Add preceptores\n"\
     "");
 
     //selecao do usuario
@@ -1247,7 +1246,7 @@ void verTurma(int turma_id){
       break;
     
     default:
-      printf("opcao invalida...\n");
+      printf("Opcao invalida, tente novamente!\n");
       
       break;
     }
@@ -1264,14 +1263,14 @@ void residentes(char* condicao){
   int numOpcoes;
 
   while(1){
-    printf("===RESIDENTES===\n"\
-      "selecione um resdente: "\
+    printf("|  Residentes   |\n"\
+      "Selecione um resdente: "\
 
       "\n"
     );
     printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
+      "[-1] -> Voltar\n"\
+      "[0] ->  NavBar\n"\
     "");
     
     numOpcoes = printTableColumn(db, "USUARIO_TB", "NOME", condicao);
@@ -1291,7 +1290,7 @@ void residentes(char* condicao){
     
     default:
       if(input>numOpcoes){
-        printf("opcao invalida...\n");
+        printf("Opcao invalida, tente novamente!\n");
         
       }else{
         listaOpcoes = getTableIDLs(db, "RESIDENTE_TB", condicao);
@@ -1319,21 +1318,21 @@ void verResidente(int residente_id){
 
   while(1){
     printf("===%s===\n"\
-      "selecione selecione uma opcao: "\
+      "Selecione uma opcao: "\
 
       "\n"
     , usuario.nome);
     printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
+      "[-1] -> Voltar\n"\
+      "[0]  -> NavBar\n"\
     "");
     printf(
-      "[1] -> ver residentes\n"\
-      "[2] -> add residentes\n"\
-      "[3] -> ver residentes\n"\
-      "[4] -> add residentes\n"\
-      "[5] -> ver preceptores\n"\
-      "[6] -> add preceptores\n"\
+      "[1] -> Ver residentes\n"\
+      "[2] -> Add residentes\n"\
+      "[3] -> Ver residentes\n"\
+      "[4] -> Add residentes\n"\
+      "[5] -> Ver preceptores\n"\
+      "[6] -> Add preceptores\n"\
     "");
 
     //selecao do usuario
@@ -1374,7 +1373,7 @@ void verResidente(int residente_id){
       break;
     
     default:
-      printf("opcao invalida...\n");
+      printf("Opcao invalida, tente novamente!\n");
       
       break;
     }
@@ -1384,7 +1383,7 @@ void verResidente(int residente_id){
 
 void nutricao(){
     printf("NUTRICAO\n"\
-      "Iformacoes da residencia: \n"\
+      "Informacoes da residencia: \n"\
       "    Numeros de turma ( 2 )\n"\
       "[1] : Turma 1  \n"\
       "[2] : Turma 2  \n"\
@@ -1465,7 +1464,7 @@ void nutricao_turma1_residente(){
         int aux;
         scanf("%d", &aux);
         getchar();
-        if(aux=2){
+        if(aux == 2){
           menuPerfil();
         }
         else{
@@ -1477,7 +1476,7 @@ void nutricao_turma1_residente(){
 
 void nutricao_turma1_preceptor(){
    printf("Preceptores \n"\
-        "Iformacoes da turma: \n"\
+        "Informacoes da turma: \n"\
         "    Numeros de residentes: ( 2 )\n"\
         "    Ano de ingresso 2022.2\n"\
         "1) Habrosio ID33\n"\
@@ -1560,7 +1559,7 @@ void perfilResidente() {
         "\n [0] -> navBar\n"\
         "----NOTIFICACAO----\n"\
         "NOTIFICACOES:\n"\
-        "1) EU QUERO MORRER\n"\
+        "1) Amanha tem a conferencia! \n"\
         "Deseja voltar para seu perfil? (s/n): ");
 
       char aux;
@@ -1591,10 +1590,10 @@ void perfilResidente() {
 void perfilPreceptor() {
   while (1) {
     printf("\n [0] -> navBar\n"\
-        "PERFIL DO PRECEPTOR \n"\
+        "Perfil do Preceptor \n"\
         "Nome: %s\n"\
         "ID: %d\n"\
-        "CARGO: %s\n"\
+        "Cargo: %s\n"\
         "Residencia: Nutricao\n"\
         "Atividades disponiveis: 1 \n"\
         "Notificacoes:  1\n"
@@ -1611,7 +1610,7 @@ void perfilPreceptor() {
     if (esc == 's') {
       printf(
         "\n [0] -> navBar\n"\
-        "----NOTIFICACAO----\n"\
+        "|    Notificacao  |\n"\
         "1) Voce esta chegando atrasado!!\n"\
         "Deseja voltar para seu perfil? (s/n): ");
       char aux;
@@ -1644,10 +1643,10 @@ void perfilCoordenacao() {
   {
 
     printf("\n [0] -> navBar\n\
-          \nPERFIL DA COORDENACAO\n"\
+          \nPerfil da Coordenacao\n"\
           "Nome: %s\n"\
           "ID: %d\n"\
-          "CARGO: %s\n"\
+          "Cargo: %s\n"\
           "\n", 
           perfil->nome,
           perfil->id, 
@@ -1668,7 +1667,7 @@ void perfilCoordenacao() {
       navBar();
     }
     else {
-      printf("Opcao invalida\n");
+      printf("Opcao invalida, tente novamente!\n");
     }
   }
 }
@@ -1697,11 +1696,12 @@ void homeGestao(){
     int input = 0;
     while (1)
     {
-    printf("===HOME GESTAO===\n"\
-        "selecione uma opcao:\n"\
+    printf("|    Tela Inicial Gestao   |\n"\
+        "Selecione uma opcao\n"\
         "[-1] -> Sair do app\n"\
-        "[0] -> navBar\n"\
-        "[1]-> ver residencias\n"\
+        "[0]  -> NavBar\n"\
+        "[1]  -> Ver residencias\n"\
+        
         
         "\n:"
       );
@@ -1722,7 +1722,7 @@ void homeGestao(){
           break;
 
         default:
-          printf("opcao invalida\n");
+          printf("Opcao invalida, tente novamente!\n");
           break;
       }
 
@@ -1738,12 +1738,12 @@ void homeResidente(){
   {
   
   
-    printf("===HOME RESIDENTE===\n"\
-      "selecione uma opcao:\n"\
-      "-1 -> Sair\n"\
-      "0 -> Barra de navegacao\n"\
-      "1 -> Todas atividades\n"\
-      "2 -> Atividades do dia\n"\
+    printf("|  Tela Inicial Residente  |\n"\
+      "Selecione uma opcao\n"\
+      "[-1] -> Sair\n"\
+      "[0]  -> Barra de navegacao\n"\
+      "[1]  -> Todas atividades\n"\
+      "[2]  -> Atividades do dia\n"\
       
       "\n:"
     );
@@ -1763,30 +1763,30 @@ void homeResidente(){
       
       case 1:
         //printNomeAtividade(Tarefinha);
-        printf("========TODAS ATIVIDADES=========\n");
+        printf("|    TODAS ATIVIDADES     |\n");
         break;
 
       case 2:
-        printf("========ATIVIDADES DO DIA=========\n");
+        printf("|    ATIVIDADES DO DIA    |\n");
         break;
 
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida, tente novamente!\n");
         break;
     }
 
     printf("\n\n");
   }
 }
-//A FAZER
+///A FAZER
 
 void homePreceptor(){
   int input = 0;
-    printf("===HOME COORDENACAO===\n"\
-        "selecione uma opcao:\n"\
-        "[-1] -> voltar\n"\
-        "[0] -> navBar\n"\
-        "[1]-> ver turma\n"\
+    printf("|  Tela Inicial Coordenacao  |\n"\
+        "Selecione uma opcao:\n"\
+        "[-1] -> Voltar\n"\
+        "[0]  -> NavBar\n"\
+        "[1]  -> Ver turma\n"\
         
         "\n:"
       );
@@ -1803,11 +1803,11 @@ void homePreceptor(){
           break;
         
         case 1:
-          printf("TURMAS FICARA AQUI\n");
+          printf("Turmas ficara aqui\n");
           break;
 
         default:
-          printf("opcao invalida\n");
+          printf("Opcao invalida, tente novamente!\n");
           break;
       }
 
@@ -1818,11 +1818,11 @@ void homePreceptor(){
 
 void homeCoordenacao(){
   int input = 0;
-    printf("===HOME COORDENACAO===\n"\
-        "selecione uma opcao:\n"\
-        "[-1] -> voltar\n"\
-        "[0] -> navBar\n"\
-        "[1]-> ver turma\n"\
+    printf("|  Tela Inicial Coordenacao |\n"\
+        "Selecione uma opcao:\n"\
+        "[-1] -> Voltar\n"\
+        "[0]  -> NavBar\n"\
+        "[1]  -> Ver turma\n"\
         
         "\n:"
       );
@@ -1856,14 +1856,14 @@ void navbarResidente(){
    int input = 0;
 
   while(1){
-    printf("===NavBar===\n\n"\
-      "selecione uma opcao:\n"\
+    printf("|  NavBar   |\n\n"\
+      "Selecione uma opcao:\n"\
       "[-1] -> Voltar\n"\
-      "[1]-> Perfil\n"\
-      "[2]-> Home\n"\
-      "[3]-> Atividade\n"\
-      "[4]-> Feeedbacks\n"\
-      "[5]-> Notas\n"\
+      "[1]  -> Perfil\n"\
+      "[2]  -> Home\n"\
+      "[3]  -> Atividade\n"\
+      "[4]  -> Feeedbacks\n"\
+      "[5]  -> Notas\n"\
   
        "\n:"
     );
@@ -1891,7 +1891,7 @@ void navbarResidente(){
           feedbackResidente();
         }
         else{
-          printf("====VOCE NAO TEM NENHUM FEEDBACK====\n");
+          printf("  No momento, voce ainda nao tem nenhum feedback   \n");
         }
         break;
       
@@ -1901,7 +1901,7 @@ void navbarResidente(){
         break;
   
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida\n");
         break;
     }
 
@@ -1914,11 +1914,11 @@ void navbarGestao(){
 int input = 0;
 
   while(1){
-    printf("===NavBar===\n\n"\
-      "selecione uma opcao:\n"\
-      "[-1] -> voltar\n"\
-      "[1]-> perfil\n"\
-      "[2]-> atividades\n"\
+    printf("|   NavBar   \n\n"\
+      "Selecione uma opcao:\n"\
+      "[-1] -> Voltar\n"\
+      "[1]  -> Perfil\n"\
+      "[2]  -> Atividades\n"\
   
        "\n:"
     );
@@ -1934,11 +1934,11 @@ int input = 0;
       break;   
       
       case 2:
-        printf("ver atividades\n");
+        printf("Ver atividades\n");
         break;
       
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida\n");
         break;
     }
 
@@ -1951,11 +1951,11 @@ void navbarPreceptor(){
 int input = 0;
 
   while(1){
-    printf("===NavBar===\n\n"\
-      "selecione uma opcao:\n"\
-      "[-1] -> voltar\n"\
-      "[1]-> perfil\n"\
-      "[2]-> Feedback\n"\
+    printf("|  NavBar  |\n\n"\
+      "Selecione uma opcao:\n"\
+      "[-1] -> Voltar\n"\
+      "[1]  -> Perfil\n"\
+      "[2]  -> Feedback\n"\
   
        "\n:"
     );
@@ -1975,7 +1975,7 @@ int input = 0;
         break;
       
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida!\n");
         break;
     }
 
@@ -1988,11 +1988,11 @@ void navbarCoordenacao(){
   int input = 0;
 
   while(1){
-    printf("===NavBar===\n\n"\
-      "selecione uma opcao:\n"\
-      "[-1] -> voltar\n"\
-      "[1]-> perfil\n"\
-      "[2]-> atividades\n"\
+    printf("|  NavBar  |\n\n"\
+      "Selecione uma opcao:\n"\
+      "[-1] -> Voltar\n"\
+      "[1]  -> Perfil\n"\
+      "[2]  -> Atividades\n"\
   
        "\n:"
     );
@@ -2008,11 +2008,11 @@ void navbarCoordenacao(){
       break;   
       
       case 2:
-        printf("ver atividades\n");
+        printf("Ver atividades\n");
         break;
       
       default:
-        printf("opcao invalida\n");
+        printf("Opcao invalida\n");
         break;
     }
 
@@ -2024,7 +2024,7 @@ void navbarCoordenacao(){
 void printNomeAtividade(struct lsAtividade **head) {
   struct lsAtividade *temp = *head;
   if(temp==NULL){
-    printf("NÃO EXISTE NENHUMA ATIVIDADE\n");
+    printf("Não existe nenhuma atividade.\n");
   }
   else{
     while (temp != NULL) {
@@ -2100,12 +2100,12 @@ void feedbackResidente(){
 void telaPrecResidente(){
   while (1)
   {
-    printf("====RESIDENTE====\n"
-          "Escolha um residente\n"
+    printf("|  RESIDENTE  |\n"
+          "Escolha um residente:\n"
           "[-1] voltar\n"
-          "[0] NavBar\n"
-          "[1] Enviar um feedback\n"
-          "[2] Notas\n"
+          "[0]  NavBar\n"
+          "[1]  Enviar um feedback\n"
+          "[2]  Notas\n"
           
     );
     int aux;
@@ -2122,7 +2122,7 @@ void telaPrecResidente(){
     
     case 1:
       feedbackPreceptor();
-      printf("FEEDBACK ENVIADO\n");
+      printf("Feedback Enviado\n");
       break;
     
     case 2:
@@ -2138,11 +2138,11 @@ void telaPrecResidente(){
 void telaPrecTurma(){
   while (1)
   {
-    printf("====TURMA====\n"
-          "Escolha um residente\n"
-          "[1] Residente1\n"
-          "[2] Residente2\n"
-          "[3] Residente3\n"
+    printf("|   TURMA   |\n"
+          "Escolha um residente: \n"
+          "[1] - Residente 1\n"
+          "[2] - Residente 2\n"
+          "[3] - Residente 3\n"
     );
     int aux;
     scanf("%d", &aux);
@@ -2172,7 +2172,7 @@ void notasResi() {
   char aux;
 
   do {
-    printf("====NOTAS====\n"
+    printf("|   NOTAS   |\n"
             "NOTA 1: 8.7\n"
             "NOTA 2: 9.0\n"
             "NOTA 3: 6.6\n"
@@ -2197,10 +2197,10 @@ void addresidente(){
 
 
   while(1){
-    printf("===Adicionar Residente===\n"\
-          "[-1] Para voltarz\n"
-          "[0] Navbar\n"
-          "[1] Para adicionar\n"
+    printf("|  Adicionar Residente   |\n"\
+          "[-1] -> Para voltar\n"
+          "[0]  -> Navbar\n"
+          "[1]  -> Para adicionar\n"
       "\n"
     );
     
@@ -2221,7 +2221,7 @@ void addresidente(){
         break;
       
       default:
-        printf("opcao invalida...\n");
+        printf("Opcao Invalida, tente novamente! \n");
 
         strcpy(tipo, "invalido");
         break;
@@ -2229,15 +2229,15 @@ void addresidente(){
 
     if(strcmp(tipo, "invalido")){
 
-      printf("insira o nome do residente: ");
+      printf("Insira o nome do residente: ");
       scanf("%s", nome);
       getchar();
 
-      printf("insira o e-mail: ");
+      printf("Insira o e-mail: ");
       scanf("%s", email);
       getchar();
       
-      printf("insira uma senha: ");
+      printf("Insira uma senha: ");
       scanf("%s", senha);
       getchar();
 
@@ -2275,13 +2275,13 @@ void addresidente(){
           listaPreceptores = getTableIDLs(db, "PRECEPTOR_TB", "ID != -1");
           int numPreceptores = lenLs(&listaPreceptores);
 
-          printf("insira sua natricula: ");
+          printf("Insira sua matricula: ");
           scanf(" %s", matricula);
           getchar();
 
 
-          printf("===TURMAS===\n"\
-            "selecione sua turma: "\
+          printf("|   TURMAS   |\n"\
+            "Selecione sua turma: "\
 
             "\n"
           );
@@ -2315,7 +2315,7 @@ void addresidente(){
 
 
 
-          printf("===PRECEPTOR===\n"\
+          printf("|   PRECEPTOR  |\n"\
             "selecione seu preceptor "\
 
             "\n"
@@ -2354,7 +2354,7 @@ void addresidente(){
           freeLs(&listaTurmas);
           freeLs(&listaPreceptores);
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             
             break;
           }
@@ -2364,8 +2364,8 @@ void addresidente(){
       }
 
       if(vef){
-        printf("credenciais invalidas!\n"\
-          "deseja tantar novamente? (s/n): "
+        printf("Credenciais invalidas!\n"\
+          "Deseja tentar novamente? (s/n): "
         );
 
         scanf("%c", &op);
@@ -2391,10 +2391,10 @@ void addpreceptores(){
 
 
   while(1){
-    printf("===Adicionar Preceptor===\n"\
-          "[-1] Para voltarz\n"
-          "[0] Navbar\n"
-          "[1] Para adicionar\n"
+    printf("|   Adicionar Preceptor  |\n"\
+          "[-1] -> Para voltar\n"
+          "[0]  -> Navbar\n"
+          "[1]  -> Para adicionar\n"
       "\n"
     );
     
@@ -2416,7 +2416,7 @@ void addpreceptores(){
       
 
       default:
-        printf("opcao invalida...\n");
+        printf("Opcao Invalida, tente novamente!\n");
 
         strcpy(tipo, "invalido");
         break;
@@ -2424,15 +2424,15 @@ void addpreceptores(){
 
     if(strcmp(tipo, "invalido")){
 
-      printf("insira o nome do preceptor: ");
+      printf("Insira o nome do preceptor: ");
       scanf("%s", nome);
       getchar();
 
-      printf("insira o e-mail: ");
+      printf("Insira o e-mail: ");
       scanf("%s", email);
       getchar();
       
-      printf("insira uma senha: ");
+      printf("Insira uma senha: ");
       scanf("%s", senha);
       getchar();
 
@@ -2470,13 +2470,13 @@ void addpreceptores(){
           listaPreceptores = getTableIDLs(db, "PRECEPTOR_TB", "ID != -1");
           int numPreceptores = lenLs(&listaPreceptores);
 
-          printf("insira sua natricula: ");
+          printf("Insira sua matricula: ");
           scanf(" %s", matricula);
           getchar();
 
 
-          printf("===TURMAS===\n"\
-            "selecione sua turma: "\
+          printf("|  TURMAS  |\n"\
+            "Selecione sua turma: "\
 
             "\n"
           );
@@ -2511,8 +2511,8 @@ void addpreceptores(){
 
 
 
-          printf("===PRECEPTOR===\n"\
-            "selecione seu preceptor "\
+          printf("|  PRECEPTOR  |\n"\
+            "Selecione seu preceptor "\
 
             "\n"
           );
@@ -2558,7 +2558,7 @@ void addpreceptores(){
           freeLs(&listaTurmas);
           freeLs(&listaPreceptores);
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             
             break;
           }
@@ -2586,8 +2586,9 @@ void addpreceptores(){
           char* condition;
           char* residencia;
           int str_len;
-          printf("===RESIDENCIAS===\n"\
-            "selecione sua residencia: "\
+          printf("\n\n");
+          printf("|   RESIDENCIAS  |\n"\
+            "Selecione sua residencia: "\
 
             "\n"
           );
@@ -2644,7 +2645,7 @@ void addpreceptores(){
           
           residencia_fk = getItemLs(&listaResidencias, input-1);
           
-          printf("insira seu cargo: ");
+          printf("Insira seu cargo: ");
           scanf(" %s", cargo);
           getchar();
 
@@ -2654,7 +2655,7 @@ void addpreceptores(){
           
           freeLs(&listaResidencias);
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realisado com sucesso!\n\n");
             
             break;
           }
@@ -2667,7 +2668,7 @@ void addpreceptores(){
           
 
 
-          printf("insira seu cargo: ");
+          printf("Insira seu cargo: ");
           scanf(" %s", cargo);
           getchar();
 
@@ -2676,7 +2677,7 @@ void addpreceptores(){
           vef = addGestaoTB(db, usuario_fk, cargo);
 
           if(vef == 0){
-            printf("cadastro realisado com sucesso!\n\n");
+            printf("Cadastro realizado com sucesso!\n\n");
             break;
           }
           
@@ -2685,8 +2686,8 @@ void addpreceptores(){
       }
 
       if(vef){
-        printf("credenciais invalidas!\n"\
-          "deseja tantar novamente? (s/n): "
+        printf("Credenciais invalidas!\n"\
+          "Deseja tentar novamente? (s/n): "
         );
 
         scanf("%c", &op);
