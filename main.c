@@ -2142,6 +2142,7 @@ void telaPrecTurma(){
     );
     int aux;
     scanf("%d", &aux);
+    getchar();
     switch (aux)
     {
     case 1:
@@ -2163,29 +2164,19 @@ void telaPrecTurma(){
   
 }
 
-void notasResi(){
-  while (1)
-  {
+void notasResi() {
+  char aux;
+
+  do {
     printf("====NOTAS====\n"
-          "NOTA 1: 8.7\n"
-          "NOTA 2: 9.0\n"
-          "NOTA 3: 6.6\n"
-          "NOTA 4: 7.9\n"
-          "Gostaria de sair desta pagina? (s/n)\n"
-    );
-    char aux;
-    scanf("%c", &aux);
-    switch (aux)
-    {
-    case 's':
-      break;
-    
-    case 'n':
-      notasResi();
-      break;
-    
-    default:
-      break;
-    }
-  }
+            "NOTA 1: 8.7\n"
+            "NOTA 2: 9.0\n"
+            "NOTA 3: 6.6\n"
+            "NOTA 4: 7.9\n"
+            "Gostaria de sair desta pagina? (s/n)\n");
+            
+    scanf(" %c", &aux); 
+      
+  } while (aux != 's');
 }
+
