@@ -25,6 +25,7 @@ void residencias();
 void turmas(char* condicao);
 void verTurma(int turma_id);
 void residentes(char* condicao);
+void verResidente(int residente_id);
 void nutricao();
 void nutricao_turma1();
 void nutricao_turma1_residente();
@@ -448,7 +449,20 @@ if(1){
 
 
 
+  // void* cellv = NULL;
+  // int cell1 = 1;
+  // cellv = &cell1;
 
+  
+  //cell = getCellVoid(db, NULL, "TURMA_TB", "ID", "ID > 0");
+  //printf("%d nome: %s", 1, (char*)getCellVoid(db, NULL, "TURMA_TB", "NOME", "ID > 0"));
+  // printf("%d nome: %d\n", 1, *(int*)cellv);
+
+  // for(int i=0; i<10; i++){
+    
+    
+
+  }
   // printf("PRINT_GESTAO===\n");
   // lsID* lsGestao = NULL;
   // lsGestao = getTableIDLs(db, "USUARIO_TB", "TIPO = 'gestao'");
@@ -458,9 +472,19 @@ if(1){
 
 
   // printf("LOGIN===\n");
-  // perfil = getUsuarioTB(db, "caio@gmail.com", "caio123");
+  // perfil = fazerLogin(db, "caio@gmail.com", "caio123");
 
   // printf("nome: %s\n", perfil->nome);
+
+
+  // Usuario p1;
+  // getUsuarioTB(db, &p1, 1);
+  // printf("nome: %s", p1.nome);
+
+
+  // Residente residente;
+  // getResidente(db, &residente, 1);
+  // printf("mat: %s", residente.matricula);
 
   // Turma t1;
   // getTurmaTB(db, &t1, 2);
@@ -468,7 +492,13 @@ if(1){
   // printf("nomeTurma: %s", t1.nomeTurma);
 
 
+  Residente residente;
+  getResidente(db, &residente, 1);
 
+  Usuario usuario;
+  getUsuarioTB(db, &usuario, residente.usuarioFk);
+
+  printf(": %s", usuario.nome);
 
 
 
@@ -592,7 +622,7 @@ void cadastro(){
       
       if(vef == 0){
         Usuario* usuarioCriado = NULL;
-        usuarioCriado = getUsuarioTB(db, email, senha);
+        usuarioCriado = fazerLogin(db, email, senha);
         int usuario_fk = usuarioCriado->id;
         free(usuarioCriado);
 
@@ -875,7 +905,7 @@ void login(){
 
     printf("\n\n");
 
-    perfil = getUsuarioTB(db, email, senha);
+    perfil = fazerLogin(db, email, senha);
 
     if(perfil == NULL){
       printf("credenciais invalidas!\n"\
@@ -1148,7 +1178,6 @@ void verTurma(int turma_id){
   getTurmaTB(db, &turma, turma_id);
   
   int input;
-  int residente_id;
   char* pass_condicao;
 
 
@@ -1158,6 +1187,135 @@ void verTurma(int turma_id){
 
       "\n"
     , turma.nome);
+    printf(
+      "[-1] -> voltar\n"\
+      "[0] -> NavBar\n"\
+    "");
+    printf(
+      "[1] -> ver residentes\n"\
+      "[2] -> add residentes\n"\
+      "[3] -> ver residentes\n"\
+      "[4] -> add residentes\n"\
+      "[5] -> ver preceptores\n"\
+      "[6] -> add preceptores\n"\
+    "");
+
+    //selecao do usuario
+    printf(": ");
+    scanf(" %d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch (input){
+    case 0:
+      navBar();
+      break;
+    
+    case 1:
+      pass_condicao = strFOverwrite(NULL, "TURMA_FK = %d", turma.id);
+      residentes(pass_condicao);
+      free(pass_condicao);
+      break;
+
+    case 2:
+      navBar();
+      break;
+
+    case 3:
+      navBar();
+      break;
+
+    case 4:
+      navBar();
+      break;
+    
+    case 5:
+      navBar();
+      break;
+    
+    case 6:
+      navBar();
+      break;
+    
+    default:
+      printf("opcao invalida...\n");
+      
+      break;
+    }
+
+  }
+}
+
+
+void residentes(char* condicao){
+  int input;
+  int residente_id;
+
+  lsID* listaOpcoes = NULL;
+  int numOpcoes;
+
+  while(1){
+    printf("===RESIDENTES===\n"\
+      "selecione um resdente: "\
+
+      "\n"
+    );
+    printf(
+      "[-1] -> voltar\n"\
+      "[0] -> NavBar\n"\
+    "");
+    
+    numOpcoes = printTableColumn(db, "USUARIO_TB", "NOME", condicao);
+    
+    //selecao do usuario
+    printf(": ");
+    scanf(" %d", &input);
+    getchar();
+
+    if(input == -1){
+      break;
+    }
+    switch (input){
+    case 0:
+      navBar();
+      break;
+    
+    default:
+      if(input>numOpcoes){
+        printf("opcao invalida...\n");
+        
+      }else{
+        listaOpcoes = getTableIDLs(db, "RESIDENTE_TB", condicao);
+        residente_id = getItemLs(&listaOpcoes, input-1);
+        verResidente(residente_id);
+      }
+      break;
+    }
+
+  }
+}
+
+
+void verResidente(int residente_id){
+  Residente residente;
+  getResidente(db, &residente, residente_id);
+
+  Usuario usuario;
+  getUsuarioTB(db, &usuario, residente.usuarioFk);
+  
+
+  int input;
+  char* pass_condicao;
+
+
+  while(1){
+    printf("===%s===\n"\
+      "selecione selecione uma opcao: "\
+
+      "\n"
+    , usuario.nome);
     printf(
       "[-1] -> voltar\n"\
       "[0] -> NavBar\n"\
@@ -1216,131 +1374,6 @@ void verTurma(int turma_id){
 
   }
 }
-
-
-void residentes(char* condicao){
-  int input;
-  int residente_id;
-
-  lsID* listaOpcoes =NULL;
-  int numOpcoes;
-
-  while(1){
-    printf("===RESIDENTES===\n"\
-      "selecione um resdente: "\
-
-      "\n"
-    );
-    printf(
-      "[-1] -> voltar\n"\
-      "[0] -> NavBar\n"\
-    "");
-    
-    numOpcoes = printTableColumn(db, "RESIDENTE_TB", "NOME", condicao);
-    
-    //selecao do usuario
-    printf(": ");
-    scanf(" %d", &input);
-    getchar();
-
-    if(input == -1){
-      break;
-    }
-    switch (input){
-    case 0:
-      navBar();
-      break;
-    
-    default:
-      if(input>numOpcoes){
-        printf("opcao invalida...\n");
-        
-      }else{
-        listaOpcoes = getTableIDLs(db, "RESIDENTE_TB", condicao);
-        residente_id = getItemLs(&listaOpcoes, input-1);
-
-        //verResidente(residente_id);
-      }
-      break;
-    }
-
-  }
-}
-
-
-// void verResidente(int residente_id){
-//   Usuario residente;
-//   getUsuarioTB1()
-  
-//   int input;
-//   int residente_id;
-//   char* pass_condicao;
-
-
-//   while(1){
-//     printf("===%s===\n"\
-//       "selecione selecione uma opcao: "\
-
-//       "\n"
-//     , turma.nome);
-//     printf(
-//       "[-1] -> voltar\n"\
-//       "[0] -> NavBar\n"\
-//     "");
-//     printf(
-//       "[1] -> ver residentes\n"\
-//       "[2] -> add residentes\n"\
-//       "[3] -> ver residentes\n"\
-//       "[4] -> add residentes\n"\
-//       "[5] -> ver preceptores\n"\
-//       "[6] -> add preceptores\n"\
-//     "");
-
-//     //selecao do usuario
-//     printf(": ");
-//     scanf(" %d", &input);
-//     getchar();
-
-//     if(input == -1){
-//       break;
-//     }
-//     switch (input){
-//     case 0:
-//       navBar();
-//       break;
-    
-//     case 1:
-//       navBar();
-//       break;
-
-//     case 2:
-//       navBar();
-//       break;
-
-//     case 3:
-//       navBar();
-//       break;
-
-//     case 4:
-//       navBar();
-//       break;
-    
-//     case 5:
-//       navBar();
-//       break;
-    
-//     case 6:
-//       navBar();
-//       break;
-    
-//     default:
-//       printf("opcao invalida...\n");
-      
-//       break;
-//     }
-
-//   }
-// }
 
 void nutricao(){
     printf("NUTRICAO\n"\

@@ -182,7 +182,7 @@ void freeLs(lsID **head);
 //banco de dados
 int sysStatus(sqlite3* db_ptr, int ret);
 int getStmt(sqlite3* db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p);
-void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field, char* condition);
+//void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field, char* condition);
 int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condition);
 lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition);
 
@@ -195,7 +195,9 @@ int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_f
 
 
 //pegando dados
-Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha);
+Usuario *fazerLogin(sqlite3* db_ptr, char *email, char *senha);
+int getUsuarioTB(sqlite3* db_ptr,Usuario* usuario, int usuario_id);
+void getResidente(sqlite3* db_ptr, Residente* residente, int residente_id);
 void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id);
 
 
