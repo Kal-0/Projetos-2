@@ -164,7 +164,7 @@ int getStmt(sqlite3* db_ptr, sqlite3_stmt** sql_stmt_ptr, char* sql_cmd_p){
   }
 }
 
-void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field, char* condition){
+void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* type, char* tableName, char* field, char* condition){
   // Banco de dados
   sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -188,7 +188,7 @@ void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field,
 
   ret = getStmt(db, &sql_stmt, sql_cmd);
 
-  printf("=============\n");
+  
   sysStatus(db, ret);
   if(ret != SQLITE_ROW){
     
@@ -204,20 +204,35 @@ void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* tableName, char* field,
 
     return cellValue;
   }
-
+  
   
   
   int cell_bytes = sqlite3_column_bytes(sql_stmt, 0);
-  *cell_size = cell_bytes;
+  if(cell_size != NULL){
+    *cell_size = cell_bytes;
+  }
 
+  printf("=============\n");
   //printf("===DEBUG===: %d\n", cell_bytes);
+
   //printf("===DEBUG===: %s\n", (char*)sqlite3_column_blob(sql_stmt, 0));
+  //printf("===DEBUG===: %d\n", (*(int*)sqlite3_column_blob(sql_stmt, 0)));
 
   cellValue = malloc(cell_bytes);
-
-  memcpy(cellValue, (void*)sqlite3_column_blob(sql_stmt, 0), cell_bytes);
+  //memcpy(cellValue, (void*)sqlite3_column_blob(sql_stmt, 0), cell_bytes);
 
   //printf("===DEBUG===: %s\n", (char*)cellValue);
+
+  if(!strcmp(type, "int")){
+    *((int*)cellValue) = (sqlite3_column_int(sql_stmt, 0));
+  }
+  else  if(!strcmp(type, "text")){
+    cellValue = strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 0), NULL);
+  }
+  else  if(!strcmp(type, "blob")){
+    cellValue = sqlite3_column_blob(sql_stmt, 0);
+  }
+
 
   sqlite3_finalize(sql_stmt);
   sql_stmt = NULL;
@@ -269,7 +284,7 @@ int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condit
 }
 
 //login
-Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha) {
+Usuario *fazerLogin(sqlite3* db_ptr, char *email, char *senha) {
   // Banco de dados
   sqlite3* db = db_ptr;
   sqlite3_stmt* sql_stmt = NULL;
@@ -409,6 +424,119 @@ Usuario *getUsuarioTB(sqlite3* db_ptr, char *email, char *senha) {
   
   
   return usuarioLogin;
+};
+
+int getUsuarioTB(sqlite3* db_ptr, Usuario* usuario, int usuario_id) {
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+
+
+  // funcao
+  //Usuario *usuario = NULL;
+  
+
+  //pegando dados do banco de dados
+  
+
+  strFOverwrite(&sql_cmd,
+    "SELECT * FROM USUARIO_TB "\
+    "WHERE (ID = %d); "\
+
+  "", usuario_id);
+
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+
+  if(ret != SQLITE_ROW){
+    sqlite3_finalize(sql_stmt);
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    return 0;
+  }
+
+  //usuario = (Usuario *)malloc(sizeof(Usuario));
+
+  usuario->id = sqlite3_column_int(sql_stmt, 0);
+  usuario->nome = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 1), NULL);
+  usuario->email = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
+  usuario->senha = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 3), NULL);
+  usuario->categoriaUsuario = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 4), NULL);
+
+  usuario->tipoUsuario = NULL;
+  
+  sqlite3_finalize(sql_stmt);
+
+  //pegando tipo de usuario
+  
+  
+  //verificando se o tipo do usuario existe
+  strFOverwrite(&sql_cmd,
+    "SELECT * FROM %s_TB "\
+    "WHERE (USUARIO_FK = %d); "\
+
+  "",usuario->categoriaUsuario, usuario->id);
+
+  
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+  
+  
+  //verificando
+  if(ret != SQLITE_ROW) {
+    sqlite3_finalize(sql_stmt);
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    return 2;
+  }
+
+
+  void* tipousuario = NULL;
+
+  //residente
+  if(!strcmp(usuario->categoriaUsuario, "residente")){
+    // tipousuario = malloc(sizeof(Residente));
+
+    // ((Residente*)tipousuario)->id = usuario->id;
+    // ((Residente*)tipousuario)->matricula = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 2), NULL);
+    // ((Residente*)tipousuario)->turmaFk = sqlite3_column_int(sql_stmt, 3);
+    // ((Residente*)tipousuario)->preceptorFk = sqlite3_column_int(sql_stmt, 4);
+
+    getResidente(db, usuario->tipoUsuario, usuario->id);
+    
+
+
+  }else if(!strcmp(usuario->categoriaUsuario, "preceptor")){
+    tipousuario = malloc(sizeof(Preceptor));
+
+    ((Preceptor*)tipousuario)->id = usuario->id;
+
+  }else if(!strcmp(usuario->categoriaUsuario, "coordenacao")){
+    tipousuario = malloc(sizeof(Coordenacao));
+
+    ((Coordenacao*)tipousuario)->id = usuario->id;
+
+  }else if(!strcmp(usuario->categoriaUsuario, "gestao")){
+    tipousuario = malloc(sizeof(Gestao));
+
+    ((Gestao*)tipousuario)->id = usuario->id;
+    ((Gestao*)tipousuario)->cargo = strFOverwrite(NULL, (char*)sqlite3_column_text(sql_stmt, 2), NULL);
+
+  }
+  
+  //printf("===DEBUG===\n");
+  sqlite3_finalize(sql_stmt);
+  
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+  
+  
+  return 1;
 };
 
 
