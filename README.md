@@ -71,18 +71,6 @@ Desenvolvedores:
   </tr>
 </table>
 
-Camila Cirne
-
-Isabela Spinelli
-
-Caio Hirata
-
-Diogo Henrique
-
-Maria júlia Pessoa
-
-Maria Luísa Arruda
-
 # Website
 Acesse nosso site para maiores explicações e aprofundamento da solução.
 
