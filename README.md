@@ -38,7 +38,7 @@ Desenvolvedores:
     </td>
     <td align="center">
       <a href="https://github.com/camilacirne">
-        <img src="https://avatars.githubusercontent.com/u/117921412?v=4" width="100px;" alt="Foto Camila Cirne"/><br>
+        <img src="https://avatars.githubusercontent.com/u/28824856?v=4" width="100px;" alt="Foto Camila Cirne"/><br>
         <sub>
           <b>Camila Cirne</b>
         </sub>
