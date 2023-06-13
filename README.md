@@ -13,6 +13,12 @@ Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as ativi
 
 Application to make it easier to store and evaluate the activities of residencies attending a specialization program at the Hospital das Clínicas!
 
+
+# Arquivos presentes 📄 
+
+No projeto possui uma pasta principal chamada "Projetos-2", que por si mesmo possui os arquivos main.c, necessário para iniciar a aplicação onde lá se encontra a maior parte de manipulação de atividade, temos o utils.c, arquivo que abriga a maioria das funções e lógica entre as mesmas, utils.h é onde ocorre a declaração das variáveis, funções e structs. Entretanto algumas funções podem criar arquivos .txt que este são apresentados na pasta "Projetos-2". Com a utilização do sqlite3 foi necessário por questão de organização criar duas pastas sqlite3 que esta abriga os arquivos sqlite3.c e sqlite3.h arquivos fundamentais para a execução do banco de dados. O banco de dados chamado "db.sqlite3" é criado em uma pasta específica para ele chamada "BD". Além disso, existem outros arquivos como o .gitignore utilizado majoritariamente na filtragem de arquivos para o GITHUB e o Makefile é um arquivo que serve como um compilador para ambos sistemas operacionais.
+
+
 # Contribuintes | Contributors
 
 
