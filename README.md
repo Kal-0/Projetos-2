@@ -10,7 +10,68 @@ Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as ativi
 Application to make it easier to store and evaluate the activities of residencies attending a specialization program at the Hospital das Clínicas!
 
 # Contribuintes | Contributors
-# Camila Cirne
+
+
+
+## 🤝 Colaboradores
+
+Agradecemos às seguintes pessoas que contribuíram para este projeto:
+
+Desenvolvedores:
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Kal-0">
+        <img src="https://avatars.githubusercontent.com/u/106926790?s=400&u=d51d91a8d447afbb4a9d0be21d664b82d7091fc5&v=4" width="100px;" alt="Foto Kal"/><br>
+        <sub>
+          <b>Caio Cesar</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Fiend3333">
+        <img src="https://avatars.githubusercontent.com/u/116087739?v=4" width="100px;" alt="Foto Diogo"/><br>
+        <sub>
+          <b>Diogo Henrique</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/camilacirne">
+        <img src="https://avatars.githubusercontent.com/u/117921412?v=4" width="100px;" alt="Foto Camila Cirne"/><br>
+        <sub>
+          <b>Camila Cirne</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/bela975">
+        <img src="https://avatars.githubusercontent.com/u/117746778?v=4" width="100px;" alt="Foto Isabela Spinelli"/><br>
+        <sub>
+          <b>Isabela Spinelli</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/MaluArr">
+        <img src="https://avatars.githubusercontent.com/u/99887403?v=4" width="100px;" alt="Foto Maria Luisa"/><br>
+        <sub>
+          <b>Maria Luisa</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mariajuliapessoa">
+        <img src="https://avatars.githubusercontent.com/u/112356614?v=4" width="100px;" alt="Foto Maria Julia"/><br>
+        <sub>
+          <b>Maria Julia</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+Camila Cirne
 
 Isabela Spinelli
 
