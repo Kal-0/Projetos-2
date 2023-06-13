@@ -165,7 +165,7 @@ struct SlsID{
 };
 
 // Funções:
-
+void getNota(int** arryNota,char* notaDB);
 
 // -Gerais:
 char* strFOverwrite(char** output_str, char* base_str, ...);

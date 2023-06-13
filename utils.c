@@ -23,18 +23,21 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
     
     va_list args;
     va_start(args, base_str);
-
+    
     //pegando tamanho total da string que sera formada
     str_size = vsnprintf(NULL, 0, base_str, args) + 1;
+   
     //printf("size: %d\n", str_size);
 
     va_end(args);
     
+    
 
     //allocando memoria
     formatted_str = (char*)malloc(str_size);
-    strcpy(formatted_str, base_str);
-
+    
+    strncpy(formatted_str, base_str, str_size);
+  
     if(SWITCH){
       printf("NF_result: %s\n", formatted_str);
     }
@@ -46,7 +49,7 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
 
     va_start(args, base_str);
     char* arg1 = va_arg(args, char*);
-
+   
     //verifica se o primeiro args e NULL
     if(arg1 != (void*)NULL || (int)arg1 == 0){
       va_end(args);
@@ -1023,6 +1026,7 @@ int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_f
 
 
   // funcao
+  printf("+++++++++++++++++++++++++\n");
 
   // criando tabela do tipo
   strFOverwrite(&sql_cmd,  
@@ -1030,7 +1034,9 @@ int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_f
     "VALUES (%d, '%s', %d, %d, '%s'); "\
 
   "", usuario_fk, matricula, turma_fk, preceptor_fk, notas);
-  
+
+
+  printf("+++++++++++++++++++++++++\n");
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(db, ret);
 
@@ -1395,3 +1401,28 @@ int printResidencias(){
 
 //função residente visualizar feedback
 void visualizarFeedbacks(char *nome);
+
+void getNota(int** arryNota, char* notaDB) {
+  if (*arryNota != NULL) {
+    free(*arryNota);
+  }
+
+  int size = 0;
+  for (int i = 0; i < strlen(notaDB); i++) {
+    if (notaDB[i] >= '0' && notaDB[i] <= '9') {
+      size++;
+    }
+  }
+
+  *arryNota = (int*)malloc(size * sizeof(int));
+  int index = 0;
+
+  for (int i = 0; i < strlen(notaDB); i++) {
+    if (notaDB[i] >= '0' && notaDB[i] <= '9') {
+      (*arryNota)[index] = notaDB[i] - '0';
+      index++;
+    }
+  }
+}
+
+//função residente visualizar feedback
