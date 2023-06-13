@@ -15,7 +15,7 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
   char* formatted_str = NULL;
   int str_size = 0;
 
-  int SWITCH = 1;
+  int SWITCH = 0;
 
   if(base_str != NULL){
     
@@ -89,7 +89,7 @@ int sysStatus(sqlite3* db_ptr, int ret){
   sqlite3* db = db_ptr;
 
   //funcao
-  int SWITCH = 1;
+  int SWITCH = 0;
 
   if(SWITCH){
     printf("\nCODE: %d\n", ret);
@@ -1026,7 +1026,7 @@ int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_f
 
 
   // funcao
-  printf("+++++++++++++++++++++++++\n");
+
 
   // criando tabela do tipo
   strFOverwrite(&sql_cmd,  
@@ -1036,7 +1036,6 @@ int addResidenteTB(sqlite3* db_ptr, int usuario_fk, char *matricula, int turma_f
   "", usuario_fk, matricula, turma_fk, preceptor_fk, notas);
 
 
-  printf("+++++++++++++++++++++++++\n");
   ret = sqlite3_exec(db, sql_cmd, NULL, 0, NULL);
   sysStatus(db, ret);
 

@@ -493,12 +493,14 @@ if(1){
 
   // printf("nomeTurma: %s", t1.nomeTurma);
 
+  //=========================
+  //Residente residente;
+  //getResidente(db, &residente, 1);
 
-  Residente residente;
-  getResidente(db, &residente, 1);
+  //Usuario usuario;
+  //getUsuarioTB(db, &usuario, residente.usuarioFk);
+  //=========================
 
-  Usuario usuario;
-  getUsuarioTB(db, &usuario, residente.usuarioFk);
 
   //printf(": %s", usuario.nome);
 
