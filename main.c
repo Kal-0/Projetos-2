@@ -45,12 +45,14 @@ void navbarResidente();
 void feedbackResidente();
 void feedbackPreceptor();
 void printNomeAtividade(struct lsAtividade **head);
+void notasResi();
+void telaPrecTurma();
 
 struct lsAtividade* tarefinha = NULL;
 
 
 
-
+int feedbackcont = 0;
 
 // int countFilesInFolder(const char* folderPath) {
 //     DIR* directory = opendir(folderPath);
@@ -410,7 +412,7 @@ if(1){
 
 
 
-  printf("TU GOSTA DE FARINHA??\n");
+  
     char* notaDB= "[4,3,3,2]";
     int* arryNota = NULL;
     getNota(&arryNota, notaDB);
@@ -422,7 +424,7 @@ if(1){
 
     free(arryNota);
 
-  printf("---------------------\n");
+  
 
   printf("ADICIONANDO_RESIDENCIA===\n");
   addResidenciaTB(db, "nutricao");
@@ -1585,8 +1587,7 @@ void perfilPreceptor() {
       printf(
         "\n [0] -> navBar\n"\
         "----NOTIFICACAO----\n"\
-        "NOTIFICACOES:\n"\
-        "1) EU QUERO MORRER\n"\
+        "1) Voce esta chegando atrasado!!\n"\
         "Deseja voltar para seu perfil? (s/n): ");
       char aux;
       scanf(" %c", &aux);
@@ -1861,13 +1862,19 @@ void navbarResidente(){
         break;
       
       case 4:
-        feedbackResidente();
+        if(feedbackcont == 1){
+          feedbackResidente();
+        }
+        else{
+          printf("====VOCE NAO TEM NENHUM FEEDBACK====\n");
+        }
         break;
       
       case 5:
-        printf("NOTAS\n");
+        notasResi();
+
         break;
-      
+  
       default:
         printf("opcao invalida\n");
         break;
@@ -2006,7 +2013,7 @@ void feedbackPreceptor(){
     FILE *file;
     char texto[200];
 
-    file = fopen("arquivo.txt", "w");
+    file = fopen("arquivo.txt", "w+");
 
     if (file == NULL) {
       printf("Erro ao abrir o arquivo.\n");
@@ -2019,6 +2026,7 @@ void feedbackPreceptor(){
     fprintf(file, "%s", texto);
 
     fclose(file);
+    feedbackcont = 1;
 
     return;
 }
@@ -2028,7 +2036,7 @@ void feedbackResidente(){
     char texto[200];
     char resposta;
 
-    file = fopen("arquivo.txt", "r");
+    file = fopen("arquivo.txt", "r+");
 
     if (file == NULL) {
         printf("O arquivo não existe.\n");
@@ -2058,6 +2066,8 @@ void feedbackResidente(){
         fprintf(file, "%s", texto);
 
         fclose(file);
+
+        feedbackcont = 0;
     }
   return;
 }
@@ -2132,7 +2142,7 @@ void telaPrecTurma(){
   
 }
 
-notasResi(){
+void notasResi(){
   while (1)
   {
     printf("====NOTAS====\n"
