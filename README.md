@@ -5,9 +5,9 @@ Projeto em C para uma disciplina da faculdade feito em grupo.
 Project in C for a college discipline done in a group.
 
 # HClass
-<div>
-![image](https://github.com/Kal-0/Projetos-2/assets/106926790/8f13e2fb-8fa7-4b25-9964-66f9d400380b)
-</div>
+
+<img src="https://github.com/Kal-0/Projetos-2/assets/106926790/8f13e2fb-8fa7-4b25-9964-66f9d400380b" alt="image" style="width: 50%; height: 50%;">
+
 # Objetivo | Goal
 Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as atividades de residêntes cursando um programa de especialização no Hospital das Clínicas!
 
