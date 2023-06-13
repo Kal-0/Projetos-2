@@ -46,7 +46,7 @@ Desenvolvedores:
     </td>
     <td align="center">
       <a href="https://github.com/bela975">
-        <img src="https://avatars.githubusercontent.com/u/117746778?v=4" width="100px;" alt="Foto Isabela Spinelli"/><br>
+        <img src="https://avatars.githubusercontent.com/u/113048987?v=4" width="100px;" alt="Foto Isabela Spinelli"/><br>
         <sub>
           <b>Isabela Spinelli</b>
         </sub>
