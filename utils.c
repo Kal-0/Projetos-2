@@ -227,10 +227,10 @@ void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* type, char* tableName, 
     *((int*)cellValue) = (sqlite3_column_int(sql_stmt, 0));
   }
   else  if(!strcmp(type, "text")){
-    cellValue = strFOverwrite(NULL,sqlite3_column_text(sql_stmt, 0), NULL);
+    cellValue = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 0), NULL);
   }
   else  if(!strcmp(type, "blob")){
-    cellValue = sqlite3_column_blob(sql_stmt, 0);
+    cellValue = (void*)sqlite3_column_blob(sql_stmt, 0);
   }
 
 

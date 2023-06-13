@@ -500,7 +500,7 @@ if(1){
   Usuario usuario;
   getUsuarioTB(db, &usuario, residente.usuarioFk);
 
-  printf(": %s", usuario.nome);
+  //printf(": %s", usuario.nome);
 
 
 
