@@ -1,7 +1,7 @@
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include <stdarg.h>
 
 #include "sqlite3/sqlite3.h"

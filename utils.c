@@ -8,7 +8,7 @@ int ACTIVE = 0;
 
 // Funções:
 
-
+//(settar variaveis SWITCH para "1" para debugar o codigo)
 // -Gerais:
 
 char* strFOverwrite(char** output_str, char* base_str, ...){
