@@ -9,7 +9,7 @@ Project in C for a college discipline done in a group.
 <img src="https://github.com/Kal-0/Projetos-2/assets/106926790/8f13e2fb-8fa7-4b25-9964-66f9d400380b" alt="image" style="width: 50%; height: 50%;">
 
 # Objetivo | Goal
-Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as atividades de residêntes cursando um programa de especialização no Hospital das Clínicas!
+Aplicativo que tem como objetivo tornar mais fácil armazenar e avaliar as atividades de residentes cursando um programa de especialização no Hospital das Clínicas!
 
 Application to make it easier to store and evaluate the activities of residencies attending a specialization program at the Hospital das Clínicas!
 
@@ -38,7 +38,7 @@ gcc main.c utils.c ./sqlite3/sqlite3.c -o ./executables/hclass.exe
 
 # Observações 👀
 
-No momento o código do projeto se encontra com apenas algumas de suas funcionalidades implementadas devido ao pouco espaço de tempo entre a conclusão da interface do protótipo, e o prazo de entrega do código implementado. Além disso, alguns membros do time apresentaram déficit de conhecimento técnico, o que acabou atrasando ainda mais o desenvolvimento.
+No momento o código do projeto se encontra com apenas algumas de suas funcionalidades implementadas devido ao pouco espaço de tempo entre a conclusão da interface do protótipo, e o prazo de entrega do código implementado.
 
 O ideal para testar a aplicação é se cadastrando como um usuário do tipo "Gestão" e/ou "Residente", por possuirem o fluxo mais completo.
 
