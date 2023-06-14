@@ -54,4 +54,3 @@ main
 main.exe
 *.bat*
 db.sqlite3
-executables/
