@@ -47,11 +47,11 @@ replit.nix
 .ccls-cache
 
 #vscode
-.output
+output/
 
 #other
 main
 main.exe
 *.bat*
-*.bd*
-.executables
+db.sqlite3
+executables/
