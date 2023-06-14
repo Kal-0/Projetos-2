@@ -8,7 +8,7 @@ int ACTIVE = 0;
 
 // Funções:
 
-//(settar variaveis SWITCH para "1" para debugar o codigo)
+//(settar variaveis "SWITCH" para "1" para debugar o codigo)
 // -Gerais:
 
 char* strFOverwrite(char** output_str, char* base_str, ...){
@@ -82,6 +82,101 @@ char* strFOverwrite(char** output_str, char* base_str, ...){
   //printf("FF_result: %s\n", formatted_str);
   return formatted_str;
 }
+
+
+
+//listas
+void append(lsID **head, int item) {
+  lsID *newItem = (lsID *)malloc(sizeof(lsID));
+  newItem->id = item;
+  newItem->next = NULL;
+  newItem->last = NULL;
+  
+  if (*head == NULL) {
+    *head = newItem;
+    
+  } else {
+    lsID *temp = *head;
+    while (temp->next != NULL) {
+      temp = temp->next;
+    }
+
+    temp->next = newItem;
+    temp->next->last = temp;
+  }
+}
+
+int getItemLs(lsID** head, int index){
+  lsID *temp = *head;
+  int cursor = 0;
+
+  if(abs(index)>lenLs(head)){
+    return 0;
+  }
+
+  if(index >= 0){
+    while (temp != NULL) {
+      if(cursor == index){
+        return temp->id;
+      }
+      cursor++;
+      temp = temp->next;
+    }
+
+  }else{
+    while (temp->next != NULL) {
+      temp = temp->next;
+    }
+
+    cursor = -1;
+    while (temp != NULL) {
+      if(cursor == index){
+        return temp->id;
+      }
+      cursor--;
+      temp = temp->last;
+    }
+    
+  }
+}
+
+int lenLs(lsID **head) {
+  lsID *temp = *head;
+  int length = 0;
+
+  while (temp != NULL) {
+    length++;
+    temp = temp->next;
+  }
+  return length;
+}
+
+void printLs(lsID **head) {
+  lsID *temp = *head;
+  while (temp != NULL) {
+    printf("%d\n", temp->id);
+    temp = temp->next;
+  }
+}
+
+void freeLs(lsID **head) {
+  lsID *temp = *head;
+  lsID *aux = NULL;
+  if (*head == NULL) {
+    return;
+  } else {
+
+    while (temp != NULL) {
+      aux = temp;
+      temp = temp->next;
+      free(aux);
+    }
+
+    *head = NULL;
+  }
+}
+
+
 
 //banco de dados
 int sysStatus(sqlite3* db_ptr, int ret){
@@ -250,6 +345,69 @@ void* getCellVoid(sqlite3* db_ptr, int* cell_size, char* type, char* tableName, 
 
 }
 
+lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition){
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+  
+  if(ACTIVE){
+    sqlite3_open("BD/db.sqlite3", &db);
+  }
+
+
+  // funcao
+
+  lsID* list = NULL;
+
+  strFOverwrite(&sql_cmd,  
+    "SELECT ID FROM %s "\
+    "WHERE (%s); "\
+  "", tableName, condition);
+
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+  if(ret != SQLITE_ROW){
+    
+
+    sqlite3_finalize(sql_stmt);
+
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    if(ACTIVE){
+      sqlite3_close(db);
+    }
+
+    return list;
+  }
+  
+  
+
+  while(ret == SQLITE_ROW){
+    //printf("===DEBUG===: %d\n", sqlite3_column_int(sql_stmt, 0));
+
+    append(&list, sqlite3_column_int(sql_stmt, 0));
+
+    ret = sqlite3_step(sql_stmt);
+  }
+  
+  sqlite3_finalize(sql_stmt);
+  sql_stmt = NULL;
+
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+
+  if(ACTIVE){
+    sqlite3_close(db);
+  }
+
+  return list;
+  
+}
+
 int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condition){
   // Banco de dados
   sqlite3* db = db_ptr;
@@ -282,6 +440,7 @@ int printTableColumn(sqlite3* db_ptr, char* tableName, char* field, char* condit
 
   return row;
 }
+
 
 //login
 Usuario *fazerLogin(sqlite3* db_ptr, char *email, char *senha) {
@@ -426,6 +585,8 @@ Usuario *fazerLogin(sqlite3* db_ptr, char *email, char *senha) {
   return usuarioLogin;
 };
 
+
+//pegar usuarios
 int getUsuarioTB(sqlite3* db_ptr, Usuario* usuario, int usuario_id) {
   // Banco de dados
   sqlite3* db = db_ptr;
@@ -539,7 +700,6 @@ int getUsuarioTB(sqlite3* db_ptr, Usuario* usuario, int usuario_id) {
   return 1;
 };
 
-
 void getResidente(sqlite3* db_ptr, Residente* residente, int residente_id){
 // Banco de dados
   sqlite3* db = db_ptr;
@@ -597,6 +757,7 @@ void getResidente(sqlite3* db_ptr, Residente* residente, int residente_id){
 
 }
 
+
 //pegar objetos
 void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id){
   // Banco de dados
@@ -622,7 +783,7 @@ void getTurmaTB(sqlite3* db_ptr, Turma* turma, int turma_id){
     if(ret == SQLITE_ROW){
 
       turma->id = sqlite3_column_int(sql_stmt, 0);
-      turma->residencia_fk = sqlite3_column_int(sql_stmt, 1);
+      turma->residenciaFK = sqlite3_column_int(sql_stmt, 1);
       turma->nome = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 2), NULL);
       turma->ano = strFOverwrite(NULL,(char*)sqlite3_column_text(sql_stmt, 3), NULL);
     }
@@ -1236,167 +1397,10 @@ int addAtividadeTB(sqlite3* db_ptr, int turma_fk, char* nome, char* descricao, c
 
 
 
-//listas
-int getItemLs(lsID** head, int index){
-  lsID *temp = *head;
-  int cursor = 0;
-
-  if(abs(index)>lenLs(head)){
-    return 0;
-  }
-
-  if(index >= 0){
-    while (temp != NULL) {
-      if(cursor == index){
-        return temp->id;
-      }
-      cursor++;
-      temp = temp->next;
-    }
-
-  }else{
-    while (temp->next != NULL) {
-      temp = temp->next;
-    }
-
-    cursor = -1;
-    while (temp != NULL) {
-      if(cursor == index){
-        return temp->id;
-      }
-      cursor--;
-      temp = temp->last;
-    }
-    
-  }
-}
-
-void printLs(lsID **head) {
-  lsID *temp = *head;
-  while (temp != NULL) {
-    printf("%d\n", temp->id);
-    temp = temp->next;
-  }
-}
-
-int lenLs(lsID **head) {
-  lsID *temp = *head;
-  int length = 0;
-
-  while (temp != NULL) {
-    length++;
-    temp = temp->next;
-  }
-  return length;
-}
-
-void append(lsID **head, int item) {
-  lsID *newItem = (lsID *)malloc(sizeof(lsID));
-  newItem->id = item;
-  newItem->next = NULL;
-  newItem->last = NULL;
-  
-  if (*head == NULL) {
-    *head = newItem;
-    
-  } else {
-    lsID *temp = *head;
-    while (temp->next != NULL) {
-      temp = temp->next;
-    }
-
-    temp->next = newItem;
-    temp->next->last = temp;
-  }
-}
-
-void freeLs(lsID **head) {
-  lsID *temp = *head;
-  lsID *aux = NULL;
-  if (*head == NULL) {
-    return;
-  } else {
-
-    while (temp != NULL) {
-      aux = temp;
-      temp = temp->next;
-      free(aux);
-    }
-
-    *head = NULL;
-  }
-}
-
-lsID* getTableIDLs(sqlite3* db_ptr, char* tableName, char* condition){
-  // Banco de dados
-  sqlite3* db = db_ptr;
-  sqlite3_stmt* sql_stmt = NULL;
-  char* sql_cmd = NULL;
-  
-  int ret;
-  
-  if(ACTIVE){
-    sqlite3_open("BD/db.sqlite3", &db);
-  }
-
-
-  // funcao
-
-  lsID* list = NULL;
-
-  strFOverwrite(&sql_cmd,  
-    "SELECT ID FROM %s "\
-    "WHERE (%s); "\
-  "", tableName, condition);
-
-  ret = getStmt(db, &sql_stmt, sql_cmd);
-  if(ret != SQLITE_ROW){
-    
-
-    sqlite3_finalize(sql_stmt);
-
-    if(sql_cmd != NULL){
-      free(sql_cmd);
-    }
-    if(ACTIVE){
-      sqlite3_close(db);
-    }
-
-    return list;
-  }
-  
-  
-
-  while(ret == SQLITE_ROW){
-    //printf("===DEBUG===: %d\n", sqlite3_column_int(sql_stmt, 0));
-
-    append(&list, sqlite3_column_int(sql_stmt, 0));
-
-    ret = sqlite3_step(sql_stmt);
-  }
-  
-  sqlite3_finalize(sql_stmt);
-  sql_stmt = NULL;
-
-  if(sql_cmd != NULL){
-    free(sql_cmd);
-  }
-
-  if(ACTIVE){
-    sqlite3_close(db);
-  }
-
-  return list;
-  
-}
-
 
 //adicionando objetos
 
-//interface
-int printResidencias(){
 
-}
 
 //função residente visualizar feedback
 void visualizarFeedbacks(char *nome);
@@ -1425,3 +1429,108 @@ void getNota(int** arryNota, char* notaDB) {
 }
 
 //função residente visualizar feedback
+
+
+
+
+//recursão
+int forRecursivo(int i, int range, int ac){
+  if(ac==0){
+    return 0;
+  }
+
+  if(ac>0){
+    if(i >= range){
+      return 0;
+    }
+
+    printf("%d\n", i);
+
+    forRecursivo(i+=ac, range, ac);
+  }else{
+    if(i <= range){
+      return 0;
+    }
+
+    printf("%d\n", i);
+
+    forRecursivo(i-=ac, range, ac);
+  }
+
+}
+
+
+//arquivos
+int arquivarUsuarios(sqlite3* db_ptr, char* filePath){
+  // Banco de dados
+  sqlite3* db = db_ptr;
+  sqlite3_stmt* sql_stmt = NULL;
+  char* sql_cmd = NULL;
+  
+  int ret;
+
+
+  // aqruivo
+  FILE *file;
+  file = fopen(filePath, "w+");
+
+  if (file == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return 1;
+  }
+
+  // funcao
+  int id;
+  char nome[100];
+  char email[100];
+  char senha[100];
+  char tipo[100];
+  int tipoFK;
+
+
+  // pegando residentes do banco de dados
+  strFOverwrite(&sql_cmd,
+    "SELECT * FROM USUARIO_TB; "\
+
+  "", NULL);
+  ret = getStmt(db, &sql_stmt, sql_cmd);
+
+  if(ret == SQLITE_ROW){
+    while (ret == SQLITE_ROW){    
+      id = sqlite3_column_int(sql_stmt, 0);
+      strcpy(nome,(char*)sqlite3_column_text(sql_stmt, 1));
+      strcpy(email,(char*)sqlite3_column_text(sql_stmt, 2));
+      strcpy(senha,(char*)sqlite3_column_text(sql_stmt, 3));
+      strcpy(tipo,(char*)sqlite3_column_text(sql_stmt, 4));
+      tipoFK = sqlite3_column_int(sql_stmt, 5);
+      
+      fprintf(file, "ID:%d \t\tNOME:%s \t\tEMAIL:%s \t\tSENHA:%s \t\tTIPO:%s \t\tTIPO_FK:%d\n", id, nome, email, senha, tipo, tipoFK);
+
+      ret = sqlite3_step(sql_stmt);
+
+      //printf("%d\n", ret);
+    }
+  }
+  else{
+    sysStatus(db, ret);
+
+    sqlite3_finalize(sql_stmt);
+    if(sql_cmd != NULL){
+      free(sql_cmd);
+    }
+    fclose(file);
+    return ret;
+  }
+
+  //fprintf(file,"end\n");
+  
+
+  sqlite3_finalize(sql_stmt);
+  if(sql_cmd != NULL){
+    free(sql_cmd);
+  }
+  fclose(file);
+
+  return 0;
+
+}

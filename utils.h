@@ -48,7 +48,7 @@ typedef struct SlsID lsID;
 
 // Usuario base
 struct SUsuario{
-  int id;
+  ID id;
   char *nome;
   char *email;
   char *senha;
@@ -62,11 +62,11 @@ struct SUsuario{
 
 // Tipos de Usuarios
 struct SResidente{
-  int id;
-  int usuarioFk;
+  ID id;
+  ID usuarioFk;
   char* matricula;
-  int turmaFk;
-  int preceptorFk;
+  ID turmaFk;
+  ID preceptorFk;
   float notasTrimestrais[4];
   lsID *listaAtividades;
   lsID *listaSubmissoes;
@@ -74,8 +74,8 @@ struct SResidente{
 };
  
 struct SPreceptor{
-  int id;
-  int usuarioFk;
+  ID id;
+  ID usuarioFk;
   Turma* turma;
   lsID *listaResidentes;
   lsID *listaAtividades;
@@ -83,15 +83,15 @@ struct SPreceptor{
 };
 
 struct SCoordenacao{
-  int id;
-  int usuarioFk;
+  ID id;
+  ID usuarioFk;
   char* cargo;
   ProgramaResidencia* residencia;
 };
 
 struct SGestao{
-  int id;
-  int usuarioFk;
+  ID id;
+  ID usuarioFk;
   char* cargo;
   lsID *listaResidencias;
 };
@@ -101,7 +101,7 @@ struct SGestao{
 // estruturas
 
 struct SProgramaResidencia{
-  int id;
+  ID id;
   char nomePrograma[30];
   lsID* listaCoordenacao;
   lsID* listaTurmas;
@@ -109,13 +109,13 @@ struct SProgramaResidencia{
 
 
 struct STurma{
-  int id;
+  ID id;
   char* nome;
   char* ano;
   lsID *residentes;
   lsID *listaPreceptores;
   lsID *listasAtividades;
-  int residencia_fk;
+  ID residenciaFK;
   char *criteriosAvaliativos;
 };
 
@@ -123,7 +123,7 @@ struct STurma{
 // objetos
 
 struct SAtividade{
-  int id;
+  ID id;
   char* nomeDaAtividade;
   char* descricaoDaAtividade;
   Turma* turma;
@@ -134,10 +134,10 @@ struct SAtividade{
 };
 
 struct SSubmissao{
-  int id;
-  int idResidente;
-  int idPreceptor;
-  int idAtividade;
+  ID id;
+  ID residenteFK;
+  ID preceptorFK;
+  ID atividadeFK;
   float nota;
   char *resposta;
   char *feedback;
@@ -145,7 +145,7 @@ struct SSubmissao{
 };
 
 struct SFeedbackGeral{
-  int id;
+  ID id;
   Preceptor* preceptor;
   Residente* residente;
   float nota;
@@ -158,7 +158,7 @@ struct SFeedbackGeral{
 };
 
 struct SlsID{
-  int id;
+  ID id;
 
   lsID* next;
   lsID* last;
@@ -172,10 +172,10 @@ char* strFOverwrite(char** output_str, char* base_str, ...);
 
 
 //listas
-int getItemLs(lsID** head, int index);
-void printLs(lsID **head);
-int lenLs(lsID **head);
 void append(lsID **head, int item);
+int getItemLs(lsID** head, int index);
+int lenLs(lsID **head);
+void printLs(lsID **head);
 void freeLs(lsID **head);
 
 
@@ -207,6 +207,15 @@ int addTurmaTB(sqlite3* db_ptr, int residencia_fk, char* nome, char* ano);
 
 //objetos
 int addAtividadeTB(sqlite3* db_ptr, int turma_fk, char* nome, char* descricao, char* data_p, char* data_e, char* status);
+
+
+//recursao
+int forRecursivo(int i, int range, int ac);
+
+
+
+//arquivos
+int arquivarUsuarios(sqlite3* db_ptr, char* filePath);
 
 /*
 void criarCriteriosDeFeedback(Turma *turma);

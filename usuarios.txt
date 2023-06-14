@@ -1,0 +1,6 @@
+ID:1 		NOME:caio 		EMAIL:caio@gmail.com 		SENHA:caio123 		TIPO:gestao 		TIPO_FK:1
+ID:2 		NOME:camila 		EMAIL:camila@gmail.com 		SENHA:camila123 		TIPO:gestao 		TIPO_FK:2
+ID:3 		NOME:carol 		EMAIL:carol@gmail.com 		SENHA:carol123 		TIPO:coordenacao 		TIPO_FK:1
+ID:4 		NOME:paulo 		EMAIL:paulo@gmail.com 		SENHA:paulo123 		TIPO:preceptor 		TIPO_FK:1
+ID:5 		NOME:diogo 		EMAIL:diogo@gmail.com 		SENHA:diogo123 		TIPO:residente 		TIPO_FK:1
+ID:6 		NOME:f 		EMAIL:f 		SENHA:f 		TIPO:gestao 		TIPO_FK:3
