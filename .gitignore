@@ -53,3 +53,5 @@ replit.nix
 main
 main.exe
 *.bat*
+*.bd*
+.executables
